@@ -11,7 +11,7 @@ this = sys.modules[__name__]
 this.plugin_name:str = "Minor Faction Support"
 this.minor_faction:tk.StringVar = tk.StringVar()
 this.activity_summary:tk.StringVar = tk.StringVar()
-this.activity = ""
+this.current_station:Dict = ""
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
@@ -50,7 +50,19 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> None:
-    # if entry["event"] in ["CarrierJumpRequest", "CarrierJumpCancelled"] and not is_beta:
+    if not is_beta:
+        if entry["event"] == "Docked":
+            on_docked_entry(entry)
+        elif entry["event"] == "RedeemVoucher":
+            on_redeem_voucher_entry(entry, system)
+
+def on_docked_entry(entry: Dict[str, Any]) -> None:
+    this.current_station["Name"] = entry["StationName"]
+    this.current_station["StationFaction"] = entry["StationFaction"]["Name"]
+    return None
+
+def on_redeem_voucher_entry(entry: Dict[str, Any], system:Optional[str]) -> None:
+    # TODO
     return None
 
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
