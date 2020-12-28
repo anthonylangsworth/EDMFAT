@@ -48,7 +48,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     return frame
 
 # Called by EDMC when a new entry is written to a journal file
-def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> None:
+def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
     if not is_beta:
         if entry["event"] == "Docked":
             on_docked_entry(entry)
