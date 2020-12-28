@@ -22,8 +22,8 @@ def plugin_start3(plugin_dir: str) -> str:
     return this.plugin_name
 
 # Called by EDMC to show plug-in details on EDMC main window
-def plugin_app(parent: myNotebook.Notebook) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
-    frame = myNotebook.Frame(parent)
+def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
+    frame = tk.Frame(parent)
     frame.columnconfigure(1, weight=1)
     tk.Label(frame, text=this.minor_faction, anchor=tk.W).grid(row=0, column=0)
     tk.Button(frame, text="Copy", command=copy_activity_to_clipboard).grid(row=0, column=1, sticky=tk.E)
@@ -39,11 +39,11 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
-    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
-    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
-    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
-    tk.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
-    tk.Entry(frame, text=this.minor_faction).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
+    myNotebook.Entry(frame, text=this.minor_faction).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
 
