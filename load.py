@@ -1,7 +1,6 @@
 import sys
 import os
 from typing import Optional, Tuple, Dict, Any, Union
-import requests
 import tkinter as tk
 import myNotebook
 from config import config, appname
