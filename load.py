@@ -11,7 +11,7 @@ this = sys.modules[__name__]
 this.plugin_name:str = "Minor Faction Support"
 this.minor_faction:tk.StringVar = tk.StringVar()
 this.activity_summary:tk.StringVar = tk.StringVar()
-this.activity
+this.activity = ""
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
@@ -36,7 +36,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX:int = 10
     PADY:int = 10
-    instructions:str = "Track missions and activity for or against a minor faction. The minor faction name below must EXACTLY match that in game, including capitalization and spacing (and is temporarily read-only)."
+    instructions:str = "Track missions and activity for or against a minor faction.\n\nChanging the value will clear all current activity. The minor faction name below must EXACTLY match that in game, including capitalization and spacing (and is temporarily read-only)."
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
@@ -64,4 +64,3 @@ def copy_activity_to_clipboard() -> None:
 
 def clear_activity_summary() -> None:
     this.activity_summary.set("(No activity)")
-    
