@@ -17,7 +17,7 @@ this = sys.modules[__name__]
 this.plugin_name = "EDMFS"
 this.version_info = (0, 1, 0)
 this.version = ".".join(map(str, this.version_info))
-this.minorFaction = "EDA Kunti League"
+this.minor_faction = "EDA Kunti League"
 
 # A Logger is used per 'found' plugin to make it easy to include the plugin's
 # folder name in the logging output format.
@@ -52,16 +52,21 @@ def plugin_app(parent: myNotebook.Notebook) -> Tuple[tk.Label, tk.Label]:
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
 
     PADX = 10
-    PADY = 2
+    HEADER_PADY = 10
 
     frame = myNotebook.Frame(parent)
+    frame.columnconfigure(1, weight=1)
 
-    myNotebook.Label(frame, text="Elite Dangerous Minor Faction Support").grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.Label(frame, text="Elite Dangerous Minor Faction Support").grid(row=0, column=0, columnspan=2, padx=PADX, pady=HEADER_PADY, sticky=tk.W)
+    myNotebook.Label(frame, text="Version: " + this.version).grid(row=0, column=3, columnspan=1, padx=PADX, pady=HEADER_PADY, sticky=tk.E)
 
     myNotebook.Label(frame).grid(sticky=tk.W)   # spacer
 
-    myNotebook.Label(frame, text="Minor Faction").grid(row=2, padx=PADX, sticky=tk.W)
-    myNotebook.Entry(frame).grid(row=2, column=1, columnspan=2, padx=PADX, pady=PADY, sticky=tk.EW)
+    settingsFrame = myNotebook.Frame(frame)
+    settingsFrame.grid(sticky=tk.W)
+    settingsFrame.columnconfigure(1, weight=1)
+    myNotebook.Label(settingsFrame, text="Minor Faction").grid(row=0, column=0, padx=PADX, sticky=tk.W)
+    myNotebook.Label(settingsFrame, text=this.minor_faction).grid(row=0, column=1, padx=PADX, sticky=tk.EW)
     
     return frame
 
