@@ -1,82 +1,66 @@
 import sys
 import os
-from typing import Optional, Tuple, Dict, Any
-#import requests
-try:
-    # Python 2
-    import Tkinter as tk
-except ModuleNotFoundError:
-    # Python 3
-    import tkinter as tk
-
+from typing import Optional, Tuple, Dict, Any, Union
+import requests
+import tkinter as tk
 import myNotebook
 from config import config, appname
 import logging
 
 this = sys.modules[__name__]
-this.plugin_name = "EDMFS"
-this.version_info = (0, 1, 0)
-this.version = ".".join(map(str, this.version_info))
+this.plugin_name = "Minor Faction Support"
+this.version = "0.1"
 this.minor_faction = "EDA Kunti League"
+this.activity = ""
 
-# A Logger is used per 'found' plugin to make it easy to include the plugin's
-# folder name in the logging output format.
-# NB: plugin_name here *must* be the plugin's folder name as per the preceding
-#     code, else the logger won't be properly set up.
+# Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 
-# If the Logger has handlers then it was already set up by the core code, else
-# it needs setting up here.
-if not logger.hasHandlers():
-    level = logging.INFO  # So logger.info(...) is equivalent to print()
-
-    logger.setLevel(level)
-    logger_channel = logging.StreamHandler()
-    logger_formatter = logging.Formatter(f'%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(lineno)d:%(funcName)s: %(message)s')
-    logger_formatter.default_time_format = '%Y-%m-%d %H:%M:%S'
-    logger_formatter.default_msec_format = '%s.%03d'
-    logger_channel.setFormatter(logger_formatter)
-    logger.addHandler(logger_channel)
-
-
+# Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
+    clear_activity()
     return this.plugin_name
 
+# Called by EDMC to show plug-in details on EDMC main window
+def plugin_app(parent: myNotebook.Notebook) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
+    frame = myNotebook.Frame(parent)
+    frame.columnconfigure(1, weight=1)
+    tk.Label(frame, text=this.minor_faction, anchor=tk.W).grid(row=0, column=0)
+    tk.Button(frame, text="Copy", command=copy_activity_to_clipboard).grid(row=0, column=1, sticky=tk.E)
+    tk.Label(frame, text="(No activity)", anchor=tk.W, justify=tk.LEFT, pady=10).grid(row=1, column=0, columnspan=2, sticky=tk.W)
 
-def plugin_app(parent: myNotebook.Notebook) -> Tuple[tk.Label, tk.Label]:
-    label = tk.Label(parent, text="%s:" % this.plugin_name)
-    this.status = tk.Label(parent, text="v%s - Ready" % this.version, anchor=tk.W)
-    return label, this.status
+    return frame
 
-
+# Called by EDMC to populate preferences dialog
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
-
     PADX = 10
-    HEADER_PADY = 10
+    PADY = 10
+    instructions = "Track missions and activity for or against a minor faction. The minor faction name below must EXACTLY match that in game, including capitalization and spacing."
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
-
-    myNotebook.Label(frame, text="Elite Dangerous Minor Faction Support").grid(row=0, column=0, columnspan=2, padx=PADX, pady=HEADER_PADY, sticky=tk.W)
-    myNotebook.Label(frame, text="Version: " + this.version).grid(row=0, column=3, columnspan=1, padx=PADX, pady=HEADER_PADY, sticky=tk.E)
-
-    myNotebook.Label(frame).grid(sticky=tk.W)   # spacer
-
-    settingsFrame = myNotebook.Frame(frame)
-    settingsFrame.grid(sticky=tk.W)
-    settingsFrame.columnconfigure(1, weight=1)
-    myNotebook.Label(settingsFrame, text="Minor Faction").grid(row=0, column=0, padx=PADX, sticky=tk.W)
-    myNotebook.Label(settingsFrame, text=this.minor_faction).grid(row=0, column=1, padx=PADX, sticky=tk.EW)
+    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    tk.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    tk.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
+    tk.Entry(frame, text=this.minor_faction).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
 
-def prefs_changed(cmdr:str, is_beta: bool) -> None:
-    # Preferences changed
-    return None
-
+# Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> None:
     # if entry["event"] in ["CarrierJumpRequest", "CarrierJumpCancelled"] and not is_beta:
     # this.status["text"] = "v%s - Ready" % this.version
     return None
 
-  
+# Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
+def copy_activity_to_clipboard() -> None:
+    root = tk.Tk()
+    root.withdraw()
+    root.clipboard_clear()
+    root.clipboard_append(this.activity)
+    root.update()
+    root.destroy()
+
+def clear_activity() -> None:
+    this.activity = "(No activity)"
