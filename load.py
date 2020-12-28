@@ -35,7 +35,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX:int = 10
     PADY:int = 10
-    instructions:str = "Track missions and activity for or against a minor faction.\n\nChanging the value will clear all current activity. The minor faction name below must EXACTLY match that in game, including capitalization and spacing (and is temporarily read-only)."
+    instructions:str = "Track missions and activity for or against a minor faction.\n\nChanging the minor faction name below will clear all current activity. The name must EXACTLY match that in game, including capitalization and spacing.\n\nThe name is temporarily read-only until we iron out bugs and get to sufficient functionality."
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
