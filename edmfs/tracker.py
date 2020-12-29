@@ -28,9 +28,9 @@ class GalaxyState:
         return self._systems
 
 class PilotState:
-    def __init__(self):
-        self._last_docked_station = None
-        self._missions:list = []
+    def __init__(self, last_docked_station: str, missions: list):
+        self._last_docked_station = last_docked_station
+        self._missions:list = missions
 
     @property
     def last_docked_station(self) -> object:
@@ -38,7 +38,7 @@ class PilotState:
 
     @property
     def missions(self) -> list:
-        return self.missions
+        return self._missions
 
 class EventProcessor(ABC):
     @property
