@@ -1,6 +1,6 @@
-import edmfs.tracker
+from edmfs.tracker import Tracker
 
 def test_plugin_start3():
-    tracker = edmfs.tracker.Tracker("a")
-    assert(tracker.name == "a")
+    tracker:Tracker = Tracker("a")
+    assert(tracker.minor_faction == "a")
     

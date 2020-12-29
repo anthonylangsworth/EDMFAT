@@ -1,7 +1,4 @@
 {
-    "terminal.integrated.env.windows": {
-        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder}" // ;${env:ProgramFiles(x86)/EDMarketConnector;${env:ProgramFiles(x86)/EDMarketConnector/lib
-    },
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true
