@@ -5,6 +5,7 @@ import tkinter as tk
 import myNotebook
 from config import config, appname
 import logging
+import edmfs.tracker
 
 this = sys.modules[__name__]
 this.plugin_name:str = "Minor Faction Support"

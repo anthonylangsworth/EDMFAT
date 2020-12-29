@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-class MinorFactionActivityMonitor:
+class Tracker:
     def __init__(self, name:str):
         self._name:str = name
     
