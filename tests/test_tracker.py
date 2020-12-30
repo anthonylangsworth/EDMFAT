@@ -1,14 +1,14 @@
-from edmfs.state import StarSystemState, PilotState, Station
-from edmfs.tracker import Tracker
 import pytest
 
-def test_Tracker_init():
+from edmfs.state import StarSystemState, PilotState, Station
+from edmfs.tracker import Tracker
+
+def test_tracker_init():
     MINOR_FACTION = "EDA Kunti League"
     tracker:Tracker = Tracker(MINOR_FACTION)
     assert(tracker.minor_faction == MINOR_FACTION)
     assert(tracker.pilot_state != None)
     assert(tracker.pilot_state.last_docked_station == None)
-
 
 @pytest.mark.parametrize(
     "location_event,expected_station",
