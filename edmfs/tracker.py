@@ -69,6 +69,33 @@ class PilotState:
     def missions(self) -> list:
         return self._missions
 
+class EventSummary():
+    def __init__(self, system_name:str, supports:bool):
+        self._system_name:str = system_name
+        self._supports:str = supports
+
+    @property
+    def system_name(self) -> str:
+        return self._system_name
+
+    @property
+    def supports(self) -> bool:
+        return self._supports
+
+class RedeemVoucherEventSummary(EventSummary):
+    def __init__(self, system_name:str, supports:bool, type:str, amount:int):
+        super(RedeemVoucherEventSummary, self).__init__(system_name, supports)
+        self._type:str = type
+        self._amount:int = amount
+    
+    @property
+    def type(self) -> str:
+        return self._type
+
+    @property
+    def amount(self) -> int:
+        return self._amount
+
 class EventProcessor(ABC):
     @property
     @abstractmethod
@@ -76,7 +103,7 @@ class EventProcessor(ABC):
         pass
 
     @abstractmethod
-    def process(self, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> None:
+    def process(self, minor_faction:str, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         pass
 
 class LocationEventProcessor(EventProcessor):
@@ -84,17 +111,30 @@ class LocationEventProcessor(EventProcessor):
     def eventName(self) -> str:
         return "Location"
 
-    def process(self, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> None:
+    def process(self, minor_faction:str, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         station:Station = None
         if(entry.get("Docked")):
             station = Station(entry["StationName"], entry["SystemAddress"], entry["StationFaction"]["Name"])
             pilot_state.last_docked_station = station
-            # galaxy_state.
+            # galaxy_state. # TODO: Add station to Galaxy State
+            return None
 
+class RedeemVoucherEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "RedeemVoucher"
+
+    def process(self, minor_faction:str, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        result:list = []
+        result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name == minor_faction)
+        # if(pilot_state.last_docked_station.system_address):
+        #     result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name != minor_faction)
+        return result
     
 # TODO: move this to an IoC setup
 _eventProcessors:Dict[str, EventProcessor] = {
-    "Location": LocationEventProcessor()
+    "Location": LocationEventProcessor(),
+    "RedeemVoucher": RedeemVoucherEventProcessor()
 }
 
 class Tracker:

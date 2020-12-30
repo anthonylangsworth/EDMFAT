@@ -75,3 +75,12 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
         tracker.on_event(location_event)
     assert(tracker.pilot_state.last_docked_station == expected_station)
 
+@pytest.mark.parametrized("minor_faction,redeem_voucher_event,expected_results", 
+    [
+        ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, []),
+        ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, []),
+        ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, [])
+    ])
+def test_redeem_voucher_single(minor_faction:str, redeem_voucher_event:str, expected_results:list):
+    tracker:Tracker = Tracker("EDA Kunti League")
+    tracker.on_event(redeem_voucher_event)
