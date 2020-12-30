@@ -37,6 +37,13 @@ class Station:
     def controlling_minor_faction(self) -> str:
         return self._controlling_minor_faction
 
+    def __eq__ (self, other) -> bool:
+        if not isinstance(other, Station):
+            return NotImplemented
+
+        return self._name == other._name \
+            and self._controlling_minor_faction == other._controlling_minor_faction
+
 class GalaxyState:
     def __init__(self):
         self._systems:Dict[int, StarSystemState] = {}
@@ -79,7 +86,7 @@ class LocationEventProcessor(EventProcessor):
 
     def process(self, entry:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> None:
         station:Station = None
-        if(entry.get("StationName", None) != None):
+        if(entry.get("Docked")):
             station = Station(entry["StationName"], entry["SystemAddress"], entry["StationFaction"]["Name"])
             pilot_state.last_docked_station = station
             # galaxy_state.
