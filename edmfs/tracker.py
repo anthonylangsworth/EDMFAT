@@ -40,6 +40,24 @@ class PilotState:
     def missions(self) -> list:
         return self._missions
 
+class Station:
+    def __init__(self, name:str, system_address:int, controlling_minor_faction:str):
+        self._name:str = name
+        self._system_address:int = system_address
+        self._controlling_minor_faction:str = controlling_minor_faction
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def system_address(self) -> int:
+        return self._system_address
+
+    @property
+    def controlling_minor_faction(self) -> str:
+        return self._controlling_minor_faction
+
 class EventProcessor(ABC):
     @property
     @abstractmethod
@@ -49,8 +67,19 @@ class EventProcessor(ABC):
     @abstractmethod
     def process(self, entry:Dict[str, Any], star_system_state:StarSystemState) -> None:
         pass
+
+class LocationEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "Location"
+
+    def process(self, entry:Dict[str, Any], star_system_state:StarSystemState) -> None:
+        station:Station = None
+        if(entry.get("StationName", None) != None):
+            station = Station(entry["StationName"], entry["SystemAddress"], entry["StationFaction"]["Name"])
+
     
-# Eventually, move this to an IoC setup
+# TODO: move this to an IoC setup
 _eventProcessors:Dict[str, EventProcessor] = {
     "location": None,
     "docked": None
@@ -75,8 +104,8 @@ class Tracker:
         return self._galaxy_state
 
     def on_entry(self, entry:Dict[str, Any]):
-        eventProcessor:EventProcessor = _eventProcessors.get(entry["event"], self._pilot_state, self._galaxy_state)
+        eventProcessor:EventProcessor = _eventProcessors.get(entry["event"], None)
         if eventProcessor != None:
-            eventProcessor.process(entry)
+            eventProcessor.process(entry, self._pilot_state, self._galaxy_state)
         return None
 
