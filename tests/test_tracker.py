@@ -1,7 +1,7 @@
 import pytest
 import copy
 
-from edmfs.state import StarSystem, PilotState, GalaxyState, Station
+from edmfs.state import PilotState, GalaxyState, Station
 from edmfs.tracker import Tracker
     
 def test_tracker_init():
