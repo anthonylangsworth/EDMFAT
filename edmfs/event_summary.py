@@ -14,7 +14,7 @@ class EventSummary():
 class RedeemVoucherEventSummary(EventSummary):
     def __init__(self, system_name:str, supports:bool, voucher_type:str, amount:int):
         super(RedeemVoucherEventSummary, self).__init__(system_name, supports)
-        self._voucher_type:str = type
+        self._voucher_type:str = voucher_type
         self._amount:int = amount
     
     @property

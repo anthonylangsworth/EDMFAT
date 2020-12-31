@@ -28,8 +28,7 @@ class Tracker:
     def galaxy_state(self) -> GalaxyState:
         return self._galaxy_state
 
-    def on_event(self, entry:Dict[str, Any]):
+    def on_event(self, entry:Dict[str, Any]) -> None:
         eventProcessor:EventProcessor = _eventProcessors.get(entry["event"], None)
         if eventProcessor != None:
             eventProcessor.process(entry, self.minor_faction, self.pilot_state, self.galaxy_state)
-        return None
