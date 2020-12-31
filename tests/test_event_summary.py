@@ -1,4 +1,4 @@
-from edmfs.event_summary import RedeemVoucherEventSummary
+from edmfs.event_summarizing import RedeemVoucherEventSummary
 
 def test_redeem_voucher_event_summary_init():
     SYSTEM_NAME:str = "HR 1597"

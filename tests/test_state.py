@@ -1,4 +1,5 @@
 import pytest
+
 from edmfs.state import StarSystemState, PilotState, Station
 
 def test_StarSystemState_init():

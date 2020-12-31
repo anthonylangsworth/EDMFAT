@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, PilotState, GalaxyState
-from .event_summary import RedeemVoucherEventSummary
+from .event_summarizing import RedeemVoucherEventSummary
 
 class EventProcessor(ABC):
     @property
