@@ -1,6 +1,6 @@
 import pytest
 
-from edmfs.state import StarSystemState, PilotState, Station
+from edmfs.state import StarSystemState, PilotState, Station, GalaxyState
 
 def test_StarSystemState_init():
     SYSTEM_NAME = "Deneb"
@@ -24,3 +24,7 @@ def test_Station_init():
     assert(station.name == NAME)
     assert(station.system_address == SYSTEM_ADDRESS)
     assert(station.controlling_minor_faction == CONTROLLING_MINOR_FACTION)
+
+def test_GalaxyState_init():
+    galaxy_state = GalaxyState()
+    assert(galaxy_state.systems == [])
