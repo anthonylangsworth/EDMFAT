@@ -1,6 +1,6 @@
 from typing import Dict
 
-class StarSystemState:
+class StarSystem:
     def __init__(self, name:str, address:int, minor_factions:tuple):
         self._name = name
         self._address = address
@@ -45,7 +45,7 @@ class Station:
 
 class GalaxyState:
     def __init__(self):
-        self._systems:Dict[int, StarSystemState] = {}
+        self._systems:Dict[int, StarSystem] = {}
 
     @property
     def systems(self) -> list:

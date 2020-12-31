@@ -37,7 +37,8 @@ class RedeemVoucherEventProcessor(EventProcessor):
         if(event["Type"] == "CombatBond"):
             if(event["Faction"] == minor_faction):
                 result.append(RedeemVoucherEventSummary("", True, event["Type"], event["Amount"]))
-            # elif # TODO: Handle anti-minor faction work
+            # elif(minor_faction in galaxy_state.systems[pilot_state.last_docked_station.system_address].minor_factions):
+            #    result.append(RedeemVoucherEventSummary("", False, event["Type"], event["Amount"]))
         elif(event["Type"] == "scannable"):
             if(pilot_state.last_docked_station.controlling_minor_faction == minor_faction):
                 result.append(RedeemVoucherEventSummary("", True, event["Type"], event["Amount"]))
