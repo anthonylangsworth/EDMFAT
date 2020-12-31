@@ -2,7 +2,7 @@ import pytest
 
 from edmfs.state import StarSystemState, PilotState, Station
 from edmfs.tracker import Tracker
-
+    
 def test_tracker_init():
     MINOR_FACTION = "EDA Kunti League"
     tracker:Tracker = Tracker(MINOR_FACTION)

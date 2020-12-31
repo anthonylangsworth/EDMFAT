@@ -32,3 +32,4 @@ class Tracker:
         eventProcessor:EventProcessor = _eventProcessors.get(entry["event"], None)
         if eventProcessor != None:
             eventProcessor.process(entry, self.minor_faction, self.pilot_state, self.galaxy_state)
+        #TODO: Store return value then summarize using EventSummarizers

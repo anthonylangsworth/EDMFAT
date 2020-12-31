@@ -51,6 +51,12 @@ class GalaxyState:
     def systems(self) -> list:
         return self._systems
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, GalaxyState):
+            return NotImplemented
+
+        return self._systems == other._systems
+
 class PilotState:
     def __init__(self):
         self._last_docked_station:Station = None
@@ -67,4 +73,12 @@ class PilotState:
     @property
     def missions(self) -> list:
         return self._missions
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, PilotState):
+            return NotImplemented
+
+        return self._last_docked_station == other._last_docked_station \
+            and self._missions == other._missions
+                
 

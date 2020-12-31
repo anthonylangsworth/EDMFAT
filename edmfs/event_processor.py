@@ -34,7 +34,9 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         result:list = []
-        result.append(RedeemVoucherEventSummary("", True, event["Type"], x["Amount"]) for x in event["Factions"] if x.name == minor_faction)
+        result.extend([RedeemVoucherEventSummary("", True, event["Type"], x["Amount"]) for x in event["Factions"] if x["Faction"] == minor_faction])
+        # TODO: Add Anti-faction summary entries
+        # TODO: Remember fleet carriers have a faction "" which should not count against the minor faction
         # if(pilot_state.last_docked_station.system_address):
         #     result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name != minor_faction)
         return result
