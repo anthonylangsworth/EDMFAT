@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, PilotState, GalaxyState
-from .event_processing import *
+from .event_processors import *
 
 # TODO: move this to an IoC setup
 _eventProcessors:Dict[str, EventProcessor] = {

@@ -1,9 +1,9 @@
 import pytest
 from typing import Dict, Any
 
-from edmfs.event_processing import LocationEventProcessor, RedeemVoucherEventProcessor
+from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station
-from edmfs.event_summarizing import RedeemVoucherEventSummary
+from edmfs.event_summarizers import RedeemVoucherEventSummary
 
 def test_location_event_processor_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
