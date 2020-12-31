@@ -27,4 +27,4 @@ def test_Station_init():
 
 def test_GalaxyState_init():
     galaxy_state = GalaxyState()
-    assert(galaxy_state.systems == [])
+    assert(galaxy_state.systems == {})

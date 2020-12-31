@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, PilotState, GalaxyState
-from .event_summarizers import RedeemVoucherEventSummary
+from .event_summaries import RedeemVoucherEventSummary
 
 class EventProcessor(ABC):
     @property
@@ -34,10 +34,19 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         result:list = []
-        result.extend([RedeemVoucherEventSummary("", True, event["Type"], x["Amount"]) for x in event["Factions"] if x["Faction"] == minor_faction])
-        # TODO: Add Anti-faction summary entries
-        # TODO: Remember fleet carriers have a faction "" which should not count against the minor faction
-        # if(pilot_state.last_docked_station.system_address):
-        #     result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name != minor_faction)
+        if(event["Type"] == "CombatBond"):
+            if(event["Faction"] == minor_faction):
+                result.append(RedeemVoucherEventSummary("", True, event["Type"], event["Amount"]))
+            # elif # TODO: Handle anti-minor faction work
+        elif(event["Type"] == "scannable"):
+            if(pilot_state.last_docked_station.controlling_minor_faction == minor_faction):
+                result.append(RedeemVoucherEventSummary("", True, event["Type"], event["Amount"]))
+            # elif # TODO: Handle anti-minor faction work
+        elif(event["Type"] == "bounty"):
+            result.extend([RedeemVoucherEventSummary("", True, event["Type"], x["Amount"]) for x in event["Factions"] if x["Faction"] == minor_faction])
+            # elif # TODO: Handle anti-minor faction work  
+            # TODO: Remember fleet carriers have a faction "" which should not count against the minor faction
+            # if(pilot_state.last_docked_station.system_address):
+            #     result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name != minor_faction)
         return result
     

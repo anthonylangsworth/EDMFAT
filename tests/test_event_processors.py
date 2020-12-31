@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station
-from edmfs.event_summarizers import RedeemVoucherEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary
 
 def test_location_event_processor_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
@@ -67,10 +67,22 @@ def test_redeem_voucher_event_processor_init():
     
 @pytest.mark.parametrize(
     "minor_faction, redeem_voucher_event, expected_results",
-    [
+    [      
         ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, []),
         ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, []),
-        ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, [ RedeemVoucherEventSummary("", True, "bounty", 42350)])
+        ("CPD-59 314 Imperial Society", { "timestamp":"2020-10-15T14:45:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":1779467, "Factions":[ { "Faction":"CPD-59 314 Imperial Society", "Amount":1779467 } ], "BrokerPercentage":25.000000 }, [ RedeemVoucherEventSummary("", True, "bounty", 1779467)]),
+        ("The Fuel Rats Mischief", { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, [ RedeemVoucherEventSummary("", True, "bounty", 42350)]),
+        ("The Fuel Rats Mischief", { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, []),
+        ("Rabh Empire Pact", { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, [ RedeemVoucherEventSummary("", True, "bounty", 385660)]),
+
+        ("EDA Kunti League", { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, [ RedeemVoucherEventSummary("", True, "bounty", 1622105)]),
+        ("EDA Kunti League", { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, []),
+        ("EDA Kunti League", { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, []),
+        ("HR 1597 & Co", { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, [ RedeemVoucherEventSummary("", True, "bounty", 1127126)]),
+
+        ("The Fuel Rats Mischief", { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, [])
+
+        #("The Fuel Rats Mischief", { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, []),
     ])
 def test_redeem_voucher_event_processor_single(minor_faction:str, redeem_voucher_event:Dict[str, Any], expected_results:list):
     redeem_voucher_event_processor:RedeemVoucherEventProcessor = RedeemVoucherEventProcessor()
@@ -80,3 +92,4 @@ def test_redeem_voucher_event_processor_single(minor_faction:str, redeem_voucher
     assert(results == expected_results)
     assert(pilot_state == PilotState())
     assert(galaxy_state == GalaxyState())
+
