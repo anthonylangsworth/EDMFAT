@@ -51,3 +51,9 @@ class RedeemVoucherEventProcessor(EventProcessor):
             #     result.append({"Type": entry[""], "Supports": True, "Amount":x["Amount"] } for x in entry["Factions"] if x.name != minor_faction)
         return result
     
+# Module non-public
+# TODO: move this to an IoC setup
+_eventProcessors:Dict[str, EventProcessor] = {
+    "Location": LocationEventProcessor(),
+    "RedeemVoucher": RedeemVoucherEventProcessor()
+}

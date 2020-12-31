@@ -2,13 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, PilotState, GalaxyState
-from .event_processors import *
-
-# TODO: move this to an IoC setup
-_eventProcessors:Dict[str, EventProcessor] = {
-    "Location": LocationEventProcessor(),
-    "RedeemVoucher": RedeemVoucherEventProcessor()
-}
+from .event_processors import EventProcessor, _eventProcessors
 
 class Tracker:
     def __init__(self, minor_faction:str):
