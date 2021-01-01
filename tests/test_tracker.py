@@ -19,8 +19,13 @@ def test_tracker_init():
         (
             "HR 1597 & Co", 
             "Journal.201019220908.01.log", 
-            ("RedeemVoucherEventSummary('unknown', True, 'bounty', 233160)\n"
-            "RedeemVoucherEventSummary('unknown', True, 'bounty', 12568414)")
+            ("RedeemVoucherEventSummary('HR 1597', True, 'bounty', 233160)\n"
+            "RedeemVoucherEventSummary('HR 1597', False, 'bounty', 65952)\n"
+            "RedeemVoucherEventSummary('HR 1597', False, 'bounty', 550530)\n"
+            "RedeemVoucherEventSummary('HR 1597', False, 'bounty', 422406)\n"
+            "RedeemVoucherEventSummary('HR 1597', False, 'bounty', 814018)\n"         
+            "RedeemVoucherEventSummary('HR 1597', True, 'bounty', 12568414)\n"
+            "RedeemVoucherEventSummary('HR 1597', False, 'bounty', 63321)")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):

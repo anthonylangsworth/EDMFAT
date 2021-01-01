@@ -1,10 +1,10 @@
 from typing import Dict
 
 class StarSystem:
-    def __init__(self, name:str, address:int, minor_factions:tuple):
+    def __init__(self, name:str, address:int, minor_factions:iter):
         self._name = name
         self._address = address
-        self._minor_factions = minor_factions
+        self._minor_factions = set(minor_factions)
 
     @property
     def name(self) -> str:
@@ -15,11 +15,19 @@ class StarSystem:
         return self._address
 
     @property
-    def minor_factions(self) -> str:
-        return self._minor_factions
+    def minor_factions(self) -> tuple:
+        return tuple(self._minor_factions) # Force read-only.
 
     def __repr__(self) -> str:
-        return f"Station('{self._name}', {self._address})"
+        return f"StarSystem('{self._name}', {self._address}, {self._minor_factions})"
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, StarSystem):
+            return NotImplemented
+
+        return self._name == other._name \
+            and self._address == other._address \
+            and set(self._minor_factions) == set(other._minor_factions)
 
 class Station:
     def __init__(self, name:str, system_address:int, controlling_minor_faction:str):
@@ -44,6 +52,7 @@ class Station:
             return NotImplemented
 
         return self._name == other._name \
+            and self._system_address == other._system_address \
             and self._controlling_minor_faction == other._controlling_minor_faction
 
     def __repr__(self) -> str:
@@ -86,5 +95,3 @@ class PilotState:
 
         return self._last_docked_station == other._last_docked_station \
             and self._missions == other._missions
-                
-

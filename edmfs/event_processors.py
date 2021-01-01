@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 
-from .state import Station, PilotState, GalaxyState
+from .state import Station, StarSystem,PilotState, GalaxyState
 from .event_summaries import RedeemVoucherEventSummary
 
 class EventProcessor(ABC):
@@ -14,18 +14,20 @@ class EventProcessor(ABC):
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         pass
 
+# Also used for FSDJump. They have the same
 class LocationEventProcessor(EventProcessor):
     @property
     def eventName(self) -> str:
         return "Location"
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        station:Station = None
-        if event.get("Docked"):
-            station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
-            pilot_state.last_docked_station = station
-            # galaxy_state. # TODO: Add station to Galaxy State
-            return None
+        if "Factions" in event.keys():
+            galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
+
+        if "Docked" in event.keys() and event["Docked"]:
+            pilot_state.last_docked_station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
+
+        return []
 
 class DockedEventProcessor(EventProcessor):
     @property
@@ -35,8 +37,7 @@ class DockedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
         pilot_state.last_docked_station = station
-        # galaxy_state. # TODO: Add station to Galaxy State
-        return None
+        return []
 
 class RedeemVoucherEventProcessor(EventProcessor):
     @property
@@ -75,6 +76,10 @@ class RedeemVoucherEventProcessor(EventProcessor):
 # TODO: move this to an IoC setup
 _eventProcessors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
+    "FSDJump": LocationEventProcessor(),
     "Docked": DockedEventProcessor(),
     "RedeemVoucher": RedeemVoucherEventProcessor()
 }
+
+#_this = sys.modules[__name__]
+
