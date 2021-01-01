@@ -2,11 +2,11 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor
+from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary
 
-def test_location_event_processor_init():
+def test_location_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
     assert(location_event_procesor.eventName == "Location")
 
@@ -62,7 +62,7 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
         assert(not location_event_processor.process(location_event, MINOR_FACTION, pilot_state, galaxy_state))
     assert(pilot_state.last_docked_station == expected_station)    
 
-def test_redeem_voucher_event_processor_init():
+def test_redeem_voucher_init():
     redeem_voucher_event_procesor:RedeemVoucherEventProcessor = RedeemVoucherEventProcessor()
     assert(redeem_voucher_event_procesor.eventName == "RedeemVoucher")
     
@@ -199,7 +199,7 @@ def test_redeem_voucher_event_processor_init():
             []
         ),        
     ])
-def test_redeem_voucher_event_processor_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
+def test_redeem_voucher_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
@@ -213,3 +213,27 @@ def test_redeem_voucher_event_processor_single(minor_faction:str, star_system:St
     assert(results == expected_results)
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
+
+def test_docked_init():
+    docked_event_processor = DockedEventProcessor()
+    assert(docked_event_processor.eventName == "Docked")
+
+@pytest.mark.parametrize(
+    "docked_event, expected_station",
+    [     
+        (
+            { "timestamp":"2020-10-19T11:16:16Z", "event":"Docked", "StationName":"Jean City", "StationType":"Outpost", "StarSystem":"HR 1597", "SystemAddress":869487593835, "MarketID":3223702528, "StationFaction":{ "Name":"HR 1597 & Co" }, "StationGovernment":"$government_Corporate;", "StationGovernment_Localised":"Corporate", "StationAllegiance":"Empire", "StationServices":[ "dock", "autodock", "commodities", "contacts", "exploration", "missions", "rearm", "refuel", "repair", "tuning", "engineer", "missionsgenerated", "flightcontroller", "stationoperations", "powerplay", "searchrescue", "stationMenu" ], "StationEconomy":"$economy_Refinery;", "StationEconomy_Localised":"Refinery", "StationEconomies":[ { "Name":"$economy_Refinery;", "Name_Localised":"Refinery", "Proportion":0.810000 }, { "Name":"$economy_Extraction;", "Name_Localised":"Extraction", "Proportion":0.190000 } ], "DistFromStarLS":170.514980 }, 
+            Station("Jean City", 869487593835, "HR 1597 & Co") 
+        ),
+        (
+            { "timestamp":"2020-10-19T11:27:21Z", "event":"Docked", "StationName":"Anderson Hub", "StationType":"Outpost", "StarSystem":"Kokobii", "SystemAddress":3657399472850, "MarketID":3223765504, "StationFaction":{ "Name":"San Davokje Transport Company", "FactionState":"War" }, "StationGovernment":"$government_Corporate;", "StationGovernment_Localised":"Corporate", "StationAllegiance":"Empire", "StationServices":[ "dock", "autodock", "commodities", "contacts", "exploration", "missions", "outfitting", "crewlounge", "rearm", "refuel", "repair", "tuning", "engineer", "missionsgenerated", "flightcontroller", "stationoperations", "powerplay", "searchrescue", "stationMenu" ], "StationEconomy":"$economy_HighTech;", "StationEconomy_Localised":"High Tech", "StationEconomies":[ { "Name":"$economy_HighTech;", "Name_Localised":"High Tech", "Proportion":0.510000 }, { "Name":"$economy_Refinery;", "Name_Localised":"Refinery", "Proportion":0.490000 } ], "DistFromStarLS":2990.366866 },
+            Station("Anderson Hub", 3657399472850, "San Davokje Transport Company") 
+        )
+    ])
+def test_docked_single(docked_event:Dict[str, Any], expected_station:Station):
+    MINOR_FACTION = "EDA Kunti League"
+    docked_event_processor = DockedEventProcessor()
+    pilot_state:PilotState = PilotState()
+    galaxy_state:GalaxyState = GalaxyState()
+    assert(not docked_event_processor.process(docked_event, MINOR_FACTION, pilot_state, galaxy_state))
+    assert(pilot_state.last_docked_station == expected_station)

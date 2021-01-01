@@ -27,6 +27,17 @@ class LocationEventProcessor(EventProcessor):
             # galaxy_state. # TODO: Add station to Galaxy State
             return None
 
+class DockedEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "Docked"
+
+    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
+        pilot_state.last_docked_station = station
+        # galaxy_state. # TODO: Add station to Galaxy State
+        return None
+
 class RedeemVoucherEventProcessor(EventProcessor):
     @property
     def eventName(self) -> str:
@@ -64,5 +75,6 @@ class RedeemVoucherEventProcessor(EventProcessor):
 # TODO: move this to an IoC setup
 _eventProcessors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
+    "Docked": DockedEventProcessor(),
     "RedeemVoucher": RedeemVoucherEventProcessor()
 }

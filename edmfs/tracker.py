@@ -28,12 +28,12 @@ class Tracker:
     def activity(self) -> str:
         return self._activity
 
-    def on_event(self, entry:Dict[str, Any]) -> None:
-        eventProcessor:EventProcessor = _eventProcessors.get(entry["event"], None)
+    def on_event(self, event:Dict[str, Any]) -> None:
+        eventProcessor:EventProcessor = _eventProcessors.get(event["event"], None)
         if eventProcessor != None:
-            event_summaries = eventProcessor.process(entry, self.minor_faction, self.pilot_state, self.galaxy_state)
-            if event_summaries:
-                self._event_summaries.extend(event_summaries)
+            new_event_summaries = eventProcessor.process(event, self.minor_faction, self.pilot_state, self.galaxy_state)
+            if new_event_summaries:
+                self._event_summaries.extend(new_event_summaries)
                 # TODO: Aggregate by system, sum similar entries, etc
                 self._activity = "\n".join(str(event_summary) for event_summary in self._event_summaries)
         
