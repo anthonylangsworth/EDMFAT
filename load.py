@@ -5,13 +5,14 @@ import tkinter as tk
 import myNotebook
 from config import config, appname
 import logging
-import edmfs.tracker
+import edmfs
 
 this = sys.modules[__name__]
 this.plugin_name:str = "Minor Faction Support"
 this.minor_faction:tk.StringVar = tk.StringVar()
 this.activity_summary:tk.StringVar = tk.StringVar()
 this.current_station:Dict = ""
+this.tracker = edmfs.Tracker(this.plugin_name)
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
@@ -51,10 +52,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
     if not is_beta:
-        if entry["event"] == "Docked":
-            on_docked_entry(entry)
-        elif entry["event"] == "RedeemVoucher":
-            on_redeem_voucher_entry(entry, system)
+        this.tracker.on_event(entry)
+        this.activity_summary.set(this.tracker.activity)
 
 def on_docked_entry(entry: Dict[str, Any]) -> None:
     this.current_station["Name"] = entry["StationName"]
