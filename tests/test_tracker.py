@@ -25,6 +25,38 @@ def test_tracker_init():
             "HR 1597 - PRO\n"
             "12,801,574 CR of Bounty Vouchers\n"
             "\n")
+        ),
+        (
+            "Maxwell Corp. of Eta-1 Pictoris", 
+            "Journal.200913212207.01.log", 
+            ("Erh Lohra - ANTI\n"
+            "106,428 CR of Bounty Vouchers\n"
+            "\n"
+            "Eta-1 Pictoris - ANTI\n"
+            "12,150 CR of Bounty Vouchers\n"
+            "\n"
+            "Eta-1 Pictoris - PRO\n"
+            "1,882,292 CR of Bounty Vouchers\n"
+            "\n"
+            "Shambogi - ANTI\n"
+            "1,105,608 CR of Bounty Vouchers\n"
+            "\n"
+            "Verner - ANTI\n"
+            "74,922 CR of Bounty Vouchers\n"
+            "\n")
+        ),
+        (
+            "HR 1597 & Co", 
+            "Journal.201018213100.01.log", 
+            ("HR 1597 - ANTI\n"
+            "1,662,746 CR of Bounty Vouchers\n"
+            "\n"
+            "HR 1597 - PRO\n"
+            "1,127,126 CR of Combat Bonds\n"
+            "\n"
+            "Kanates - ANTI\n"
+            "436,046 CR of Bounty Vouchers\n"
+            "\n")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
