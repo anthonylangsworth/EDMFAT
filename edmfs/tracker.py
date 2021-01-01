@@ -36,7 +36,7 @@ class Tracker:
     def on_event(self, event:Dict[str, Any]) -> None:
         new_event_summaries = self._process_event(event)
         if new_event_summaries:
-            self._event_summaries.append(new_event_summaries)
+            self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries)
 
     def _process_event(self, event:Dict[str, Any]) -> list:
@@ -46,13 +46,13 @@ class Tracker:
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""
-        sorted_event_summaries = sorted(event_summaries, key=lambda x: x.system_name)
-        for system_name, event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: x.system_name):
-            result += system_name + "\n"
+        sorted_event_summaries = sorted(sorted(event_summaries, key=lambda x: x.supports), key=lambda x: x.system_name)
+        for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.supports)):
+            result += f"{system_name} - {'PRO' if supports else 'ANTI'}\n"
             for type_name, system_event_summaries_by_system_and_type in groupby(event_summaries_by_system, key=lambda x: type(x).__name__):
                 event_formatter = self._event_formatters.get(type_name, None)
                 if event_formatter:
                      result += event_formatter.process(system_event_summaries_by_system_and_type)
-            result += "\n\n"
+            result += "\n"
         return result
         
