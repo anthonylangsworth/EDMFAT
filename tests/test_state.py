@@ -5,7 +5,7 @@ from edmfs.state import StarSystem, PilotState, Station, GalaxyState
 def test_StarSystem_init():
     SYSTEM_NAME = "Deneb"
     ADDRESS = 89562036
-    MINOR_FACTIONS = ("EDA Kunti League", "Kunti Dragons")
+    MINOR_FACTIONS = set(["EDA Kunti League", "Kunti Dragons"])
     star_system_state:StarSystem = StarSystem(SYSTEM_NAME, ADDRESS, MINOR_FACTIONS)
     assert(star_system_state.name == SYSTEM_NAME)
     assert(star_system_state.address == ADDRESS)

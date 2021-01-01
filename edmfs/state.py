@@ -15,8 +15,8 @@ class StarSystem:
         return self._address
 
     @property
-    def minor_factions(self) -> tuple:
-        return tuple(self._minor_factions) # Force read-only.
+    def minor_factions(self) -> set:
+        return self._minor_factions
 
     def __repr__(self) -> str:
         return f"StarSystem('{self._name}', {self._address}, {self._minor_factions})"
@@ -30,7 +30,7 @@ class StarSystem:
             and set(self._minor_factions) == set(other._minor_factions)
 
 class Station:
-    def __init__(self, name:str, system_address:int, controlling_minor_faction:str):
+    def __init__(self, name:str, system_address:int, controlling_minor_faction:set):
         self._name:str = name
         self._system_address:int = system_address
         self._controlling_minor_faction:str = controlling_minor_faction

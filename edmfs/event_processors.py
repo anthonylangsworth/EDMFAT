@@ -8,6 +8,7 @@ class EventProcessor(ABC):
     @property
     @abstractmethod
     def eventName(self) -> str:
+        #TODO: Make this a list, in case one event processor handles multiple event types
         pass
 
     @abstractmethod
@@ -74,7 +75,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
     
 # Module non-public
 # TODO: move this to an IoC setup
-_eventProcessors:Dict[str, EventProcessor] = {
+_default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
     "FSDJump": LocationEventProcessor(),
     "Docked": DockedEventProcessor(),
