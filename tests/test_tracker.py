@@ -7,7 +7,7 @@ from edmfs.tracker import Tracker
     
 def test_tracker_init():
     MINOR_FACTION = "EDA Kunti League"
-    tracker:Tracker = Tracker(MINOR_FACTION)
+    tracker = Tracker(MINOR_FACTION)
     assert(tracker.minor_faction == MINOR_FACTION)
     assert(tracker.pilot_state == PilotState())
     assert(tracker.galaxy_state == GalaxyState())
@@ -24,9 +24,8 @@ def test_tracker_init():
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
-    events = []
     with open("tests/" + journal_file_name) as journal_file:
-        events.extend([json.loads(line) for line in journal_file.readlines()])
+        events = [json.loads(line) for line in journal_file.readlines()]
 
     tracker = Tracker(minor_faction)
     for event in events:
