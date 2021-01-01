@@ -44,4 +44,4 @@ class RedeemVoucherEventSummary(EventSummary):
             and self._supports == other._supports        
 
     def __str__(self) -> str:
-        return super(RedeemVoucherEventSummary, self).__str__ + f" {self._voucher_type} {self._amount}" 
+        return super(RedeemVoucherEventSummary, self).__str__ + f" {self._amount} CR of {self._voucher_type}" 
