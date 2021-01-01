@@ -72,7 +72,7 @@ def test_redeem_voucher_event_processor_init():
         # Bounty 
         (
             "The Fuel Rats Mischief", 
-            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief")), 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, 
             [ RedeemVoucherEventSummary("Fuelum", True, "bounty", 42350)]
@@ -86,7 +86,7 @@ def test_redeem_voucher_event_processor_init():
         ),
         (
             "The Fuel Rats Mischief", 
-            StarSystem("Findja", 1000, ("The Fuel Rats Mischief")), 
+            StarSystem("Findja", 1000, ("The Fuel Rats Mischief",)), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, 
             []
@@ -129,25 +129,25 @@ def test_redeem_voucher_event_processor_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "EDA Kunti League")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, 
-            [ RedeemVoucherEventSummary("", True, "bounty", 1622105)]
+            [RedeemVoucherEventSummary("", True, "bounty", 1622105)]
         ),
         (
             "EDA Kunti League", 
             StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
-            []
+            [RedeemVoucherEventSummary("", False, "bounty", 1177365)]
         ),
         (
             "EDA Kunti League", 
-            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
             []
         ),
         (
             "EDA Kunti League", 
-            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 }, 
             []
@@ -163,14 +163,34 @@ def test_redeem_voucher_event_processor_init():
         # Codex (not relevant for BGS)
         (
             "The Fuel Rats Mischief", 
-            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, 
             []
-        )
+        ),
 
         # Scannable (Cartography)
-        #("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, []),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+            [RedeemVoucherEventSummary("Fuelum", True, "scannable", 206078)]
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
+            Station("", 1000, "The Dark Wheel"), 
+            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+            []
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "The Dark Wheel")), 
+            Station("", 1000, "The Dark Wheel"), 
+            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+            [RedeemVoucherEventSummary("Fuelum", False, "scannable", 206078)]
+        )                 
     ])
 def test_redeem_voucher_event_processor_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()

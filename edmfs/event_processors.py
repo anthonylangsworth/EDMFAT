@@ -21,7 +21,7 @@ class LocationEventProcessor(EventProcessor):
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         station:Station = None
-        if(event.get("Docked")):
+        if event.get("Docked"):
             station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
             pilot_state.last_docked_station = station
             # galaxy_state. # TODO: Add station to Galaxy State
@@ -33,24 +33,31 @@ class RedeemVoucherEventProcessor(EventProcessor):
         return "RedeemVoucher"
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        result:list = []        
+        result = []        
         try:
-            system_name = galaxy_state.systems[pilot_state.last_docked_station.system_address].name
+            star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
+            system_name = star_system.name
+            system_minor_factions = star_system.minor_factions
         except:
             system_name = "unknown"
+            system_minor_factions = []
 
-        if(event["Type"] == "bounty"):
-            result.extend([RedeemVoucherEventSummary(system_name, True, event["Type"], x["Amount"]) for x in event["Factions"] if x["Faction"] == minor_faction])
-            # Fleet carriers have a faction "" which should not count against the minor faction
-            result.extend([RedeemVoucherEventSummary(system_name, False, event["Type"], x["Amount"]) for x in event["Factions"] if x["Faction"] != minor_faction and x["Faction"] != ""])
-        elif(event["Type"] == "CombatBond"):
-            if(event["Faction"] == minor_faction):
+        if event["Type"] == "bounty":
+            for x in event["Factions"]:
+                if x["Faction"] == minor_faction:
+                    result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], x["Amount"]))
+                elif x["Faction"] in system_minor_factions:
+                    result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], x["Amount"]))
+        elif event["Type"] == "CombatBond":
+            if event["Faction"] == minor_faction:
                 result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
-            elif(minor_faction in galaxy_state.systems[pilot_state.last_docked_station.system_address].minor_factions):
+            elif event["Faction"] in system_minor_factions:
                 result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
-        elif(event["Type"] == "scannable"):
-            if(pilot_state.last_docked_station.controlling_minor_faction == minor_faction):
+        elif event["Type"] == "scannable":
+            if pilot_state.last_docked_station.controlling_minor_faction == minor_faction:
                 result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
+            elif pilot_state.last_docked_station.controlling_minor_faction in system_minor_factions:
+                result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
         return result
     
 # Module non-public
