@@ -12,14 +12,14 @@ this.plugin_name:str = "Minor Faction Support"
 this.minor_faction:tk.StringVar = tk.StringVar()
 this.activity_summary:tk.StringVar = tk.StringVar()
 this.current_station:Dict = ""
-this.tracker = edmfs.Tracker(this.plugin_name)
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    this.minor_faction.set("EDA Kunti League")
+    this.tracker = edmfs.Tracker("EDA Kunti League")
+    this.minor_faction.set(this.tracker.minor_faction)
     clear_activity_summary()
     return this.plugin_name
 
@@ -55,21 +55,12 @@ def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Opti
         this.tracker.on_event(entry)
         this.activity_summary.set(this.tracker.activity)
 
-def on_docked_entry(entry: Dict[str, Any]) -> None:
-    this.current_station["Name"] = entry["StationName"]
-    this.current_station["StationFaction"] = entry["StationFaction"]["Name"]
-    return None
-
-def on_redeem_voucher_entry(entry: Dict[str, Any], system:Optional[str]) -> None:
-    # TODO
-    return None
-
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
 def copy_activity_to_clipboard() -> None:
     root = tk.Tk()
     root.withdraw()
     root.clipboard_clear()
-    root.clipboard_append(this.activity_summary.string)
+    root.clipboard_append(this.tracker.activity)
     root.update()
     root.destroy()
 

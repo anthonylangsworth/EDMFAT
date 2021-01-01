@@ -1,7 +1,10 @@
 # Thoughts and TODOs
 
-1. Shift business logic to module for easy testing and sharing.
-2. Continue test framework.
+TODO:
+1. Describe (Unknown) error: Starting EDMC while docked at a station.
+2. Test selling bonds, bounties at a interstellar factor or carrier.
+3. Remove trailing "\n" from activity to prevent window growing too tall.
+4. Rename EDMFAT (Elite Dangerous Minor Faction Activity Tracker)?
 
 Does not do:
 1. Handle state-specific requirements. E.g. handing in combat bonds to factions in Election or War state will not affect influence.
