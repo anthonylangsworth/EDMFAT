@@ -18,6 +18,9 @@ class EventSummary():
         return self._system_name == other._system_name \
             and self._supports == other._supports
 
+    def __str__(self) -> str:
+        return f"{self._system_name} {'pro' if self._supports else 'anti'}" 
+
 class RedeemVoucherEventSummary(EventSummary):
     def __init__(self, system_name:str, supports:bool, voucher_type:str, amount:int):
         super(RedeemVoucherEventSummary, self).__init__(system_name, supports)
@@ -32,10 +35,13 @@ class RedeemVoucherEventSummary(EventSummary):
     def amount(self) -> int:
         return self._amount
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, RedeemVoucherEventSummary):
             return NotImplemented
 
         return super(RedeemVoucherEventSummary, self).__eq__(other) \
             and self._system_name == other._system_name \
             and self._supports == other._supports        
+
+    def __str__(self) -> str:
+        return super(RedeemVoucherEventSummary, self).__str__ + f" {self._voucher_type} {self._amount}" 

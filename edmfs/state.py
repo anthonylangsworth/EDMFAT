@@ -18,6 +18,9 @@ class StarSystem:
     def minor_factions(self) -> str:
         return self._minor_factions
 
+    def __str__(self) -> str:
+        return f"{self._name} [{self._address}]"
+
 class Station:
     def __init__(self, name:str, system_address:int, controlling_minor_faction:str):
         self._name:str = name
@@ -42,6 +45,9 @@ class Station:
 
         return self._name == other._name \
             and self._controlling_minor_faction == other._controlling_minor_faction
+
+    def __str__(self) -> str:
+        return f"{self._name} [{self._system_address}]"
 
 class GalaxyState:
     def __init__(self):

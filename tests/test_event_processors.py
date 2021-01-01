@@ -68,36 +68,121 @@ def test_redeem_voucher_event_processor_init():
     
 @pytest.mark.parametrize(
     "minor_faction, star_system, last_docked_station, redeem_voucher_event, expected_results",
-    [      
-        ("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, []),
-        ("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, []),
-        ("CPD-59 314 Imperial Society", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-10-15T14:45:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":1779467, "Factions":[ { "Faction":"CPD-59 314 Imperial Society", "Amount":1779467 } ], "BrokerPercentage":25.000000 }, [ RedeemVoucherEventSummary("", True, "bounty", 1779467)]),
-        ("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, [ RedeemVoucherEventSummary("", True, "bounty", 42350)]),
-        ("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, []),
-        ("Rabh Empire Pact", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, [ RedeemVoucherEventSummary("", True, "bounty", 385660)]),
+    [     
+        # Bounty 
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief")), 
+            Station("Station", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, 
+            [ RedeemVoucherEventSummary("Fuelum", True, "bounty", 42350)]
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Findja Empire Assembly")), 
+            Station("Station", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, 
+            [RedeemVoucherEventSummary("Fuelum", False, "bounty", 25490)]
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Findja", 1000, ("The Fuel Rats Mischief")), 
+            Station("Station", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, 
+            []
+        ),
+        (
+            "CPD-59 314 Imperial Society", 
+            StarSystem("CPD-59 314", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
+            Station("Station", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-10-15T14:45:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":1779467, "Factions":[ { "Faction":"CPD-59 314 Imperial Society", "Amount":1779467 } ], "BrokerPercentage":25.000000 }, 
+            [ RedeemVoucherEventSummary("CPD-59 314", True, "bounty", 1779467)]
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Rabh Empire Pact", "Kacomam Empire Group", "Trumuye Emperor's Grace", "EDA Kunti League")), 
+            Station("Station", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
+            [
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 385660),
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 666873),
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 545094),    
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 4326959)    
+            ]
+        ),
+        (
+            "Rabh Empire Pact", 
+            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Rabh Empire Pact", "Kacomam Empire Group", "Trumuye Emperor's Grace", "EDA Kunti League")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
+            [
+                RedeemVoucherEventSummary("Fuelum", True, "bounty", 385660),
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 666873),
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 545094),    
+                RedeemVoucherEventSummary("Fuelum", False, "bounty", 4326959)    
+            ]
+        ),
 
-        ("EDA Kunti League", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, [ RedeemVoucherEventSummary("", True, "bounty", 1622105)]),
-        ("EDA Kunti League", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, []),
-        ("EDA Kunti League", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, []),
-        ("EDA Kunti League", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 }, []),
-        ("HR 1597 & Co", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, [ RedeemVoucherEventSummary("", True, "bounty", 1127126)]),
+        # Combat Bond
+        (
+            "EDA Kunti League", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "EDA Kunti League")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, 
+            [ RedeemVoucherEventSummary("", True, "bounty", 1622105)]
+        ),
+        (
+            "EDA Kunti League", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
+            []
+        ),
+        (
+            "EDA Kunti League", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
+            []
+        ),
+        (
+            "EDA Kunti League", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 }, 
+            []
+        ),
+        (
+            "HR 1597 & Co", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
+            [ RedeemVoucherEventSummary("", True, "bounty", 1127126)]
+        ),
 
-        ("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, [])
+        # Codex (not relevant for BGS)
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief")), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, 
+            []
+        )
 
+        # Scannable (Cartography)
         #("The Fuel Rats Mischief", StarSystem("", 1000, ("The Fuel Rats Mischief")), Station("", 1000, "The Fuel Rats Mischief"), { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, []),
     ])
 def test_redeem_voucher_event_processor_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
-    pilot_state:PilotState = PilotState()
+    pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
-    galaxy_state:GalaxyState = GalaxyState()
+    galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
     expected_pilot_state = copy.copy(pilot_state)
     expected_galaxy_state = copy.copy(galaxy_state)
 
     redeem_voucher_event_processor:RedeemVoucherEventProcessor = RedeemVoucherEventProcessor()
-    results:list = redeem_voucher_event_processor.process(redeem_voucher_event, minor_faction, pilot_state, galaxy_state)
+    results = redeem_voucher_event_processor.process(redeem_voucher_event, minor_faction, pilot_state, galaxy_state)
 
     assert(results == expected_results)
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
-
