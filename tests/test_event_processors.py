@@ -160,15 +160,6 @@ def test_redeem_voucher_event_processor_init():
             [ RedeemVoucherEventSummary("", True, "bounty", 1127126)]
         ),
 
-        # Codex (not relevant for BGS)
-        (
-            "The Fuel Rats Mischief", 
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
-            Station("", 1000, "The Fuel Rats Mischief"), 
-            { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, 
-            []
-        ),
-
         # Scannable (Cartography)
         (
             "The Fuel Rats Mischief", 
@@ -190,7 +181,23 @@ def test_redeem_voucher_event_processor_init():
             Station("", 1000, "The Dark Wheel"), 
             { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
             [RedeemVoucherEventSummary("Fuelum", False, "scannable", 206078)]
-        )                 
+        ),
+
+        # BGS irrelevant types
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, 
+            []
+        ),
+        (
+            "The Fuel Rats Mischief", 
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
+            Station("", 1000, "The Fuel Rats Mischief"), 
+            { "timestamp":"2020-12-27T07:48:49Z", "event":"RedeemVoucher", "Type":"settlement", "Amount":4352, "Faction":"" }, 
+            []
+        ),        
     ])
 def test_redeem_voucher_event_processor_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
