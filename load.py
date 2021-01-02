@@ -52,8 +52,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
     if not is_beta:
-        this.tracker.on_event(entry)
-        this.activity_summary.set(this.tracker.activity)
+        if this.tracker.on_event(entry):
+            this.activity_summary.set(this.tracker.activity)
 
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
 def copy_activity_to_clipboard() -> None:

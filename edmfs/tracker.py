@@ -34,11 +34,14 @@ class Tracker:
     def activity(self) -> str:
         return self._activity
 
-    def on_event(self, event:Dict[str, Any]) -> None:
+    def on_event(self, event:Dict[str, Any]) -> bool:
         new_event_summaries = self._process_event(event)
+        activity_updated = False
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries)
+            activity_updated = True
+        return activity_updated
 
     def _process_event(self, event:Dict[str, Any]) -> list:
         event_processor = self._event_processors.get(event["event"], None)
