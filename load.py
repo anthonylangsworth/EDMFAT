@@ -8,10 +8,10 @@ import logging
 import edmfs
 
 this = sys.modules[__name__]
-this.plugin_name:str = "Minor Faction Support"
-this.minor_faction:tk.StringVar = tk.StringVar()
-this.activity_summary:tk.StringVar = tk.StringVar()
-this.current_station:Dict = ""
+this.plugin_name = "Minor Faction Support"
+this.minor_faction = tk.StringVar()
+this.activity_summaryr = tk.StringVar()
+this.current_station = ""
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')

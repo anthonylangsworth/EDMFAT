@@ -7,7 +7,7 @@ Originally intended to support the "Elite Dangerous AU & NZ" squadron and their 
 # Installation
 
 Requirements:
-1. Elite Dangerous Market Connector (EDMC), installed as per https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup. This plug-in requires version 4.0 or later due to the use of Python 3.
+1. Elite Dangerous Market Connector (EDMC), installed as per https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup. This plug-in requires version 4.0 or later due to the use of Python 3.6.
 2. This plug-in does not support console players. Sorry. This is a current limitation of EDMC.
 
 To install:
