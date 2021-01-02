@@ -11,7 +11,7 @@ class EventFormatter(ABC):
 class RedeemVoucherEventFormatter(EventFormatter):
     def process(self, event_summaries: iter) -> str:
         result = ""
-        for voucher_type, event_summaries_by_type in groupby(event_summaries, key=lambda x: x.voucher_type):
+        for voucher_type, event_summaries_by_type in groupby(sorted(event_summaries, key=lambda x: _redeem_voucher_order.index(x.voucher_type)), key=lambda x: x.voucher_type):
             result += f"{sum(map(lambda es: es.amount, event_summaries_by_type)):,} CR of {_voucher_type_lookup.get(voucher_type, voucher_type)}\n"
         return result
 
@@ -30,3 +30,8 @@ _voucher_type_lookup:Dict[str, str] = {
     "bounty" : "Bounty Vouchers",
     "CombatBond" : "Combat Bonds"
 }
+
+_redeem_voucher_order = (
+    "bounty",
+    "CombatBond"
+)
