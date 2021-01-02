@@ -10,7 +10,7 @@ import edmfs
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Support"
 this.minor_faction = tk.StringVar()
-this.activity_summaryr = tk.StringVar()
+this.activity_summary = tk.StringVar()
 this.current_station = ""
 
 # Setup logging
