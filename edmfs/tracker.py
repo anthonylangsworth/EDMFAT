@@ -5,10 +5,10 @@ from itertools import groupby
 from .state import Station, PilotState, GalaxyState
 from .event_processors import EventProcessor, _default_event_processors
 from .event_formatters import EventFormatter, _default_event_formatters
-from .event_summaries import EventSummary
+from .event_summaries import EventSummary, _default_event_summary_order
 
 class Tracker:
-    def __init__(self, minor_faction:str, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None):
+    def __init__(self, minor_faction:str, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_faction = minor_faction
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState()
@@ -16,6 +16,7 @@ class Tracker:
         self._activity = ""
         self._event_processors = event_processors if event_processors else _default_event_processors
         self._event_formatters = event_formatters if event_formatters else _default_event_formatters
+        self._event_summary_order = tuple(event_summary_order if event_summary_order else _default_event_summary_order)
     
     @property
     def minor_faction(self) -> str:
@@ -46,7 +47,7 @@ class Tracker:
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""
-        sorted_event_summaries = sorted(sorted(event_summaries, key=lambda x: x.supports), key=lambda x: x.system_name)
+        sorted_event_summaries = sorted(sorted(sorted(event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: x.supports), key=lambda x: x.system_name)
         for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.supports)):
             result += f"{system_name} - {'PRO' if supports else 'ANTI'}\n"
             for type_name, system_event_summaries_by_system_and_type in groupby(event_summaries_by_system, key=lambda x: type(x).__name__):

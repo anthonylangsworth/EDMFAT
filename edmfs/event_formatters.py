@@ -15,13 +15,18 @@ class RedeemVoucherEventFormatter(EventFormatter):
             result += f"{sum(map(lambda es: es.amount, event_summaries_by_type)):,} CR of {_voucher_type_lookup.get(voucher_type, voucher_type)}\n"
         return result
 
+class SellExplorationDataEventFormatter(EventFormatter):
+    def process(self, event_summaries: iter) -> str:
+        return f"{sum(map(lambda es: es.amount, event_summaries)):,} CR of Cartography Data\n"
+
 # TODO: Move to an IoC setup
 _default_event_formatters:Dict[str, EventFormatter] = {
-    "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter()
+    "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
+    "SellExplorationDataEventSummary" : SellExplorationDataEventFormatter()
 }
 
 _voucher_type_lookup:Dict[str, str] = {
-    "scannable" : "Cartography Data",
+    #"scannable" : "Scan Data",
     "bounty" : "Bounty Vouchers",
     "CombatBond" : "Combat Bonds"
 }

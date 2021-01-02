@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem,PilotState, GalaxyState
-from .event_summaries import RedeemVoucherEventSummary
+from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary
 
 class EventProcessor(ABC):
     @property
@@ -15,7 +15,7 @@ class EventProcessor(ABC):
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         pass
 
-# Also used for FSDJump. They have the same
+# Also used for FSDJump. They have the same schema.
 class LocationEventProcessor(EventProcessor):
     @property
     def eventName(self) -> str:
@@ -66,11 +66,36 @@ class RedeemVoucherEventProcessor(EventProcessor):
                 result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
             elif event["Faction"] in system_minor_factions:
                 result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
-        elif event["Type"] == "scannable":
-            if pilot_state.last_docked_station.controlling_minor_faction == minor_faction:
-                result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
-            elif pilot_state.last_docked_station.controlling_minor_faction in system_minor_factions:
-                result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
+        # Not sure whether this is BGS relevant
+        # elif event["Type"] == "scannable":
+        #     if pilot_state.last_docked_station.controlling_minor_faction == minor_faction:
+        #         result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
+        #     elif pilot_state.last_docked_station.controlling_minor_faction in system_minor_factions:
+        #         result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
+        return result
+
+# Also used for MultiSellExplorationData. They have the same schema.
+class SellExplorationDataEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "SellExplorationData"
+
+    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        result = []        
+        try:
+            star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
+            system_name = star_system.name
+            system_minor_factions = star_system.minor_factions
+            controlling_minor_faction = pilot_state.last_docked_station.controlling_minor_faction
+        except:
+            system_name = "unknown"
+            system_minor_factions = []
+            controlling_minor_faction = ""
+
+        if controlling_minor_faction == minor_faction:
+            result.append(SellExplorationDataEventSummary(system_name, True, event["TotalEarnings"]))
+        elif controlling_minor_faction in system_minor_factions:
+            result.append(SellExplorationDataEventSummary(system_name, False, event["TotalEarnings"]))
         return result
     
 # Module non-public
@@ -79,7 +104,9 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
     "FSDJump": LocationEventProcessor(),
     "Docked": DockedEventProcessor(),
-    "RedeemVoucher": RedeemVoucherEventProcessor()
+    "RedeemVoucher": RedeemVoucherEventProcessor(),
+    "SellExplorationData": SellExplorationDataEventProcessor(),
+    "MultiSellExplorationData": SellExplorationDataEventProcessor()
 }
 
 #_this = sys.modules[__name__]

@@ -2,9 +2,9 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor
+from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, StarSystem
-from edmfs.event_summaries import RedeemVoucherEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary
 
 def test_location_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
@@ -155,14 +155,14 @@ def test_redeem_voucher_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "EDA Kunti League")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, 
-            [RedeemVoucherEventSummary("", True, "bounty", 1622105)]
+            [RedeemVoucherEventSummary("", True, "CombatBond", 1622105)]
         ),
         (
             "EDA Kunti League", 
             StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
-            [RedeemVoucherEventSummary("", False, "bounty", 1177365)]
+            [RedeemVoucherEventSummary("", False, "CombatBond", 1177365)]
         ),
         (
             "EDA Kunti League", 
@@ -183,31 +183,31 @@ def test_redeem_voucher_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
-            [ RedeemVoucherEventSummary("", True, "bounty", 1127126)]
+            [ RedeemVoucherEventSummary("", True, "CombatBond", 1127126)]
         ),
 
-        # Scannable (Cartography)
-        (
-            "The Fuel Rats Mischief", 
-            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
-            Station("", 1000, "The Fuel Rats Mischief"), 
-            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
-            [RedeemVoucherEventSummary("Fuelum", True, "scannable", 206078)]
-        ),
-        (
-            "The Fuel Rats Mischief", 
-            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
-            Station("", 1000, "The Dark Wheel"), 
-            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
-            []
-        ),
-        (
-            "The Fuel Rats Mischief", 
-            StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "The Dark Wheel")), 
-            Station("", 1000, "The Dark Wheel"), 
-            { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
-            [RedeemVoucherEventSummary("Fuelum", False, "scannable", 206078)]
-        ),
+        # Scannable (Not sure what this is)
+        # (
+        #     "The Fuel Rats Mischief", 
+        #     StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
+        #     Station("", 1000, "The Fuel Rats Mischief"), 
+        #     { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+        #     [RedeemVoucherEventSummary("Fuelum", True, "scannable", 206078)]
+        # ),
+        # (
+        #     "The Fuel Rats Mischief", 
+        #     StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
+        #     Station("", 1000, "The Dark Wheel"), 
+        #     { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+        #     []
+        # ),
+        # (
+        #     "The Fuel Rats Mischief", 
+        #     StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "The Dark Wheel")), 
+        #     Station("", 1000, "The Dark Wheel"), 
+        #     { "timestamp":"2020-07-05T15:09:48Z", "event":"RedeemVoucher", "Type":"scannable", "Amount":206078, "Faction":"" }, 
+        #     [RedeemVoucherEventSummary("Fuelum", False, "scannable", 206078)]
+        # ),
 
         # BGS irrelevant types
         (
@@ -263,3 +263,39 @@ def test_docked_single(docked_event:Dict[str, Any], expected_station:Station):
     galaxy_state:GalaxyState = GalaxyState()
     assert(not docked_event_processor.process(docked_event, MINOR_FACTION, pilot_state, galaxy_state))
     assert(pilot_state.last_docked_station == expected_station)
+
+def test_sell_exploration_data_init():
+    sell_exploration_event_processor = SellExplorationDataEventProcessor()
+    assert(sell_exploration_event_processor.eventName == "SellExplorationData")
+
+@pytest.mark.parametrize(
+   "minor_faction, star_system, last_docked_station, sell_exploration_data_event, expected_results",
+    [     
+        (
+            "HR 1597 & Co",
+            StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
+            Station("Elsa Prospect", 1000, "HR 1597 & Co"), 
+            { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
+            [ SellExplorationDataEventSummary("HR 1597", True, 47743)]
+        ),
+        (
+            "HR 1597 & Co",
+            StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
+            Station("Elsa Prospect", 1000, "EDA Kunti League"), 
+            { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
+            [ SellExplorationDataEventSummary("HR 1597", False, 47743)]
+        )
+    ])
+def test_sell_exploration_data_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, sell_exploration_data_event:Dict[str, Any], expected_results:list):
+    pilot_state = PilotState()
+    pilot_state.last_docked_station = last_docked_station
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.copy(pilot_state)
+    expected_galaxy_state = copy.copy(galaxy_state)
+
+    sell_exploration_data_event_processor = SellExplorationDataEventProcessor()
+    result = sell_exploration_data_event_processor.process(sell_exploration_data_event, minor_faction, pilot_state, galaxy_state)
+    assert(result == expected_results)
+    assert(pilot_state == expected_pilot_state)
+    assert(galaxy_state == expected_galaxy_state)

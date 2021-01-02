@@ -56,6 +56,7 @@ def test_tracker_init():
             "\n"
             "Kanates - ANTI\n"
             "436,046 CR of Bounty Vouchers\n"
+            "61,635 CR of Cartography Data\n"
             "\n")
         ),
         (
@@ -66,6 +67,10 @@ def test_tracker_init():
             "\n"
             "LTT 2337 - PRO\n"
             "718,360 CR of Bounty Vouchers\n"
+            "141,361 CR of Cartography Data\n"
+            "\n"
+            "Shambogi - PRO\n"
+            "50,765 CR of Cartography Data\n"
             "\n")
         )
     ])
