@@ -39,7 +39,7 @@ class Tracker:
         activity_updated = False
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
-            self._activity = self._update_activity(self._event_summaries)
+            self._activity = self._update_activity(self._event_summaries).rstrip("\n")
             activity_updated = True
         return activity_updated
 

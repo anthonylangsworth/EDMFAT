@@ -23,8 +23,7 @@ def test_tracker_init():
             "1,916,227 CR of Bounty Vouchers\n"
             "\n"
             "HR 1597 - PRO\n"
-            "12,801,574 CR of Bounty Vouchers\n"
-            "\n")
+            "12,801,574 CR of Bounty Vouchers")
         ),
         (
             "Maxwell Corp. of Eta-1 Pictoris", 
@@ -42,8 +41,7 @@ def test_tracker_init():
             "1,105,608 CR of Bounty Vouchers\n"
             "\n"
             "Verner - ANTI\n"
-            "74,922 CR of Bounty Vouchers\n"
-            "\n")
+            "74,922 CR of Bounty Vouchers")
         ),
         (
             "HR 1597 & Co", 
@@ -56,12 +54,11 @@ def test_tracker_init():
             "\n"
             "Kanates - ANTI\n"
             "436,046 CR of Bounty Vouchers\n"
-            "61,635 CR of Cartography Data\n"
-            "\n")
+            "61,635 CR of Cartography Data")
         ),
         (
             "EDA Kunti League", 
-            "Journal.210101234033.01.log", 
+            "Journal.210101234033.01.log",
             ("HR 1597 - PRO\n"
             "559,467 CR of Combat Bonds\n"
             "\n"
@@ -70,8 +67,17 @@ def test_tracker_init():
             "141,361 CR of Cartography Data\n"
             "\n"
             "Shambogi - PRO\n"
-            "50,765 CR of Cartography Data\n"
-            "\n")
+            "50,765 CR of Cartography Data")
+        ),
+        (
+            "EDA Kunti League", 
+            "Journal.210102125854.01.log",
+            ("Shambogi - ANTI\n"
+            "1,209,935 CR of Combat Bonds\n"
+            "54,881 CR of Cartography Data\n"
+            "\n"
+            "Shambogi - PRO\n"
+            "374,299 CR of Bounty Vouchers")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
