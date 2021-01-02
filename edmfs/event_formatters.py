@@ -30,14 +30,18 @@ class SellExplorationDataEventFormatter(EventFormatter):
 
 class MarketSellEventFormatter(EventFormatter):
     def process(self, event_summaries: iter) -> str:
-        total_sell_price = sum(map(lambda x: x.sell_price_per_unit * x.count, event_summaries))
-        total_buy_price = sum(map(lambda x: x.average_buy_price_per_unit * x.count, event_summaries))
-        total_count = sum(map(lambda x: x.count, event_summaries))
+        total_sell_price = 0
+        total_buy_price = 0
+        total_count = 0
+        for event_summary in event_summaries:
+            total_sell_price += event_summary.sell_price_per_unit * event_summary.count
+            total_buy_price += event_summary.average_buy_price_per_unit * event_summary.count
+            total_count += event_summary.count
         return f"{total_count:,} T trade at {(total_sell_price - total_buy_price) / total_count:,.0f} CR average profit per T\n"
 
 # TODO: Move to an IoC setup
 _default_event_formatters:Dict[str, EventFormatter] = {
     "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
     "SellExplorationDataEventSummary" : SellExplorationDataEventFormatter(),
-    "MarketSellEventSummary": SellExplorationDataEventFormatter()
+    "MarketSellEventSummary": MarketSellEventFormatter()
 }

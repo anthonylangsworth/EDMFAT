@@ -71,13 +71,27 @@ def test_tracker_init():
         ),
         (
             "EDA Kunti League", 
-            "Journal.210102125854.01.log",
-            ("Shambogi - ANTI\n"
-            "1,209,935 CR of Combat Bonds\n"
-            "54,881 CR of Cartography Data\n"
+            "Journal.201212203015.01.log",
+            ("Antai - PRO\n"
+            "2,840 T trade at 2,506 CR average profit per T")
+        ),
+        (
+            "Green Party of Dulos", 
+            "Journal.200630212114.01.log",
+            ("Afli - ANTI\n"
+            "108,720 CR of Cartography Data\n"
             "\n"
-            "Shambogi - PRO\n"
-            "374,299 CR of Bounty Vouchers")
+            "Arque - ANTI\n"
+            "22,392 CR of Cartography Data\n"
+            "\n"
+            "Dulos - ANTI\n"
+            "28 T trade at 44 CR average profit per T\n"
+            "\n"
+            "Orrere - ANTI\n"
+            "6 T trade at 512 CR average profit per T\n"
+            "\n"
+            "Wyrd - ANTI\n"
+            "370,738 CR of Bounty Vouchers")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
