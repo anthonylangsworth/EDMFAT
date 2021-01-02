@@ -67,7 +67,7 @@ def test_tracker_init():
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
-    with open("tests/" + journal_file_name) as journal_file:
+    with open("tests/journal_files/" + journal_file_name) as journal_file:
         events = [json.loads(line) for line in journal_file.readlines()]
 
     tracker = Tracker(minor_faction)
