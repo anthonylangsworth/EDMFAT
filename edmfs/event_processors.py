@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem,PilotState, GalaxyState
-from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary
+from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
 class EventProcessor(ABC):
     @property
@@ -97,6 +97,30 @@ class SellExplorationDataEventProcessor(EventProcessor):
         elif controlling_minor_faction in system_minor_factions:
             result.append(SellExplorationDataEventSummary(system_name, False, event["TotalEarnings"]))
         return result
+
+class MarketSellEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "MarketSell"
+
+    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        result = []        
+        try:
+            star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
+            system_name = star_system.name
+            system_minor_factions = star_system.minor_factions
+            controlling_minor_faction = pilot_state.last_docked_station.controlling_minor_faction
+        except:
+            system_name = "unknown"
+            system_minor_factions = []
+            controlling_minor_faction = ""
+
+        # TODO: Black market sales
+        if controlling_minor_faction == minor_faction:
+            result.append(MarketSellEventSummary(system_name, not event.get("BlackMarket", False), event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+        elif controlling_minor_faction in system_minor_factions:
+            result.append(MarketSellEventSummary(system_name, not event.get("BlackMarket", True), event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+        return result        
     
 # Module non-public
 # TODO: move this to an IoC setup
@@ -106,8 +130,6 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "Docked": DockedEventProcessor(),
     "RedeemVoucher": RedeemVoucherEventProcessor(),
     "SellExplorationData": SellExplorationDataEventProcessor(),
-    "MultiSellExplorationData": SellExplorationDataEventProcessor()
+    "MultiSellExplorationData": SellExplorationDataEventProcessor(),
+    "MarketSell": MarketSellEventProcessor()
 }
-
-#_this = sys.modules[__name__]
-

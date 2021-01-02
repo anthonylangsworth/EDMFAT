@@ -1,4 +1,4 @@
-from edmfs.event_summaries import RedeemVoucherEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
 def test_redeem_voucher_event_summary_init():
     SYSTEM_NAME:str = "HR 1597"
@@ -10,3 +10,25 @@ def test_redeem_voucher_event_summary_init():
     assert(redeem_voucher_event_summary.supports == SUPPORTS)
     assert(redeem_voucher_event_summary.voucher_type == VOUCHER_TYPE)
     assert(redeem_voucher_event_summary.amount == AMOUNT)
+
+def test_sell_exploration_data_event_summary_init():
+    SYSTEM_NAME:str = "Shambogi"
+    SUPPORTS:bool = True
+    AMOUNT:int = 512546
+    sell_exploration_data_event_summary:SellExplorationDataEventSummary = SellExplorationDataEventSummary(SYSTEM_NAME, SUPPORTS, AMOUNT)
+    assert(sell_exploration_data_event_summary.system_name == SYSTEM_NAME)
+    assert(sell_exploration_data_event_summary.supports == SUPPORTS)
+    assert(sell_exploration_data_event_summary.amount == AMOUNT)
+
+def test_market_sell_event_summary_init():
+    SYSTEM_NAME:str = "Alpha Centauri"
+    SUPPORTS:bool = True
+    COUNT:int = 100
+    SELL_PRICE_PER_UNIT:int = 10
+    AVERAGE_BUY_PRICE_PER_UNIT:int = 5
+    market_sell_event_summary:MarketSellEventSummary = MarketSellEventSummary(SYSTEM_NAME, SUPPORTS, COUNT, SELL_PRICE_PER_UNIT, AVERAGE_BUY_PRICE_PER_UNIT)
+    assert(market_sell_event_summary.system_name == SYSTEM_NAME)
+    assert(market_sell_event_summary.supports == SUPPORTS)
+    assert(market_sell_event_summary.count == COUNT)
+    assert(market_sell_event_summary.sell_price_per_unit == SELL_PRICE_PER_UNIT)
+    assert(market_sell_event_summary.average_buy_price_per_unit == AVERAGE_BUY_PRICE_PER_UNIT)

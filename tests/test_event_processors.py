@@ -2,9 +2,9 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor
+from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, StarSystem
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
 def test_location_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
@@ -296,6 +296,43 @@ def test_sell_exploration_data_single(minor_faction:str, star_system:StarSystem,
 
     sell_exploration_data_event_processor = SellExplorationDataEventProcessor()
     result = sell_exploration_data_event_processor.process(sell_exploration_data_event, minor_faction, pilot_state, galaxy_state)
+    assert(result == expected_results)
+    assert(pilot_state == expected_pilot_state)
+    assert(galaxy_state == expected_galaxy_state)
+
+def test_market_sell_init():
+    market_sell_event_processor = MarketSellEventProcessor()
+    assert(market_sell_event_processor.eventName == "MarketSell")
+
+@pytest.mark.parametrize(
+   "minor_faction, star_system, last_docked_station, market_sell_event, expected_results",
+    (
+        (
+            "Soverign Justice League",
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Soverign Justice League"), 
+            { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
+            [ MarketSellEventSummary("Afli", True, 756, 59759, 4568)]
+        ),
+        (
+            "Afli Blue Society",
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Soverign Justice League"), 
+            { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
+            [ MarketSellEventSummary("Afli", False, 756, 59759, 4568)]
+        )        
+    )
+)
+def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, market_sell_event:Dict[str, Any], expected_results:list):
+    pilot_state = PilotState()
+    pilot_state.last_docked_station = last_docked_station
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.copy(pilot_state)
+    expected_galaxy_state = copy.copy(galaxy_state)
+
+    market_sell_event_processor = MarketSellEventProcessor()
+    result = market_sell_event_processor.process(market_sell_event, minor_faction, pilot_state, galaxy_state)
     assert(result == expected_results)
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)

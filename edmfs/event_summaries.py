@@ -62,7 +62,39 @@ class SellExplorationDataEventSummary(EventSummary):
     def __repr__(self) -> str:
         return f"SellExplorationDataEventSummary('{self._system_name}', {self._supports}, {self._amount})" 
 
+class MarketSellEventSummary(EventSummary):
+    def __init__(self, system_name:str, supports:bool, count:int, sell_price_per_unit:int, average_buy_price_per_unit:int):
+        super(MarketSellEventSummary, self).__init__(system_name, supports)
+        self._count:int = count
+        self._sell_price_per_unit:int = sell_price_per_unit
+        self._average_buy_price_per_unit:int = average_buy_price_per_unit
+    
+    @property
+    def count(self) -> int:
+        return self._count
+
+    @property
+    def sell_price_per_unit(self) -> int:
+        return self._sell_price_per_unit
+
+    @property
+    def average_buy_price_per_unit(self) -> int:
+        return self._average_buy_price_per_unit
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, MarketSellEventSummary):
+            return NotImplemented
+
+        return super(MarketSellEventSummary, self).__eq__(other) \
+            and self._count == other._count \
+            and self._sell_price_per_unit == other._sell_price_per_unit \
+            and self._average_buy_price_per_unit == other._average_buy_price_per_unit        
+
+    def __repr__(self) -> str:
+        return f"MarketSellEventSummary('{self._system_name}', {self._supports}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit})" 
+
 _default_event_summary_order = (
     "RedeemVoucherEventSummary",
-    "SellExplorationDataEventSummary"
+    "SellExplorationDataEventSummary",
+    "MarketSellEventSummary"
 )
