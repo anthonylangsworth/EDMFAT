@@ -1,16 +1,30 @@
-# Thoughts and TODOs
+# What is it?
 
-TODO:
-1. Describe (Unknown) error: Starting EDMC while docked at a station.
-2. Test selling bonds, bounties at a interstellar factor or carrier.
-3. Remove trailing "\n" from activity to prevent window growing too tall.
-4. Rename EDMFAT (Elite Dangerous Minor Faction Activity Tracker)?
+Elite: Dangerous Minor Faction Activity Tracker (EDMFAT) automatically records game actions that affect a minor faction like selling bounties or completing missions. It is aimed at Elite: Dangerous squadrons that support a minor faction for background simulation work.
 
-Does not do:
-1. Handle state-specific requirements. E.g. handing in combat bonds to factions in Election or War state will not affect influence.
-2. Handle things that are not in journal files, e.g. conflict zones.
+Originally intended to support the "Elite Dangerous AU & NZ" squadron and their minor faction "EDA Kunti League", the goal is to generalize this into something useful for the broader Elite: Dangerous community.
 
-# References
+# Installation
 
-1. EDMC Plug-in details: https://github.com/EDCD/EDMarketConnector/blob/main/PLUGINS.md
-2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v27/Journal-Manual_v27.pdf
+Requirements:
+1. Elite Dangerous Market Connector (EDMC), installed as per https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup. This plug-in requires version 4.0 or later due to the use of Python 3.
+2. This plug-in does not support console players. Sorry. This is a current limitation of EDMC.
+
+To install:
+1. Download the latest ZIP file under "Packages" at the top right.
+2. Copy the ZIP file into your EDMC plug-ins folder, normally `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins`.
+3. Expand the ZIP file. This should create and "EDMFAT" folder with the plug-in files inside it.
+4. Restart EDMC if it was already running.
+
+# Use
+
+NOTE:
+1. EDMFAT is currently hard coded to the minor faction "EDA Kunti League" minor faction. Eventually, the user will be allowed to change it.
+2. The current version is limited to selling bounties, combat bonds and cartography only. Future versions will add trade and missions.
+
+1. Play Elite: Dangerous, supporting your minor faction. 
+2. Minor faction-relevant activity will be captured and appear in the EDMC window.
+3. When done, press the "Copy" button to copy the activity to the clipboard.
+4. Paste it into your team's Discord channels or wherever you report activity.
+
+
