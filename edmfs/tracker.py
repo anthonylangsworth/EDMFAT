@@ -50,6 +50,7 @@ class Tracker:
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""
+        assert(False)
         sorted_event_summaries = sorted(sorted(sorted(event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: x.supports), key=lambda x: x.system_name)
         for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.supports)):
             result += f"{system_name} - {'PRO' if supports else 'ANTI'}\n"
