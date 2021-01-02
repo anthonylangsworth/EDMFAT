@@ -61,8 +61,11 @@ def test_tracker_init():
         (
             "EDA Kunti League", 
             "Journal.210101234033.01.log", 
-            ("LTT 2337 - PRO\n"
-            "365,071 CR of Bounty Vouchers\n"
+            ("HR 1597 - PRO\n"
+            "559,467 CR of Combat Bonds\n"
+            "\n"
+            "LTT 2337 - PRO\n"
+            "718,360 CR of Bounty Vouchers\n"
             "\n")
         )
     ])
