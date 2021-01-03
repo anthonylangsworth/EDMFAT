@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 
-from .state import Station, StarSystem,PilotState, GalaxyState
+from .state import Station, StarSystem, Mission, PilotState, GalaxyState
 from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
 class NoLastDockedStationError(Exception):
@@ -17,6 +17,15 @@ class UnknownStarSystemError(Exception):
     def system_address(self) -> int:
         return self._system_address
 
+class UnknownMissionError(Exception):
+    """Mission not found in PilotState. Should not happen in game."""
+    def __init__(self, id: int):
+        self._id = id
+
+    @property
+    def id(self) -> int:
+        return self._id
+
 def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False):
     if minor_faction == supported_minor_faction:
         supports = supports_value
@@ -30,7 +39,7 @@ def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
     if not pilot_state.last_docked_station:
         raise NoLastDockedStationError()
 
-    if not pilot_state.last_docked_station.system_address in galaxy_state.systems.keys():
+    if not galaxy_state.systems.get(pilot_state.last_docked_station.system_address, None):
         raise UnknownStarSystemError(pilot_state.last_docked_station.system_address)
 
     star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
@@ -97,7 +106,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
         return result
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, station = _get_location(pilot_state, galaxy_state)
+        star_system, _ = _get_location(pilot_state, galaxy_state)
 
         # Carriers use a faction of "", excluding it from the logic below
 
@@ -140,7 +149,27 @@ class MarketSellEventProcessor(EventProcessor):
                 supports = not supports
             result.append(MarketSellEventSummary(star_system.name, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
 
-        return result        
+        return result
+
+class MissionAcceptedEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "MissionAccepted"
+        
+    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        star_system, _ = _get_location(pilot_state, galaxy_state)
+        pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], 
+            star_system.address, event.get("TargetFaction", None), event.get("DestinationSystem", None))
+        return []
+
+class MissionCompletedEventProcessor(EventProcessor):
+    @property
+    def eventName(self) -> str:
+        return "MissionCompleted"
+        
+    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        #pilot_state.missions.remove(event["MissionID"])
+        pass
     
 # Module non-public
 # TODO: move this to an IoC setup
@@ -151,5 +180,7 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "RedeemVoucher": RedeemVoucherEventProcessor(),
     "SellExplorationData": SellExplorationDataEventProcessor(),
     "MultiSellExplorationData": SellExplorationDataEventProcessor(),
-    "MarketSell": MarketSellEventProcessor()
+    "MarketSell": MarketSellEventProcessor(),
+    "MissionAccepted": MissionAcceptedEventProcessor(),
+    "MissionCompleted": MissionCompletedEventProcessor()
 }

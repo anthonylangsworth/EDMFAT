@@ -34,7 +34,7 @@ class StarSystem:
 
 
 class Station:
-    def __init__(self, name:str, system_address:int, controlling_minor_faction:set):
+    def __init__(self, name:str, system_address:int, controlling_minor_faction:str):
         self._name:str = name
         self._system_address:int = system_address
         self._controlling_minor_faction:str = controlling_minor_faction
@@ -62,6 +62,53 @@ class Station:
     def __repr__(self) -> str:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
+class Mission:
+    def __init__(self, id:int, minor_faction:str, influence:str, system:int, target_faction:str, destination_system:str):
+        self._id = id
+        self._minor_faction = minor_faction
+        self._influence = influence
+        self._system = system
+        self._target_faction = target_faction
+        self._destination_system = destination_system
+
+    @property
+    def id(self) -> int:
+        return self._id
+    
+    @property
+    def minor_faction(self) -> int:
+        return self._minor_faction
+    
+    @property
+    def influence(self) -> str:
+        return self._influence
+    
+    @property
+    def system(self) -> int:
+        return self._system
+    
+    @property
+    def target_faction(self) -> str:
+        return self._target_faction
+    
+    @property
+    def destination_system(self) -> str:
+        return self._destination_system
+
+    def __eq__ (self, other) -> bool:
+        if not isinstance(other, Mission):
+            return NotImplemented
+
+        return (self._id == other._id
+            and self._minor_faction == other._minor_faction
+            and self._influence == other._influence
+            and self._system == other._system
+            and self._target_faction == other._target_faction
+            and self._destination_system == other._destination_system)
+
+    def __repr__(self) -> str:
+        return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', '{self._influence}', '{self._system}', '{self._target_faction}', '{self._destination_system}')"
+
 class GalaxyState:
     def __init__(self, star_systems:Dict[int, StarSystem] = None):
         self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Work around for {} being shared in edge cases
@@ -80,9 +127,9 @@ class GalaxyState:
         return hash(self._systems)
 
 class PilotState:
-    def __init__(self, last_docked_station:Station = None, missions:list = []):
-        self._last_docked_station:Station = last_docked_station
-        self._missions:list = missions
+    def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
+        self._last_docked_station = last_docked_station
+        self._missions = missions if missions else {}
 
     @property
     def last_docked_station(self) -> Station:
