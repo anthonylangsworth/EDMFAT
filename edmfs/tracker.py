@@ -1,15 +1,17 @@
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 from itertools import groupby
+from logging import Logger
 
 from .state import Station, PilotState, GalaxyState
-from .event_processors import EventProcessor, _default_event_processors
+from .event_processors import EventProcessor, _default_event_processors, NoLastDockedStationError, UnknownStarSystemError
 from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
 class Tracker:
-    def __init__(self, minor_faction:str, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
+    def __init__(self, minor_faction:str, logger:Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_faction = minor_faction
+        self._logger = logger
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState()
         self._event_summaries = []
@@ -46,7 +48,15 @@ class Tracker:
     def _process_event(self, event:Dict[str, Any]) -> list:
         event_processor = self._event_processors.get(event["event"], None)
         if event_processor != None:
-            return event_processor.process(event, self.minor_faction, self.pilot_state, self.galaxy_state)
+            try:
+                result = event_processor.process(event, self.minor_faction, self.pilot_state, self.galaxy_state)
+            except NoLastDockedStationError:
+                self._logger.exception(f"Last docked station required for {str(event)}")
+                result = []
+            except UnknownStarSystemError as unknown_star_system_error:
+                self._logger.exception(f"Unknown star system {unknown_star_system_error.system_address} required for {str(event)}")
+                result = []
+            return result
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""

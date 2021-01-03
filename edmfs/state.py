@@ -29,6 +29,10 @@ class StarSystem:
             and self._address == other._address \
             and set(self._minor_factions) == set(other._minor_factions)
 
+    def __hash__(self) -> int:
+        return hash((self._name, self._address, self._minor_factions))
+
+
 class Station:
     def __init__(self, name:str, system_address:int, controlling_minor_faction:set):
         self._name:str = name
@@ -59,11 +63,11 @@ class Station:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
 class GalaxyState:
-    def __init__(self):
-        self._systems:Dict[int, StarSystem] = {}
+    def __init__(self, star_systems:Dict[int, StarSystem] = {}):
+        self._systems:Dict[int, StarSystem] = star_systems
 
     @property
-    def systems(self) -> list:
+    def systems(self) -> Dict[int, StarSystem]:
         return self._systems
 
     def __eq__(self, other) -> bool:
@@ -72,10 +76,13 @@ class GalaxyState:
 
         return self._systems == other._systems
 
+    def __hash__(self) -> int:
+        return hash(self._systems)
+
 class PilotState:
-    def __init__(self):
-        self._last_docked_station:Station = None
-        self._missions:list = []
+    def __init__(self, last_docked_station:Station = None, missions:list = []):
+        self._last_docked_station:Station = last_docked_station
+        self._missions:list = missions
 
     @property
     def last_docked_station(self) -> Station:

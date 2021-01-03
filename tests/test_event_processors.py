@@ -2,12 +2,12 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import supports_minor_faction, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor
+from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError
 from edmfs.state import PilotState, GalaxyState, Station, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
 @pytest.mark.parametrize(
-    "minor_faction, supported_minor_faction, system_minor_factions, expected_result",
+    "event_minor_faction, supported_minor_faction, system_minor_factions, expected_result",
     (
         ("a", "a", "a, b", True),
         ("a", "b", "a, b", False),
@@ -20,8 +20,42 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
         ("a", "a", "c, d", True)
     )
 )
-def test_supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, expected_result):
-    assert(supports_minor_faction(minor_faction, supported_minor_faction, system_minor_factions) == expected_result)
+def test_supports_minor_faction(event_minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, expected_result):
+    assert(_supports_minor_faction(event_minor_faction, supported_minor_faction, system_minor_factions) == expected_result)
+
+@pytest.mark.parametrize(
+    "pilot_state, galaxy_state, expected_star_system, expected_station",
+    (
+        (
+            PilotState(Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))),
+            GalaxyState({98367212:StarSystem("Afli", 98367212, [])}),
+            StarSystem("Afli", 98367212, []),
+            Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))
+        ),
+    )
+)
+def test_get_location(pilot_state: PilotState, galaxy_state: GalaxyState, expected_star_system:StarSystem, expected_station:Station):
+    star_system, station = _get_location(pilot_state, galaxy_state)
+    assert(star_system == expected_star_system)
+    assert(station == expected_station)
+
+def test_get_location_no_system():
+    pilot_state = PilotState(Station("Pu City", 654789, set(["Afli Patron's Principles", "Afli Imperial Society"])))
+    galaxy_state = GalaxyState({200:StarSystem("Afli", 200, [])})
+    try:
+        _get_location(pilot_state, galaxy_state)
+        assert(False)
+    except UnknownStarSystemError:
+        pass
+
+def test_get_location_no_station():
+    pilot_state = PilotState()
+    galaxy_state = GalaxyState({654789:StarSystem("Afli", 654789, [])})
+    try:
+        _get_location(pilot_state, galaxy_state)
+        assert(False)
+    except NoLastDockedStationError:
+        pass    
 
 def test_location_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
