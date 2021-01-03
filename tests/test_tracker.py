@@ -26,33 +26,16 @@ def test_tracker_init():
             "12,801,574 CR of Bounty Vouchers")
         ),
         (
-            "Maxwell Corp. of Eta-1 Pictoris", 
+            "EDA Kunti League", 
             "Journal.200913212207.01.log", 
-            ("Erh Lohra - ANTI\n"
-            "106,428 CR of Bounty Vouchers\n"
+            ("Shambogi - ANTI\n965,956 CR of Bounty Vouchers\n"
             "\n"
-            "Eta-1 Pictoris - ANTI\n"
-            "12,150 CR of Bounty Vouchers\n"
-            "\n"
-            "Eta-1 Pictoris - PRO\n"
-            "1,882,292 CR of Bounty Vouchers\n"
-            "\n"
-            "Shambogi - ANTI\n"
-            "1,105,608 CR of Bounty Vouchers\n"
-            "\n"
-            "Verner - ANTI\n"
-            "74,922 CR of Bounty Vouchers")
+            "Shambogi - PRO\n139,652 CR of Bounty Vouchers")
         ),
         (
-            "HR 1597 & Co", 
+            "EDA Kunti League", 
             "Journal.201018213100.01.log", 
-            ("HR 1597 - ANTI\n"
-            "1,662,746 CR of Bounty Vouchers\n"
-            "\n"
-            "HR 1597 - PRO\n"
-            "1,127,126 CR of Combat Bonds\n"
-            "\n"
-            "Kanates - ANTI\n"
+            ("Kanates - PRO\n"
             "436,046 CR of Bounty Vouchers\n"
             "61,635 CR of Cartography Data")
         ),
@@ -78,20 +61,8 @@ def test_tracker_init():
         (
             "Green Party of Dulos", 
             "Journal.200630212114.01.log",
-            ("Afli - ANTI\n"
-            "108,720 CR of Cartography Data\n"
-            "\n"
-            "Arque - ANTI\n"
-            "22,392 CR of Cartography Data\n"
-            "\n"
-            "Dulos - ANTI\n"
-            "28 T trade at 44 CR average profit per T\n"
-            "\n"
-            "Orrere - ANTI\n"
-            "6 T trade at 512 CR average profit per T\n"
-            "\n"
-            "Wyrd - ANTI\n"
-            "370,738 CR of Bounty Vouchers")
+            ("Dulos - ANTI\n"
+            "28 T trade at 44 CR average profit per T")
         ),
         (
             "EDA Kunti League", 

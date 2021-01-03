@@ -34,7 +34,7 @@ class LocationEventProcessor(EventProcessor):
         if "Factions" in event.keys():
             galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
 
-        if "Docked" in event.keys() and event["Docked"]:
+        if event.get("Docked", False):
             pilot_state.last_docked_station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
 
         return []
@@ -86,7 +86,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
         if known_location and minor_faction in system_minor_factions: # Exclude interstellar factors
             if event["Type"] == "bounty":
                 result.extend(self._process_bounty(event, system_name, minor_faction, system_minor_factions))
-            elif event["Type"] == "CombatBond": # or event["Type"] == "scannable": # Not sure whether this is BGS relevant
+            elif event["Type"] == "CombatBond": 
                 result.extend(self._process_combat_bond(event, system_name, minor_faction, system_minor_factions))
 
         return result
