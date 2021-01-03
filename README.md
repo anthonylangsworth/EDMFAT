@@ -26,4 +26,4 @@ To install:
 
 NOTE:
 1. EDMFAT is currently hard coded to the minor faction "EDA Kunti League" minor faction. Eventually, the user will be allowed to change it.
-2. The current version is limited to selling bounties, combat bonds and cartography only. Future versions will add trade and missions.
+2. The current version is limited to trading (positive and negative), selling bounties, combat bonds and cartography only. Future versions will add missions.
