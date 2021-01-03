@@ -80,13 +80,13 @@ class RedeemVoucherEventProcessor(EventProcessor):
         except:
             known_location = False
 
-        # Carriers use a faction of ""
+        # Carriers use a faction of "", excluding it from the logic below
 
         result = []   
         if known_location and minor_faction in system_minor_factions: # Exclude interstellar factors
             if event["Type"] == "bounty":
                 result.extend(self._process_bounty(event, system_name, minor_faction, system_minor_factions))
-            elif event["Type"] == "CombatBond": # or event["Type"] == "scannable": # Not sure whether this is bGS relevant
+            elif event["Type"] == "CombatBond": # or event["Type"] == "scannable": # Not sure whether this is BGS relevant
                 result.extend(self._process_combat_bond(event, system_name, minor_faction, system_minor_factions))
 
         return result
