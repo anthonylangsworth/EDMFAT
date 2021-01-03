@@ -2,9 +2,26 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor
+from edmfs.event_processors import supports_minor_faction, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
+
+@pytest.mark.parametrize(
+    "minor_faction, supported_minor_faction, system_minor_factions, expected_result",
+    (
+        ("a", "a", "a, b", True),
+        ("a", "b", "a, b", False),
+        ("c", "b", "a, b", None),
+
+        # Should not happen but included for predictability
+        ("a", "a", "", True),
+        ("a", "b", "", None),
+        ("a", "b", "c, d", None),
+        ("a", "a", "c, d", True)
+    )
+)
+def test_supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, expected_result):
+    assert(supports_minor_faction(minor_faction, supported_minor_faction, system_minor_factions) == expected_result)
 
 def test_location_init():
     location_event_procesor:LocationEventProcessor = LocationEventProcessor()
@@ -162,7 +179,7 @@ def test_redeem_voucher_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
-            [RedeemVoucherEventSummary("", False, "CombatBond", 1177365)]
+            []
         ),
         (
             "EDA Kunti League", 
@@ -284,6 +301,13 @@ def test_sell_exploration_data_init():
             Station("Elsa Prospect", 1000, "EDA Kunti League"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
             [ SellExplorationDataEventSummary("HR 1597", False, 47743)]
+        ),
+        (
+            "The Dark Wheel",
+            StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
+            Station("Elsa Prospect", 1000, "EDA Kunti League"), 
+            { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
+            [ ]
         )
     ])
 def test_sell_exploration_data_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, sell_exploration_data_event:Dict[str, Any], expected_results:list):
@@ -341,6 +365,13 @@ def test_market_sell_init():
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080 },
             [ MarketSellEventSummary("Afli", False, 64, 80, 1080)]
+        ),
+        (
+            "Kunti Dragons",
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Soverign Justice League"), 
+            { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
+            [ ]
         )        
     )
 )

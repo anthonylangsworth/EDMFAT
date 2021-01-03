@@ -4,6 +4,15 @@ from abc import ABC, abstractmethod
 from .state import Station, StarSystem,PilotState, GalaxyState
 from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
 
+def supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False):
+    if minor_faction == supported_minor_faction:
+        supports = supports_value
+    elif minor_faction in system_minor_factions:
+        supports = undermines_value   
+    else:
+        supports = None
+    return supports 
+
 class EventProcessor(ABC):
     @property
     @abstractmethod
@@ -45,33 +54,41 @@ class RedeemVoucherEventProcessor(EventProcessor):
     def eventName(self) -> str:
         return "RedeemVoucher"
 
+    def _process_bounty(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
+        result = []
+        for x in event["Factions"]:
+            supports = supports_minor_faction(x["Faction"], minor_faction, system_minor_factions)
+
+            if supports != None:
+                result.append(RedeemVoucherEventSummary(system_name, supports, event["Type"], x["Amount"]))
+        return result
+
+    def _process_combat_bond(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
+        supports = supports_minor_faction(event["Faction"], minor_faction, system_minor_factions)
+
+        result = []
+        if supports != None:
+            result.append(RedeemVoucherEventSummary(system_name, supports, event["Type"], event["Amount"]))
+        return result
+
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        result = []        
         try:
             star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
             system_name = star_system.name
             system_minor_factions = star_system.minor_factions
+            known_location = True
         except:
-            system_name = "unknown"
-            system_minor_factions = []
+            known_location = False
 
-        if event["Type"] == "bounty":
-            for x in event["Factions"]:
-                if x["Faction"] == minor_faction:
-                    result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], x["Amount"]))
-                elif x["Faction"] in system_minor_factions:
-                    result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], x["Amount"]))
-        elif event["Type"] == "CombatBond":
-            if event["Faction"] == minor_faction:
-                result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
-            elif event["Faction"] in system_minor_factions:
-                result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
-        # Not sure whether this is BGS relevant
-        # elif event["Type"] == "scannable":
-        #     if pilot_state.last_docked_station.controlling_minor_faction == minor_faction:
-        #         result.append(RedeemVoucherEventSummary(system_name, True, event["Type"], event["Amount"]))
-        #     elif pilot_state.last_docked_station.controlling_minor_faction in system_minor_factions:
-        #         result.append(RedeemVoucherEventSummary(system_name, False, event["Type"], event["Amount"]))
+        # Carriers use a faction of ""
+
+        result = []   
+        if known_location and minor_faction in system_minor_factions: # Exclude interstellar factors
+            if event["Type"] == "bounty":
+                result.extend(self._process_bounty(event, system_name, minor_faction, system_minor_factions))
+            elif event["Type"] == "CombatBond": # or event["Type"] == "scannable": # Not sure whether this is bGS relevant
+                result.extend(self._process_combat_bond(event, system_name, minor_faction, system_minor_factions))
+
         return result
 
 # Also used for MultiSellExplorationData. They have the same schema.
@@ -81,21 +98,21 @@ class SellExplorationDataEventProcessor(EventProcessor):
         return "SellExplorationData"
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        result = []        
         try:
             star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
             system_name = star_system.name
             system_minor_factions = star_system.minor_factions
             controlling_minor_faction = pilot_state.last_docked_station.controlling_minor_faction
-        except:
-            system_name = "unknown"
-            system_minor_factions = []
-            controlling_minor_faction = ""
+            known_location = True
+        except: 
+            known_location = False
 
-        if controlling_minor_faction == minor_faction:
-            result.append(SellExplorationDataEventSummary(system_name, True, event["TotalEarnings"]))
-        elif controlling_minor_faction in system_minor_factions:
-            result.append(SellExplorationDataEventSummary(system_name, False, event["TotalEarnings"]))
+        result = []        
+        if known_location:
+            supports = supports_minor_faction(minor_faction, controlling_minor_faction, system_minor_factions)
+
+            if supports != None:
+                result.append(SellExplorationDataEventSummary(system_name, supports, event["TotalEarnings"]))
         return result
 
 class MarketSellEventProcessor(EventProcessor):
@@ -104,27 +121,23 @@ class MarketSellEventProcessor(EventProcessor):
         return "MarketSell"
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        result = []        
         try:
             star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
             system_name = star_system.name
             system_minor_factions = star_system.minor_factions
             controlling_minor_faction = pilot_state.last_docked_station.controlling_minor_faction
+            known_location = True
         except:
-            system_name = "unknown"
-            system_minor_factions = []
-            controlling_minor_faction = ""
+            known_location = False
 
-        if controlling_minor_faction == minor_faction:
-            supports = not event.get("BlackMarket", False)
-            relevant_to_minor_faction = True
-        elif controlling_minor_faction in system_minor_factions:
-            supports = event.get("BlackMarket", False)
-            relevant_to_minor_faction = True
-        if relevant_to_minor_faction:
-            if event["SellPrice"] <  event["AvgPricePaid"]:
-                supports = not supports
-            result.append(MarketSellEventSummary(system_name, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+        result = []        
+        if known_location:
+            supports = supports_minor_faction(minor_faction, controlling_minor_faction, system_minor_factions, not event.get("BlackMarket", False), event.get("BlackMarket", False))
+
+            if supports != None:
+                if event["SellPrice"] <  event["AvgPricePaid"]:
+                    supports = not supports
+                result.append(MarketSellEventSummary(system_name, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
 
         return result        
     
