@@ -7,7 +7,7 @@ Originally intended to support the "Elite Dangerous AU & NZ" squadron and their 
 # Installation
 
 Requirements:
-1. Elite Dangerous Market Connector (EDMC), installed as per https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup. This plug-in requires version 4.0 or later due to the use of Python 3.6.
+1. Elite Dangerous Market Connector (EDMC), installed as per https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup. This plug-in requires version 4.0 or later due to the use of Python 3.7.
 2. This plug-in does not support console players. Sorry. This is a current limitation of EDMC.
 
 To install:
@@ -18,7 +18,7 @@ To install:
 
 # Use
 
-1. Start EDMC.
+1. Start EDMC. This is important. If you start EDMC while Elite: Dangerous is running, the plug-in may miss important events.
 2. Play Elite: Dangerous, supporting your minor faction. 
 3. Minor faction-relevant activity will be captured and appear in the EDMC window.
 4. When done, press the "Copy" button to copy the activity to the clipboard.
