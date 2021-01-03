@@ -115,11 +115,17 @@ class MarketSellEventProcessor(EventProcessor):
             system_minor_factions = []
             controlling_minor_faction = ""
 
-        # TODO: Black market sales
         if controlling_minor_faction == minor_faction:
-            result.append(MarketSellEventSummary(system_name, not event.get("BlackMarket", False), event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+            supports = not event.get("BlackMarket", False)
+            relevant_to_minor_faction = True
         elif controlling_minor_faction in system_minor_factions:
-            result.append(MarketSellEventSummary(system_name, event.get("BlackMarket", False), event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+            supports = event.get("BlackMarket", False)
+            relevant_to_minor_faction = True
+        if relevant_to_minor_faction:
+            if event["SellPrice"] <  event["AvgPricePaid"]:
+                supports = not supports
+            result.append(MarketSellEventSummary(system_name, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+
         return result        
     
 # Module non-public

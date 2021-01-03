@@ -334,6 +334,13 @@ def test_market_sell_init():
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
             [ MarketSellEventSummary("Afli", True, 1, 7111, 0)]
+        ),
+        (
+            "Soverign Justice League",
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Soverign Justice League"), 
+            { "timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080 },
+            [ MarketSellEventSummary("Afli", False, 64, 80, 1080)]
         )        
     )
 )
