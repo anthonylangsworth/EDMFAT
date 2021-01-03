@@ -18,13 +18,12 @@ To install:
 
 # Use
 
-1. Play Elite: Dangerous, supporting your minor faction. 
-2. Minor faction-relevant activity will be captured and appear in the EDMC window.
-3. When done, press the "Copy" button to copy the activity to the clipboard.
-4. Paste it into your team's Discord channels or wherever you report activity.
+1. Start EDMC.
+2. Play Elite: Dangerous, supporting your minor faction. 
+3. Minor faction-relevant activity will be captured and appear in the EDMC window.
+4. When done, press the "Copy" button to copy the activity to the clipboard.
+5. Paste it into your team's Discord channels or wherever you report activity.
 
 NOTE:
 1. EDMFAT is currently hard coded to the minor faction "EDA Kunti League" minor faction. Eventually, the user will be allowed to change it.
 2. The current version is limited to selling bounties, combat bonds and cartography only. Future versions will add trade and missions.
-
-
