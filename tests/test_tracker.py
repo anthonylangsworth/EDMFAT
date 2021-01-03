@@ -92,6 +92,15 @@ def test_tracker_init():
             "\n"
             "Wyrd - ANTI\n"
             "370,738 CR of Bounty Vouchers")
+        ),
+        (
+            "EDA Kunti League", 
+            "Journal.210102190919.01.log",
+            ("Groanomana - PRO\n"
+             "18,704,140 CR of Bounty Vouchers\n"
+             "\n"
+             "HR 1597 - PRO\n"
+             "7,622,618 CR of Bounty Vouchers")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
