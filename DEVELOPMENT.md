@@ -1,9 +1,11 @@
 This a scratch pad to record development-specific details, keeping them separate from user documentation.
 
 TODO:
-1. Describe (Unknown) error: Starting EDMC while docked at a station.
-2. Test selling bonds, bounties at a interstellar factor or carrier.
-3. Rename EDMFAT (Elite Dangerous Minor Faction Activity Tracker)?
+1. Add to troubleshooting: Missing data if EDMC started while docked.
+2. Test selling bonds, bounties at a interstellar factor or carrier in game.
+3. Missions
+4. Passenger missions
+5. Killing clean ships
 
 Does not do:
 1. Handle state-specific requirements. E.g. handing in combat bonds to factions in Election or War state will not affect influence.
