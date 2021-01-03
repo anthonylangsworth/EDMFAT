@@ -63,8 +63,8 @@ class Station:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
 class GalaxyState:
-    def __init__(self, star_systems:Dict[int, StarSystem] = {}):
-        self._systems:Dict[int, StarSystem] = star_systems
+    def __init__(self, star_systems:Dict[int, StarSystem] = None):
+        self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Work around for {} being shared in edge cases
 
     @property
     def systems(self) -> Dict[int, StarSystem]:

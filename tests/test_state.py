@@ -26,5 +26,5 @@ def test_Station_init():
     assert(station.controlling_minor_faction == CONTROLLING_MINOR_FACTION)
 
 def test_GalaxyState_init():
-    galaxy_state = GalaxyState({})
+    galaxy_state = GalaxyState()
     assert(galaxy_state.systems == {})
