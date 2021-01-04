@@ -127,9 +127,8 @@ class GalaxyState:
         return hash(self._systems)
 
 class PilotState:
-    def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
+    def __init__(self, last_docked_station:Station = None):
         self._last_docked_station = last_docked_station
-        self._missions = missions if missions else {} # Fix strange sharing issue
 
     @property
     def last_docked_station(self) -> Station:
@@ -139,13 +138,9 @@ class PilotState:
     def last_docked_station(self, value:Station) -> None:
         self._last_docked_station = value
 
-    @property
-    def missions(self) -> list:
-        return self._missions
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, PilotState):
             return NotImplemented
 
-        return self._last_docked_station == other._last_docked_station \
-            and self._missions == other._missions
+        return self._last_docked_station == other._last_docked_station

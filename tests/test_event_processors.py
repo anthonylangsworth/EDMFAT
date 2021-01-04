@@ -424,7 +424,7 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
     assert(galaxy_state == expected_galaxy_state)
 
 @pytest.mark.parametrize(
-   "minor_faction, star_systems, station, mission, mission_completed_event, expected_results",
+   "minor_faction, star_systems, station, mission_completed_event, expected_results",
     (
         (
             "Luchu Purple Hand Gang",
@@ -433,7 +433,6 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("LTT 2337", 908620436178, ["LTT 2337 United Holdings", "LTT 2337 Empire Party", "Independent LTT 2337 Values Party", "LTT 2337 Flag", "LTT 2337 Jet Brothers", "The Nova Alliance", "EDA Kunti League"])
             ],
             Station("Bowen Terminal", 908620436178, "EDA Kunti League"),
-            Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217, "LTT 2337 Empire Party", "LTT 2337"), 
             { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             [
                 MissionCompletedEventSummary("Luchu", True, "++")
@@ -446,7 +445,6 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("LTT 2337", 908620436178, ["LTT 2337 United Holdings", "LTT 2337 Empire Party", "Independent LTT 2337 Values Party", "LTT 2337 Flag", "LTT 2337 Jet Brothers", "The Nova Alliance", "EDA Kunti League"])
             ],
             Station("Bowen Terminal", 908620436178, "EDA Kunti League"),
-            Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217, "LTT 2337 Empire Party", "LTT 2337"), 
             { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             [
                 MissionCompletedEventSummary("Luchu", False, "++")
@@ -459,7 +457,6 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("Trumuye", 11667412755873, ["Antai Energy Group", "Trumuye Emperor's Grace", "Trumuye Incorporated", "League of Trumuye League", "United Trumuye Progressive Party", "EDA Kunti League"])
             ],
             Station("Yakovlev Port", 11667412755873, "EDA Kunti League"),
-            Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217, "Trumuye Incorporated", "Trumuye"),
             # { "timestamp":"2020-12-31T13:46:59Z", "event":"MissionAccepted", "Faction":"LHS 1832 Labour", "Name":"Mission_Delivery_Democracy", "LocalisedName":"Deliver 18 units of Copper in the name of democracy", "Commodity":"$Copper_Name;", "Commodity_Localised":"Copper", "Count":18, "TargetFaction":"Trumuye Incorporated", "DestinationSystem":"Trumuye", "DestinationStation":"Yakovlev Port", "Expiry":"2021-01-01T13:46:03Z", "Wing":false, "Influence":"++", "Reputation":"++", "Reward":50745, "MissionID":685926706 }
             { "timestamp":"2020-12-31T13:52:56Z", "event":"MissionCompleted", "Faction":"LHS 1832 Labour", "Name":"Mission_Delivery_Democracy_name", "MissionID":685926706, "Commodity":"$Copper_Name;", "Commodity_Localised":"Copper", "Count":18, "TargetFaction":"Trumuye Incorporated", "DestinationSystem":"Trumuye", "DestinationStation":"Yakovlev Port", "Reward":1000, "FactionEffects":[ { "Faction":"Trumuye Incorporated", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":11667412755873, "Trend":"UpGood", "Influence":"+++++" } ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"LHS 1832 Labour", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
             [
@@ -474,16 +471,13 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("Dromi", 1213084977515, ["Pilots' Federation Administration"])
             ],
             Station("Aldrich Station", 5370319620984, "Pilots' Federation Administration"),
-            Mission(570789967, "Pilots' Federation Administration", "None", 2871051298217, "Pilots' Federation Administration", "Dromi"),
             { "timestamp":"2020-04-25T15:25:27Z", "event":"MissionCompleted", "Faction":"Pilots' Federation Administration", "Name":"Mission_Delivery_name", "MissionID":570789967, "Commodity":"$ConductiveFabrics_Name;", "Commodity_Localised":"Conductive Fabrics", "Count":4, "TargetFaction":"Pilots' Federation Administration", "DestinationSystem":"Dromi", "DestinationStation":"Mawson Dock", "Reward":24310, "FactionEffects":[ { "Faction":"Pilots' Federation Administration", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             []
         )        
     )
 )
-def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):
-    pilot_state = PilotState()
-    pilot_state.last_docked_station = station
-    pilot_state.missions[mission.id] = mission
+def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission_completed_event:Dict[str, Any], expected_results:list):
+    pilot_state = PilotState(station)
     galaxy_state = GalaxyState()
     for star_system in star_systems:
         galaxy_state.systems[star_system.address] = star_system
