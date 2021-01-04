@@ -497,7 +497,16 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
             [
                 MissionCompletedEventSummary("LHS 3802", False, "+")                
             ]
-        )         
+        ),
+        (
+            "EDA Kunti League",
+            [
+                StarSystem("Negani", 16064922396065, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"])
+            ],
+            Station("Thiele Point", 16064922396065, "L.Y.S Corp."),
+            { "timestamp":"2020-09-13T11:50:16Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Courier_Elections_name", "MissionID":629331402, "TargetFaction":"L.Y.S Corp.", "DestinationSystem":"Negani", "DestinationStation":"Thiele Point", "Reward":150000, "FactionEffects":[ { "Faction":"L.Y.S Corp.", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":16064922396065, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
+            []
+        )
     )
 )
 def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission_completed_event:Dict[str, Any], expected_results:list):

@@ -43,7 +43,7 @@ class MissionCompletedEventFormatter(EventFormatter):
     def process(self, event_summaries: iter) -> str:
         result = ""
         for influence, mission_completed_events in groupby(sorted(event_summaries, key=lambda x: x.influence), key=lambda x: x.influence):
-            result += f"{len(list(mission_completed_events))}xINF{influence} mission\n"
+            result += f"{len(list(mission_completed_events))} INF{influence} mission(s)\n"
         return result
 
 # TODO: Move to an IoC setup

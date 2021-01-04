@@ -23,6 +23,8 @@ def test_tracker_init():
             "1,916,227 CR of Bounty Vouchers\n"
             "\n"
             "HR 1597 - PRO\n"
+            "1 INF++ mission(s)\n"
+            "2 INF+++ mission(s)\n"            
             "12,801,574 CR of Bounty Vouchers")
         ),
         (

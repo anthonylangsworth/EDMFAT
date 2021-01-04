@@ -68,7 +68,7 @@ def test_market_sell(event_summaries: list, expected_activity: str):
             [
                 MissionCompletedEventSummary("Shambogi", True, "+")
             ],
-            "1xINF+ mission\n"
+            "1 INF+ mission(s)\n"
         ),        
         (
             [
@@ -77,9 +77,9 @@ def test_market_sell(event_summaries: list, expected_activity: str):
                 MissionCompletedEventSummary("Shambogi", True, "++"),
                 MissionCompletedEventSummary("Shambogi", True, "+++")
             ],
-            ("2xINF+ mission\n"
-            "1xINF++ mission\n"
-            "1xINF+++ mission\n")
+            ("2 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "1 INF+++ mission(s)\n")
         )
     ]
 )
