@@ -151,17 +151,6 @@ class MarketSellEventProcessor(EventProcessor):
 
         return result
 
-class MissionAcceptedEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "MissionAccepted"
-        
-    def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, _ = _get_location(pilot_state, galaxy_state)
-        pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], 
-            star_system.address, event.get("TargetFaction", None), event.get("DestinationSystem", None))
-        return []
-
 class MissionCompletedEventProcessor(EventProcessor):
     @property
     def eventName(self) -> str:
@@ -176,7 +165,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     raise UnknownStarSystemError(influence_effect["SystemAddress"])
 
                 influence = influence_effect["Influence"]
-                if influence != "None":
+                if influence != "None": # E.g. missions in starter area
                     if faction_effect["Faction"] == minor_faction:
                         supports = influence_effect["Trend"] == "UpGood"
                     elif faction_effect["Faction"] in star_system.minor_factions:
@@ -198,6 +187,5 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "SellExplorationData": SellExplorationDataEventProcessor(),
     "MultiSellExplorationData": SellExplorationDataEventProcessor(),
     "MarketSell": MarketSellEventProcessor(),
-    "MissionAccepted": MissionAcceptedEventProcessor(),
     "MissionCompleted": MissionCompletedEventProcessor()
 }

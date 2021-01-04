@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor
+from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionCompletedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
@@ -420,40 +420,6 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
     market_sell_event_processor = MarketSellEventProcessor()
     result = market_sell_event_processor.process(market_sell_event, minor_faction, pilot_state, galaxy_state)
     assert(result == expected_results)
-    assert(pilot_state == expected_pilot_state)
-    assert(galaxy_state == expected_galaxy_state)
-
-@pytest.mark.parametrize(
-   "minor_faction, star_system, station, mission, mission_accepted_event",
-    (
-        (
-            "Luchu Purple Hand Gang",
-            StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
-            Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
-            Mission(685926938, "Luchu Purple Hand Gang", "++", 86306249, "LTT 2337 Empire Party", "LTT 2337"), 
-            { "timestamp":"2020-12-31T13:47:32Z", "event":"MissionAccepted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier", "LocalisedName":"Courier Job Available", "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Expiry":"2021-01-01T13:46:03Z", "Wing":False, "Influence":"++", "Reputation":"+", "Reward":51607, "MissionID":685926938 }
-        ),
-        (
-            "LHS 1832 Labour",
-            StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
-            Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
-            Mission(685926779, "LHS 1832 Labour", "++", 86306249, "Verner Imperial Society", "Beatis"), 
-            { "timestamp":"2020-12-31T13:47:10Z", "event":"MissionAccepted", "Faction":"LHS 1832 Labour", "Name":"Chain_HelpFinishTheOrder", "LocalisedName":"Deliver 2 Units of Polymers", "Commodity":"$Polymers_Name;", "Commodity_Localised":"Polymers", "Count":2, "TargetFaction":"Verner Imperial Society", "DestinationSystem":"Beatis", "DestinationStation":"Vlamingh Hub", "Expiry":"2021-01-01T13:46:03Z", "Wing":False, "Influence":"++", "Reputation":"++", "Reward":10045, "MissionID":685926779 }
-        )
-    )
-)
-def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, station:Station, mission:Mission, mission_accepted_event:Dict[str, Any]):
-    pilot_state = PilotState()
-    pilot_state.last_docked_station = station
-    galaxy_state = GalaxyState()
-    galaxy_state.systems[star_system.address] = star_system
-    expected_pilot_state = copy.deepcopy(pilot_state)
-    expected_pilot_state.missions[mission.id] = mission
-    expected_galaxy_state = copy.deepcopy(galaxy_state)
-
-    mission_accepted_event_processor = MissionAcceptedEventProcessor()
-    result = mission_accepted_event_processor.process(mission_accepted_event, minor_faction, pilot_state, galaxy_state)
-    assert(result == [])    
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
 
