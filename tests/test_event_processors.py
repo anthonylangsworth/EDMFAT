@@ -14,10 +14,10 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
         ("c", "b", "a, b", None),
 
         # Should not happen but included for predictability
-        ("a", "a", "", True),
+        ("a", "a", "", None),
         ("a", "b", "", None),
         ("a", "b", "c, d", None),
-        ("a", "a", "c, d", True)
+        ("a", "a", "c, d", None)
     )
 )
 def test_supports_minor_faction(event_minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, expected_result):
@@ -473,7 +473,31 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
             Station("Aldrich Station", 5370319620984, "Pilots' Federation Administration"),
             { "timestamp":"2020-04-25T15:25:27Z", "event":"MissionCompleted", "Faction":"Pilots' Federation Administration", "Name":"Mission_Delivery_name", "MissionID":570789967, "Commodity":"$ConductiveFabrics_Name;", "Commodity_Localised":"Conductive Fabrics", "Count":4, "TargetFaction":"Pilots' Federation Administration", "DestinationSystem":"Dromi", "DestinationStation":"Mawson Dock", "Reward":24310, "FactionEffects":[ { "Faction":"Pilots' Federation Administration", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             []
-        )        
+        ),
+        (
+            "EG Union",
+            [
+                StarSystem("Gebel", 3107576582874, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
+                StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
+            ],
+            Station("Riess Hub", 3107576582874, "EG Union"),
+            { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
+            [
+                MissionCompletedEventSummary("Gebel", True, "+")
+            ]
+        ),
+        (
+            "LHS 3802 Rats",
+            [
+                StarSystem("Gebel", 3107576582874, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
+                StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
+            ],
+            Station("Riess Hub", 3107576582874, "EG Union"),
+            { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
+            [
+                MissionCompletedEventSummary("LHS 3802", False, "+")                
+            ]
+        )         
     )
 )
 def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission_completed_event:Dict[str, Any], expected_results:list):

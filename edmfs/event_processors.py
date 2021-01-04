@@ -27,7 +27,9 @@ class UnknownMissionError(Exception):
         return self._id
 
 def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False):
-    if minor_faction == supported_minor_faction:
+    if not supported_minor_faction in system_minor_factions:
+        supports = None
+    elif minor_faction == supported_minor_faction:
         supports = supports_value
     elif minor_faction in system_minor_factions:
         supports = undermines_value   
@@ -163,16 +165,8 @@ class MissionCompletedEventProcessor(EventProcessor):
                 star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
                 if not star_system:
                     raise UnknownStarSystemError(influence_effect["SystemAddress"])
-
                 influence = influence_effect["Influence"]
-                
-                if faction_effect["Faction"] == minor_faction:
-                    supports = influence_effect["Trend"] == "UpGood"
-                elif faction_effect["Faction"] in star_system.minor_factions:
-                    supports = influence_effect["Trend"] == "DownBad"
-                else:
-                    supports = None
-
+                supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
                 if supports != None:
                     result.append(MissionCompletedEventSummary(star_system.name, supports, influence))
         return result
