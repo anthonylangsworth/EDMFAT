@@ -39,9 +39,17 @@ class MarketSellEventFormatter(EventFormatter):
             total_count += event_summary.count
         return f"{total_count:,} T trade at {(total_sell_price - total_buy_price) / total_count:,.0f} CR average profit per T\n"
 
+class MissionCompletedEventFormatter(EventFormatter):
+    def process(self, event_summaries: iter) -> str:
+        result = ""
+        for influence, mission_completed_events in groupby(sorted(event_summaries, key=lambda x: x.influence), key=lambda x: x.influence):
+            result += f"{len(list(mission_completed_events))}x{influence}\n"
+        return result
+
 # TODO: Move to an IoC setup
 _default_event_formatters:Dict[str, EventFormatter] = {
     "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
     "SellExplorationDataEventSummary" : SellExplorationDataEventFormatter(),
-    "MarketSellEventSummary": MarketSellEventFormatter()
+    "MarketSellEventSummary": MarketSellEventFormatter(),
+    "MissionCompletedEventSummary": MissionCompletedEventFormatter()
 }

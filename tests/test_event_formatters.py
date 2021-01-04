@@ -1,7 +1,7 @@
 import pytest
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
 @pytest.mark.parametrize(
     "event_summaries, expected_activity",
@@ -35,7 +35,7 @@ def test_redeem_voucher(event_summaries: list, expected_activity: str):
         (
             [
                 SellExplorationDataEventSummary("Shambogi", True, 100),
-                SellExplorationDataEventSummary("Shambogi", False, 2000)
+                SellExplorationDataEventSummary("Shambogi", True, 2000)
             ],
             "2,100 CR of Cartography Data\n"
         )
@@ -51,7 +51,7 @@ def test_sell_exploration_data(event_summaries: list, expected_activity: str):
         (
             [
                 MarketSellEventSummary("Shambogi", True, 1000, 100, 50),
-                MarketSellEventSummary("Shambogi", False, 1000, 200, 100)
+                MarketSellEventSummary("Shambogi", True, 1000, 200, 100)
             ],
             "2,000 T trade at 75 CR average profit per T\n"
         )
@@ -60,3 +60,29 @@ def test_sell_exploration_data(event_summaries: list, expected_activity: str):
 def test_market_sell(event_summaries: list, expected_activity: str):
     market_sell_event_formatter = MarketSellEventFormatter()
     assert(market_sell_event_formatter.process(event_summaries) == expected_activity)
+
+@pytest.mark.parametrize(
+    "event_summaries, expected_activity",
+    [
+        (
+            [
+                MissionCompletedEventSummary("Shambogi", True, "+")
+            ],
+            "1x+\n"
+        ),        
+        (
+            [
+                MissionCompletedEventSummary("Shambogi", True, "+"),
+                MissionCompletedEventSummary("Shambogi", True, "+"),
+                MissionCompletedEventSummary("Shambogi", True, "++"),
+                MissionCompletedEventSummary("Shambogi", True, "+++")
+            ],
+            ("2x+\n"
+            "1x++\n"
+            "1x+++\n")
+        )
+    ]
+)
+def test_mission_completed(event_summaries: list, expected_activity: str):
+    mission_completed_event_formatter = MissionCompletedEventFormatter()
+    assert(mission_completed_event_formatter.process(event_summaries) == expected_activity)
