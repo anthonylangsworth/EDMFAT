@@ -427,6 +427,19 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
    "minor_faction, star_systems, station, mission, mission_completed_event, expected_results",
     (
         (
+            "Luchu Purple Hand Gang",
+            [
+                StarSystem("Luchu", 2871051298217, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"]),
+                StarSystem("LTT 2337", 908620436178, ["LTT 2337 United Holdings", "LTT 2337 Empire Party", "Independent LTT 2337 Values Party", "LTT 2337 Flag", "LTT 2337 Jet Brothers", "The Nova Alliance", "EDA Kunti League"])
+            ],
+            Station("Bowen Terminal", 908620436178, "EDA Kunti League"),
+            Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217, "LTT 2337 Empire Party", "LTT 2337"), 
+            { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
+            [
+                MissionCompletedEventSummary("Luchu", True, "++")
+            ]
+        ),
+        (
             "EDA Kunti League",
             [
                 StarSystem("Luchu", 2871051298217, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"]),
@@ -453,7 +466,18 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 MissionCompletedEventSummary("Trumuye", False, "+++++"),
                 MissionCompletedEventSummary("Luchu", False, "+++")
             ]
-        )
+        ),
+        (
+            "Pilots' Federation Administration",
+            [
+                StarSystem("Otegine", 5370319620984, ["Pilots' Federation Administration"]),
+                StarSystem("Dromi", 1213084977515, ["Pilots' Federation Administration"])
+            ],
+            Station("Aldrich Station", 5370319620984, "Pilots' Federation Administration"),
+            Mission(570789967, "Pilots' Federation Administration", "None", 2871051298217, "Pilots' Federation Administration", "Dromi"),
+            { "timestamp":"2020-04-25T15:25:27Z", "event":"MissionCompleted", "Faction":"Pilots' Federation Administration", "Name":"Mission_Delivery_name", "MissionID":570789967, "Commodity":"$ConductiveFabrics_Name;", "Commodity_Localised":"Conductive Fabrics", "Count":4, "TargetFaction":"Pilots' Federation Administration", "DestinationSystem":"Dromi", "DestinationStation":"Mawson Dock", "Reward":24310, "FactionEffects":[ { "Faction":"Pilots' Federation Administration", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
+            []
+        )        
     )
 )
 def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):

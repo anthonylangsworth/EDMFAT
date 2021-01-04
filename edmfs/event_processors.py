@@ -165,16 +165,16 @@ class MissionCompletedEventProcessor(EventProcessor):
                     raise UnknownStarSystemError(influence_effect["SystemAddress"])
 
                 influence = influence_effect["Influence"]
-                if influence != "None": # E.g. missions in starter area
-                    if faction_effect["Faction"] == minor_faction:
-                        supports = influence_effect["Trend"] == "UpGood"
-                    elif faction_effect["Faction"] in star_system.minor_factions:
-                        supports = influence_effect["Trend"] == "DownBad"
-                    else:
-                        supports = None
+                
+                if faction_effect["Faction"] == minor_faction:
+                    supports = influence_effect["Trend"] == "UpGood"
+                elif faction_effect["Faction"] in star_system.minor_factions:
+                    supports = influence_effect["Trend"] == "DownBad"
+                else:
+                    supports = None
 
-                    if supports != None:
-                        result.append(MissionCompletedEventSummary(star_system.name, supports, influence))
+                if supports != None:
+                    result.append(MissionCompletedEventSummary(star_system.name, supports, influence))
         return result
     
 # Module non-public
