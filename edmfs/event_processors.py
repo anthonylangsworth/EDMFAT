@@ -2,7 +2,7 @@ from typing import Dict, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary
+from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
 class NoLastDockedStationError(Exception):
     """No last docked station in PilotState. Should not happen in game."""
@@ -168,8 +168,25 @@ class MissionCompletedEventProcessor(EventProcessor):
         return "MissionCompleted"
         
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        #pilot_state.missions.remove(event["MissionID"])
-        pass
+        result = []
+        for faction_effect in [x for x in event["FactionEffects"]]:
+            for influence_effect in faction_effect["Influence"]:
+                star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
+                if not star_system:
+                    raise UnknownStarSystemError(influence_effect["SystemAddress"])
+
+                influence = influence_effect["Influence"]
+                if influence != "None":
+                    if faction_effect["Faction"] == minor_faction:
+                        supports = influence_effect["Trend"] == "UpGood"
+                    elif faction_effect["Faction"] in star_system.minor_factions:
+                        supports = influence_effect["Trend"] == "DownBad"
+                    else:
+                        supports = None
+
+                    if supports != None:
+                        result.append(MissionCompletedEventSummary(star_system.name, supports, influence))
+        return result
     
 # Module non-public
 # TODO: move this to an IoC setup

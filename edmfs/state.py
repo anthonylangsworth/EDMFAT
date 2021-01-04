@@ -129,7 +129,7 @@ class GalaxyState:
 class PilotState:
     def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
         self._last_docked_station = last_docked_station
-        self._missions = missions if missions else {}
+        self._missions = missions if missions else {} # Fix strange sharing issue
 
     @property
     def last_docked_station(self) -> Station:
