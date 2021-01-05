@@ -14,6 +14,7 @@ def test_StarSystem_init():
 def test_pilot_state_init():
     pilot_state:PilotState = PilotState()
     assert(pilot_state.last_docked_station == None)
+    assert(pilot_state.missions == {})
 
 def test_station_init():
     NAME = "Syromyatnikov Terminal"
