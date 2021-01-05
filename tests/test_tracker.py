@@ -121,7 +121,17 @@ def test_tracker_init():
             "\n"
             "LTT 2337 - PRO\n"
             "5 T trade at 265 CR average profit per T")
-        )
+        ),
+        (
+            "EDA Kunti League", 
+            "Journal.210105214916.01.log",
+            ("LHS 1832 - ANTI\n"
+            "1 INF+ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "Shongbon - ANTI\n"
+            "1 INF+++ mission(s)")
+        ),
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
     with open("tests/journal_files/" + journal_file_name) as journal_file:
@@ -131,30 +141,3 @@ def test_journal_file(minor_faction:str, journal_file_name:str, expected_activit
     for event in events:
         tracker.on_event(event)
     assert(tracker.activity == expected_activity)
-
-
-"""Anek Wango - ANTI
-1 INF+ mission(s)
-1 INF++ mission(s)
-
-LHS 1832 - ANTI
-1 INF+ mission(s)
-1 INF++ mission(s)
-1 INF+++ mission(s)
-
-LHS 1832 - PRO
-1 INF++ mission(s)
-194,136 CR of Bounty Vouchers
-12,039 CR of Cartography Data
-
-LPM 229 - ANTI
-1 INF+ mission(s)
-2 INF++ mission(s)
-
-LTT 2337 - ANTI
-2 INF+ mission(s)
-1 INF++ mission(s)
-6 T trade at -198 CR average profit per T
-
-LTT 2337 - PRO
-5 T trade at 265 CR average profit per T"""
