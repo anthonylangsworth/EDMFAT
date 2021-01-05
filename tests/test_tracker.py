@@ -30,16 +30,31 @@ def test_tracker_init():
         (
             "EDA Kunti League", 
             "Journal.200913212207.01.log", 
-            ("Shambogi - ANTI\n965,956 CR of Bounty Vouchers\n"
+            ("Kunti - ANTI\n"
+            "1 INF+++ mission(s)\n"
             "\n"
-            "Shambogi - PRO\n139,652 CR of Bounty Vouchers")
+            "Shambogi - ANTI\n"
+            "965,956 CR of Bounty Vouchers\n"
+            "\n"
+            "Shambogi - PRO\n"
+            "7 INF++ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "139,652 CR of Bounty Vouchers")
         ),
         (
             "EDA Kunti League", 
             "Journal.201018213100.01.log", 
-            ("Kanates - PRO\n"
+            ("9 G. Carinae - ANTI\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "Kanates - PRO\n"
+            "3 INF+++ mission(s)\n"
+            "1 INF++++ mission(s)\n"
             "436,046 CR of Bounty Vouchers\n"
-            "61,635 CR of Cartography Data")
+            "61,635 CR of Cartography Data\n"
+            "\n"
+            "Kutjara - ANTI\n"
+            "1 INF++++ mission(s)")
         ),
         (
             "EDA Kunti League", 
@@ -64,7 +79,10 @@ def test_tracker_init():
             "Green Party of Dulos", 
             "Journal.200630212114.01.log",
             ("Dulos - ANTI\n"
-            "28 T trade at 44 CR average profit per T")
+            "28 T trade at 44 CR average profit per T\n"
+            "\n"
+            "Dulos - PRO\n"
+            "1 INF+++ mission(s)")
         ),
         (
             "EDA Kunti League", 
