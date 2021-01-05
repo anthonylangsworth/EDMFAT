@@ -160,15 +160,22 @@ class MissionCompletedEventProcessor(EventProcessor):
         
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         result = []
+
+        # Use the highest influence to mirror the game UI. 
+
+        max_influence = ""
+        for faction_effect in [x for x in event["FactionEffects"]]:
+            for influence_effect in faction_effect["Influence"]:
+                max_influence = influence_effect["Influence"] if influence_effect["Influence"] > max_influence else max_influence
+
         for faction_effect in [x for x in event["FactionEffects"]]:
             for influence_effect in faction_effect["Influence"]:
                 star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
                 if not star_system:
                     raise UnknownStarSystemError(influence_effect["SystemAddress"])
-                influence = influence_effect["Influence"]
                 supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
                 if supports != None:
-                    result.append(MissionCompletedEventSummary(star_system.name, supports, influence))
+                    result.append(MissionCompletedEventSummary(star_system.name, supports, max_influence))
         return result
     
 # Module non-public
