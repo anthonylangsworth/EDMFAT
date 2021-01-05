@@ -468,7 +468,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             ],
             Station("Bowen Terminal", 908620436178, "EDA Kunti League"),
             Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217), 
-            { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
+            { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 23~37 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             [
                 MissionCompletedEventSummary("Luchu", True, "++")
             ]
@@ -508,7 +508,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
                 StarSystem("Dromi", 1213084977515, ["Pilots' Federation Administration"])
             ],
             Station("Aldrich Station", 5370319620984, "Pilots' Federation Administration"),
-            Mission(570789967, "Pilots' Federation Administration", "None", 2871051298217),
+            Mission(570789967, "Pilots' Federation Administration", "None", 5370319620984),
             { "timestamp":"2020-04-25T15:25:27Z", "event":"MissionCompleted", "Faction":"Pilots' Federation Administration", "Name":"Mission_Delivery_name", "MissionID":570789967, "Commodity":"$ConductiveFabrics_Name;", "Commodity_Localised":"Conductive Fabrics", "Count":4, "TargetFaction":"Pilots' Federation Administration", "DestinationSystem":"Dromi", "DestinationStation":"Mawson Dock", "Reward":24310, "FactionEffects":[ { "Faction":"Pilots' Federation Administration", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             []
         ),
@@ -549,6 +549,10 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
         #     { "timestamp":"2020-09-13T11:50:16Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Courier_Elections_name", "MissionID":629331402, "TargetFaction":"L.Y.S Corp.", "DestinationSystem":"Negani", "DestinationStation":"Thiele Point", "Reward":150000, "FactionEffects":[ { "Faction":"L.Y.S Corp.", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":16064922396065, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
         #     []
         # )
+
+        # Testing TODOS:
+        # 1. Mission with no destination system or faction, e.g. donation
+        # 1. Mission with the same faction and system, e.g. trade
     )
 )
 def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):

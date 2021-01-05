@@ -63,11 +63,11 @@ class Station:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
 class Mission:
-    def __init__(self, id:int, minor_faction:str, influence:str, system:int):
+    def __init__(self, id:int, minor_faction:str, influence:str, system_address:int):
         self._id = id
         self._minor_faction = minor_faction
         self._influence = influence
-        self._system = system
+        self._system_address = system_address
 
     @property
     def id(self) -> int:
@@ -82,8 +82,8 @@ class Mission:
         return self._influence
     
     @property
-    def system(self) -> int:
-        return self._system
+    def system_address(self) -> int:
+        return self._system_address
     
     def __eq__ (self, other) -> bool:
         if not isinstance(other, Mission):
@@ -92,14 +92,14 @@ class Mission:
         return (self._id == other._id
             and self._minor_faction == other._minor_faction
             and self._influence == other._influence
-            and self._system == other._system)
+            and self._system_address == other._system_address)
 
     def __repr__(self) -> str:
-        return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', '{self._system}')"
+        return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', {self._system_address})"
 
 class GalaxyState:
     def __init__(self, star_systems:Dict[int, StarSystem] = None):
-        self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Work around for {} being shared in edge cases
+        self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Workaround for {} being shared in edge cases
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
@@ -117,7 +117,7 @@ class GalaxyState:
 class PilotState:
     def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
         self._last_docked_station = last_docked_station
-        self._missions = missions if missions else {} # Fix strange sharing issue
+        self._missions = missions if missions else {} # Workaround for {} being shared in edge cases
 
     @property
     def last_docked_station(self) -> Station:

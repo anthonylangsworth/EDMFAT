@@ -33,9 +33,9 @@ def test_mission_init():
     ID = 564728
     MINOR_FACTION = "The Dark Wheel"
     INFLUENCE = "+++"
-    STAR_SYSTEM = 86306249
-    mission = Mission(ID, MINOR_FACTION, INFLUENCE, STAR_SYSTEM)
+    SYSTEM_ADDRESS = 86306249
+    mission = Mission(ID, MINOR_FACTION, INFLUENCE, SYSTEM_ADDRESS)
     assert(mission.id == ID)
     assert(mission.minor_faction == MINOR_FACTION)
     assert(mission.influence == INFLUENCE)
-    assert(mission.system == STAR_SYSTEM)
+    assert(mission.system_address == SYSTEM_ADDRESS)
