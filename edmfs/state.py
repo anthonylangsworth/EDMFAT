@@ -63,13 +63,11 @@ class Station:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
 class Mission:
-    def __init__(self, id:int, minor_faction:str, influence:str, system:int, target_faction:str, destination_system:str):
+    def __init__(self, id:int, minor_faction:str, influence:str, system:int):
         self._id = id
         self._minor_faction = minor_faction
         self._influence = influence
         self._system = system
-        self._target_faction = target_faction
-        self._destination_system = destination_system
 
     @property
     def id(self) -> int:
@@ -87,14 +85,6 @@ class Mission:
     def system(self) -> int:
         return self._system
     
-    @property
-    def target_faction(self) -> str:
-        return self._target_faction
-    
-    @property
-    def destination_system(self) -> str:
-        return self._destination_system
-
     def __eq__ (self, other) -> bool:
         if not isinstance(other, Mission):
             return NotImplemented
@@ -102,12 +92,10 @@ class Mission:
         return (self._id == other._id
             and self._minor_faction == other._minor_faction
             and self._influence == other._influence
-            and self._system == other._system
-            and self._target_faction == other._target_faction
-            and self._destination_system == other._destination_system)
+            and self._system == other._system)
 
     def __repr__(self) -> str:
-        return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', '{self._influence}', '{self._system}', '{self._target_faction}', '{self._destination_system}')"
+        return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', '{self._system}')"
 
 class GalaxyState:
     def __init__(self, star_systems:Dict[int, StarSystem] = None):

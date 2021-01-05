@@ -161,7 +161,7 @@ class MissionAcceptedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, _ = _get_location(pilot_state, galaxy_state)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], 
-            star_system.address, event.get("TargetFaction", None), event.get("DestinationSystem", None))
+            star_system.address)
         return []
 
 class MissionCompletedEventProcessor(EventProcessor):
