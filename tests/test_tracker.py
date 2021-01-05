@@ -92,6 +92,35 @@ def test_tracker_init():
              "\n"
              "HR 1597 - PRO\n"
              "7,622,618 CR of Bounty Vouchers")
+        ),
+        (
+            "EDA Kunti League", 
+            "Journal.210105181410.01.log",
+            ("Anek Wango - ANTI\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "\n"
+            "LHS 1832 - ANTI\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "LHS 1832 - PRO\n"
+            "1 INF++ mission(s)\n"
+            "194,136 CR of Bounty Vouchers\n"
+            "12,039 CR of Cartography Data\n"
+            "\n"
+            "LPM 229 - ANTI\n"
+            "1 INF+ mission(s)\n"
+            "2 INF++ mission(s)\n"
+            "\n"
+            "LTT 2337 - ANTI\n"
+            "2 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "6 T trade at -198 CR average profit per T\n"
+            "\n"
+            "LTT 2337 - PRO\n"
+            "5 T trade at 265 CR average profit per T")
         )
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
@@ -102,3 +131,30 @@ def test_journal_file(minor_faction:str, journal_file_name:str, expected_activit
     for event in events:
         tracker.on_event(event)
     assert(tracker.activity == expected_activity)
+
+
+"""Anek Wango - ANTI
+1 INF+ mission(s)
+1 INF++ mission(s)
+
+LHS 1832 - ANTI
+1 INF+ mission(s)
+1 INF++ mission(s)
+1 INF+++ mission(s)
+
+LHS 1832 - PRO
+1 INF++ mission(s)
+194,136 CR of Bounty Vouchers
+12,039 CR of Cartography Data
+
+LPM 229 - ANTI
+1 INF+ mission(s)
+2 INF++ mission(s)
+
+LTT 2337 - ANTI
+2 INF+ mission(s)
+1 INF++ mission(s)
+6 T trade at -198 CR average profit per T
+
+LTT 2337 - PRO
+5 T trade at 265 CR average profit per T"""
