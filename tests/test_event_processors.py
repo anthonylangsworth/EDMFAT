@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any
 import pytest
 
-from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionCompletedEventProcessor
+from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
@@ -424,6 +424,40 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
     assert(galaxy_state == expected_galaxy_state)
 
 @pytest.mark.parametrize(
+   "minor_faction, star_system, station, mission, mission_accepted_event",
+    (
+        (
+            "Luchu Purple Hand Gang",
+            StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
+            Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
+            Mission(685926938, "Luchu Purple Hand Gang", "++", 86306249, "LTT 2337 Empire Party", "LTT 2337"), 
+            { "timestamp":"2020-12-31T13:47:32Z", "event":"MissionAccepted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier", "LocalisedName":"Courier Job Available", "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Expiry":"2021-01-01T13:46:03Z", "Wing":False, "Influence":"++", "Reputation":"+", "Reward":51607, "MissionID":685926938 }
+        ),
+        (
+            "LHS 1832 Labour",
+            StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
+            Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
+            Mission(685926779, "LHS 1832 Labour", "++", 86306249, "Verner Imperial Society", "Beatis"), 
+            { "timestamp":"2020-12-31T13:47:10Z", "event":"MissionAccepted", "Faction":"LHS 1832 Labour", "Name":"Chain_HelpFinishTheOrder", "LocalisedName":"Deliver 2 Units of Polymers", "Commodity":"$Polymers_Name;", "Commodity_Localised":"Polymers", "Count":2, "TargetFaction":"Verner Imperial Society", "DestinationSystem":"Beatis", "DestinationStation":"Vlamingh Hub", "Expiry":"2021-01-01T13:46:03Z", "Wing":False, "Influence":"++", "Reputation":"++", "Reward":10045, "MissionID":685926779 }
+        )
+    )
+)
+def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, station:Station, mission:Mission, mission_accepted_event:Dict[str, Any]):
+    pilot_state = PilotState()
+    pilot_state.last_docked_station = station
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_pilot_state.missions[mission.id] = mission
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+
+    mission_accepted_event_processor = MissionAcceptedEventProcessor()
+    result = mission_accepted_event_processor.process(mission_accepted_event, minor_faction, pilot_state, galaxy_state)
+    assert(result == [])    
+    assert(pilot_state == expected_pilot_state)
+    assert(galaxy_state == expected_galaxy_state)
+
+@pytest.mark.parametrize(
    "minor_faction, star_systems, station, mission, mission_completed_event, expected_results",
     (
         (
@@ -485,6 +519,7 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
             ],
             Station("Riess Hub", 3107576582874, "EG Union"),
+            Mission(572416943, "EG Union", "None", 3107576582874, "LHS 3802 Rats", "LHS 3802"),
             { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
             [
                 MissionCompletedEventSummary("Gebel", True, "+")
@@ -497,20 +532,23 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
                 StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
             ],
             Station("Riess Hub", 3107576582874, "EG Union"),
+            Mission(572416943, "EG Union", "None", 3107576582874, "LHS 3802 Rats", "LHS 3802"),
             { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
             [
                 MissionCompletedEventSummary("LHS 3802", False, "+")                
             ]
-        ),
-        (
-            "EDA Kunti League",
-            [
-                StarSystem("Negani", 16064922396065, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"])
-            ],
-            Station("Thiele Point", 16064922396065, "L.Y.S Corp."),
-            { "timestamp":"2020-09-13T11:50:16Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Courier_Elections_name", "MissionID":629331402, "TargetFaction":"L.Y.S Corp.", "DestinationSystem":"Negani", "DestinationStation":"Thiele Point", "Reward":150000, "FactionEffects":[ { "Faction":"L.Y.S Corp.", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":16064922396065, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
-            []
         )
+        # ,
+        # (
+        #     "EDA Kunti League",
+        #     [
+        #         StarSystem("Negani", 16064922396065, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"])
+        #     ],
+        #     Station("Thiele Point", 16064922396065, "L.Y.S Corp."),
+        #     Mission(570789967, "Pilots' Federation Administration", "None", 2871051298217, "Pilots' Federation Administration", "Dromi"),
+        #     { "timestamp":"2020-09-13T11:50:16Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Courier_Elections_name", "MissionID":629331402, "TargetFaction":"L.Y.S Corp.", "DestinationSystem":"Negani", "DestinationStation":"Thiele Point", "Reward":150000, "FactionEffects":[ { "Faction":"L.Y.S Corp.", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":16064922396065, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
+        #     []
+        # )
     )
 )
 def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):
