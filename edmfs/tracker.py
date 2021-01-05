@@ -54,7 +54,7 @@ class Tracker:
                 self._logger.exception(f"Last docked station required for {str(event)}")
                 result = []
             except UnknownStarSystemError as unknown_star_system_error:
-                self._logger.exception(f"Unknown star system {unknown_star_system_error.system_address} required for {str(event)}")
+                self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
                 result = []
             return result
     

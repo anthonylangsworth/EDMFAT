@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Union, Any
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
@@ -10,12 +10,12 @@ class NoLastDockedStationError(Exception):
 
 class UnknownStarSystemError(Exception):
     """Star system not found in GalaxyState. Should not happen in game."""
-    def __init__(self, system_address: int):
-        self._system_address = system_address
+    def __init__(self, system: Union[int, str]):
+        self._system = system
 
     @property
-    def system_address(self) -> int:
-        return self._system_address
+    def system(self) -> int:
+        return self._system
 
 class UnknownMissionError(Exception):
     """Mission not found in PilotState. Should not happen in game."""
@@ -172,41 +172,47 @@ class MissionCompletedEventProcessor(EventProcessor):
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
 
-        # Use the highest influence to mirror the game UI. 
-        max_influence = mission.influence if mission else "+"
-        for faction_effect in [x for x in event["FactionEffects"]]:
-            for influence_effect in faction_effect["Influence"]:
-                max_influence = max(influence_effect["Influence"], max_influence)
-
-        # Try the Influence entries
         result = []
-        for faction_effect in event["FactionEffects"]:
-            for influence_effect in faction_effect["Influence"]:
-                star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
-                if not star_system:
-                    raise UnknownStarSystemError(influence_effect["SystemAddress"])
-                supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
-                if supports != None:
-                    result.append(MissionCompletedEventSummary(star_system.name, supports, max_influence))
+        if not mission or mission.influence != "None":
+            # Use the highest influence to mirror the game UI. 
+            max_influence = mission.influence if mission else "+"
+            for faction_effect in [x for x in event["FactionEffects"]]:
+                for influence_effect in faction_effect["Influence"]:
+                    max_influence = max(influence_effect["Influence"], max_influence)
 
-        # This logic may have issues with the source and destination system are the same but have different source and target factions differ
+            # Try the Influence entries
+            for faction_effect in event["FactionEffects"]:
+                for influence_effect in faction_effect["Influence"]:
+                    star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
+                    if not star_system:
+                        raise UnknownStarSystemError(influence_effect["SystemAddress"])
+                    supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
+                    if supports != None:
+                        result.append(MissionCompletedEventSummary(star_system.name, supports, max_influence))
 
-        # Add the source system if missing and the mission is known
-        if mission:
-            source_system = galaxy_state.systems.get(mission.system_address, None)
-            if not source_system:
-                raise UnknownStarSystemError(mission.system_address)
-            if not any([x for x in result if x.system_name == source_system.name]):
-                result.append(MissionCompletedEventSummary(source_system.name, True, max_influence))
+            # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
-        # Add the target system if missing
-        if not pilot_state.last_docked_station:
-            raise NoLastDockedStationError()
-        target_system = galaxy_state.systems.get(pilot_state.last_docked_station.system_address, None)
-        if not target_system:
-            raise UnknownStarSystemError(pilot_state.last_docked_station.system_address)
-        if not any([x for x in result if x.system_name == target_system.name]):
-            result.append(MissionCompletedEventSummary(target_system.name, True, max_influence))            
+            # Add the source system if missing and the mission is known
+            if mission:
+                source_system = galaxy_state.systems.get(mission.system_address, None)
+                if not source_system:
+                    raise UnknownStarSystemError(mission.system_address)
+                if not any([x for x in result if x.system_name == source_system.name]):
+                    supports = _supports_minor_faction(event["Faction"], minor_faction, source_system.minor_factions)
+                    if supports != None:
+                        result.append(MissionCompletedEventSummary(source_system.name, supports, max_influence))
+
+            # Add the target system if required and missing
+            if event.get("TargetFaction", None):
+                destination_system_name = event.get("NewDestinationSystem", None) if event.get("NewDestinationSystem", None) != None else event.get("DestinationSystem", None)
+                if destination_system_name:
+                    destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
+                    if not destination_system:
+                        raise UnknownStarSystemError(destination_system_name)
+                    if not any([x for x in result if x.system_name == destination_system_name]):
+                        supports = _supports_minor_faction(event["TargetFaction"], minor_faction, destination_system.minor_factions)
+                        if supports != None:
+                            result.append(MissionCompletedEventSummary(destination_system.name, supports, max_influence))                            
 
         return result
     
