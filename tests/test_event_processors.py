@@ -152,14 +152,14 @@ def test_redeem_voucher_init():
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, 
-            [ RedeemVoucherEventSummary("Fuelum", True, "bounty", 42350)]
+            [ RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", True, "bounty", 42350)]
         ),
         (
             "The Fuel Rats Mischief", 
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Findja Empire Assembly")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, 
-            [RedeemVoucherEventSummary("Fuelum", False, "bounty", 25490)]
+            [RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 25490)]
         ),
         (
             "The Fuel Rats Mischief", 
@@ -173,7 +173,7 @@ def test_redeem_voucher_init():
             StarSystem("CPD-59 314", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-15T14:45:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":1779467, "Factions":[ { "Faction":"CPD-59 314 Imperial Society", "Amount":1779467 } ], "BrokerPercentage":25.000000 }, 
-            [ RedeemVoucherEventSummary("CPD-59 314", True, "bounty", 1779467)]
+            [ RedeemVoucherEventSummary("CPD-59 314", "CPD-59 314 Imperial Society", True, "bounty", 1779467)]
         ),
         (
             "The Fuel Rats Mischief", 
@@ -181,10 +181,10 @@ def test_redeem_voucher_init():
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
             [
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 385660),
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 666873),
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 545094),    
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 4326959)    
+                RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 385660),
+                RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 666873),
+                RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 545094),    
+                RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 4326959)    
             ]
         ),
         (
@@ -193,10 +193,10 @@ def test_redeem_voucher_init():
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
             [
-                RedeemVoucherEventSummary("Fuelum", True, "bounty", 385660),
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 666873),
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 545094),    
-                RedeemVoucherEventSummary("Fuelum", False, "bounty", 4326959)    
+                RedeemVoucherEventSummary("Fuelum", "Rabh Empire Pact", True, "bounty", 385660),
+                RedeemVoucherEventSummary("Fuelum", "Rabh Empire Pact", False, "bounty", 666873),
+                RedeemVoucherEventSummary("Fuelum", "Rabh Empire Pact", False, "bounty", 545094),    
+                RedeemVoucherEventSummary("Fuelum", "Rabh Empire Pact", False, "bounty", 4326959)    
             ]
         ),
 
@@ -206,7 +206,7 @@ def test_redeem_voucher_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "EDA Kunti League")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, 
-            [RedeemVoucherEventSummary("", True, "CombatBond", 1622105)]
+            [RedeemVoucherEventSummary("", "EDA Kunti League", True, "CombatBond", 1622105)]
         ),
         (
             "EDA Kunti League", 
@@ -234,7 +234,7 @@ def test_redeem_voucher_init():
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
-            [ RedeemVoucherEventSummary("", True, "CombatBond", 1127126)]
+            [ RedeemVoucherEventSummary("", "HR 1597 & Co", True, "CombatBond", 1127126)]
         ),
 
         # Scannable (Not sure what this is)
@@ -327,14 +327,14 @@ def test_sell_exploration_data_init():
             StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
             Station("Elsa Prospect", 1000, "HR 1597 & Co"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
-            [ SellExplorationDataEventSummary("HR 1597", True, 47743)]
+            [ SellExplorationDataEventSummary("HR 1597", "HR 1597 & Co",True, 47743)]
         ),
         (
             "HR 1597 & Co",
             StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
             Station("Elsa Prospect", 1000, "EDA Kunti League"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
-            [ SellExplorationDataEventSummary("HR 1597", False, 47743)]
+            [ SellExplorationDataEventSummary("HR 1597", "HR 1597 & Co",False, 47743)]
         ),
         (
             "The Dark Wheel",
@@ -370,35 +370,35 @@ def test_market_sell_init():
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
-            [ MarketSellEventSummary("Afli", True, 756, 59759, 4568)]
+            [ MarketSellEventSummary("Afli", "Soverign Justice League",True, 756, 59759, 4568)]
         ),
         (
             "Afli Blue Society",
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
-            [ MarketSellEventSummary("Afli", False, 756, 59759, 4568)]
+            [ MarketSellEventSummary("Afli", "Afli Blue Society",False, 756, 59759, 4568)]
         ),
         (
             "Soverign Justice League",
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
-            [ MarketSellEventSummary("Afli", False, 1, 7111, 0)]
+            [ MarketSellEventSummary("Afli", "Soverign Justice League",False, 1, 7111, 0)]
         ),
         (
             "Afli Blue Society",
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
-            [ MarketSellEventSummary("Afli", True, 1, 7111, 0)]
+            [ MarketSellEventSummary("Afli", "Afli Blue Society",True, 1, 7111, 0)]
         ),
         (
             "Soverign Justice League",
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080 },
-            [ MarketSellEventSummary("Afli", False, 64, 80, 1080)]
+            [ MarketSellEventSummary("Afli", "Soverign Justice League",False, 64, 80, 1080)]
         ),
         (
             "Kunti Dragons",
@@ -470,7 +470,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217), 
             { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             [
-                MissionCompletedEventSummary("Luchu", True, "++")
+                MissionCompletedEventSummary("Luchu", "Luchu Purple Hand Gang",True, "++")
             ]
         ),
         (
@@ -483,8 +483,8 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             Mission(685926938, "Luchu Purple Hand Gang", "++", 2871051298217), 
             { "timestamp":"2020-12-31T14:11:07Z", "event":"MissionCompleted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier_name", "MissionID":685926938, "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Reward":11763, "FactionEffects":[ { "Faction":"Luchu Purple Hand Gang", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"LTT 2337 Empire Party", "Effects":[  ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
             [
-                MissionCompletedEventSummary("Luchu", False, "++"),
-                MissionCompletedEventSummary("LTT 2337", False, "++")
+                MissionCompletedEventSummary("Luchu", "EDA Kunti League",False, "++"),
+                MissionCompletedEventSummary("LTT 2337", "EDA Kunti League",False, "++")
             ]
         ),
         (
@@ -498,8 +498,8 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             # { "timestamp":"2020-12-31T13:46:59Z", "event":"MissionAccepted", "Faction":"LHS 1832 Labour", "Name":"Mission_Delivery_Democracy", "LocalisedName":"Deliver 18 units of Copper in the name of democracy", "Commodity":"$Copper_Name;", "Commodity_Localised":"Copper", "Count":18, "TargetFaction":"Trumuye Incorporated", "DestinationSystem":"Trumuye", "DestinationStation":"Yakovlev Port", "Expiry":"2021-01-01T13:46:03Z", "Wing":false, "Influence":"++", "Reputation":"++", "Reward":50745, "MissionID":685926706 }
             { "timestamp":"2020-12-31T13:52:56Z", "event":"MissionCompleted", "Faction":"LHS 1832 Labour", "Name":"Mission_Delivery_Democracy_name", "MissionID":685926706, "Commodity":"$Copper_Name;", "Commodity_Localised":"Copper", "Count":18, "TargetFaction":"Trumuye Incorporated", "DestinationSystem":"Trumuye", "DestinationStation":"Yakovlev Port", "Reward":1000, "FactionEffects":[ { "Faction":"Trumuye Incorporated", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":11667412755873, "Trend":"UpGood", "Influence":"+++++" } ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"LHS 1832 Labour", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
             [
-                MissionCompletedEventSummary("Trumuye", False, "+++++"),
-                MissionCompletedEventSummary("Luchu", False, "+++++")
+                MissionCompletedEventSummary("Trumuye", "EDA Kunti League",False, "+++++"),
+                MissionCompletedEventSummary("Luchu", "EDA Kunti League",False, "+++++")
             ]
         ),
         (
@@ -523,7 +523,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             Mission(572416943, "EG Union", "++", 3107576582874),
             { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
             [
-                MissionCompletedEventSummary("Gebel", True, "++")
+                MissionCompletedEventSummary("Gebel", "EG Union",True, "++")
             ]
         ),
         (
@@ -536,7 +536,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             Mission(572416943, "EG Union", "++", 3107576582874),
             { "timestamp":"2020-04-29T13:54:30Z", "event":"MissionCompleted", "Faction":"EG Union", "Name":"Mission_Assassinate_name", "MissionID":572416943, "TargetType":"$MissionUtil_FactionTag_PirateLord;", "TargetType_Localised":"Known Pirate", "TargetFaction":"LHS 3802 Rats", "NewDestinationSystem":"Gebel", "DestinationSystem":"LHS 3802", "NewDestinationStation":"Riess Hub", "DestinationStation":"Tokubei Terminal", "Target":"Mauduit", "Reward":10000, "FactionEffects":[ { "Faction":"EG Union", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":3107576582874, "Trend":"UpGood", "Influence":"+" } ], "ReputationTrend":"UpGood", "Reputation":"+++" }, { "Faction":"LHS 3802 Rats", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[ { "SystemAddress":2870245991865, "Trend":"DownBad", "Influence":"+" } ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
             [
-                MissionCompletedEventSummary("LHS 3802", False, "++")                
+                MissionCompletedEventSummary("LHS 3802", "LHS 3802 Rats", False, "++")                
             ]
         )
         # ,

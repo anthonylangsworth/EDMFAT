@@ -96,7 +96,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
             supports = _supports_minor_faction(x["Faction"], minor_faction, system_minor_factions)
 
             if supports != None:
-                result.append(RedeemVoucherEventSummary(system_name, supports, event["Type"], x["Amount"]))
+                result.append(RedeemVoucherEventSummary(system_name, minor_faction, supports, event["Type"], x["Amount"]))
         return result
 
     def _process_combat_bond(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
@@ -104,7 +104,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
         result = []
         if supports != None:
-            result.append(RedeemVoucherEventSummary(system_name, supports, event["Type"], event["Amount"]))
+            result.append(RedeemVoucherEventSummary(system_name, minor_faction, supports, event["Type"], event["Amount"]))
         return result
 
     def process(self, event:Dict[str, Any], minor_faction:str, pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
@@ -133,7 +133,7 @@ class SellExplorationDataEventProcessor(EventProcessor):
 
         result = []        
         if supports != None:
-            result.append(SellExplorationDataEventSummary(star_system.name, supports, event["TotalEarnings"]))
+            result.append(SellExplorationDataEventSummary(star_system.name, minor_faction, supports, event["TotalEarnings"]))
         return result
 
 class MarketSellEventProcessor(EventProcessor):
@@ -149,7 +149,7 @@ class MarketSellEventProcessor(EventProcessor):
         if supports != None:
             if event["SellPrice"] <  event["AvgPricePaid"]:
                 supports = not supports
-            result.append(MarketSellEventSummary(star_system.name, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
+            result.append(MarketSellEventSummary(star_system.name, minor_faction, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
 
         return result
 
@@ -188,7 +188,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                         raise UnknownStarSystemError(influence_effect["SystemAddress"])
                     supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
                     if supports != None:
-                        result.append(MissionCompletedEventSummary(star_system.name, supports, max_influence))
+                        result.append(MissionCompletedEventSummary(star_system.name, minor_faction, supports, max_influence))
 
             # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
@@ -200,7 +200,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                 if not any([x for x in result if x.system_name == source_system.name]):
                     supports = _supports_minor_faction(event["Faction"], minor_faction, source_system.minor_factions)
                     if supports != None:
-                        result.append(MissionCompletedEventSummary(source_system.name, supports, max_influence))
+                        result.append(MissionCompletedEventSummary(source_system.name, minor_faction, supports, max_influence))
 
             # Add the target system if required and missing
             if event.get("TargetFaction", None):
@@ -212,7 +212,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     if not any([x for x in result if x.system_name == destination_system_name]):
                         supports = _supports_minor_faction(event["TargetFaction"], minor_faction, destination_system.minor_factions)
                         if supports != None:
-                            result.append(MissionCompletedEventSummary(destination_system.name, supports, max_influence))                            
+                            result.append(MissionCompletedEventSummary(destination_system.name, minor_faction, supports, max_influence))                            
 
         return result
     
