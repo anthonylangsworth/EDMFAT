@@ -38,7 +38,7 @@ class Tracker:
 
     def on_event(self, event:Dict[str, Any]) -> bool:
         new_event_summaries = self._process_event(event)
-        activity_updated = False
+        activity_updated = False # Consider an Observer pattern or similar
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries).rstrip("\n")
@@ -47,15 +47,14 @@ class Tracker:
 
     def _process_event(self, event:Dict[str, Any]) -> list:
         event_processor = self._event_processors.get(event["event"], None)
+        result = []
         if event_processor != None:
             try:
                 result = event_processor.process(event, self.minor_faction, self.pilot_state, self.galaxy_state)
             except NoLastDockedStationError:
                 self._logger.exception(f"Last docked station required for {str(event)}")
-                result = []
             except UnknownStarSystemError as unknown_star_system_error:
                 self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
-                result = []
             return result
     
     def _update_activity(self, event_summaries:list) -> str:

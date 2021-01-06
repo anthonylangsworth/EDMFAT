@@ -45,9 +45,13 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
-    myNotebook.Entry(frame, textvariable=this.minor_faction, state=tk.DISABLED).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.Entry(frame, textvariable=this.minor_faction, width=30).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
+
+def prefs_changed(cmdr: str, is_beta: bool) -> None:
+    this.minor_faction.set(this.minor_faction.get().strip())
+    this.tracker.minor_faction = this.minor_faction.get()
 
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
