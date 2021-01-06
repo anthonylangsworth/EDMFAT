@@ -19,10 +19,10 @@ def test_tracker_init():
         (
             "HR 1597 & Co", 
             "Journal.201019220908.01.log", 
-            ("HR 1597 - ANTI\n"
+            ("HR 1597 - ANTI HR 1597 & Co\n"
             "1,916,227 CR of Bounty Vouchers\n"
             "\n"
-            "HR 1597 - PRO\n"
+            "HR 1597 - PRO HR 1597 & Co\n"
             "1 INF++ mission(s)\n"
             "2 INF+++ mission(s)\n"            
             "12,801,574 CR of Bounty Vouchers")
@@ -30,13 +30,13 @@ def test_tracker_init():
         (
             "EDA Kunti League", 
             "Journal.200913212207.01.log", 
-            ("Kunti - ANTI\n"
+            ("Kunti - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
             "\n"
-            "Shambogi - ANTI\n"
+            "Shambogi - ANTI EDA Kunti League\n"
             "965,956 CR of Bounty Vouchers\n"
             "\n"
-            "Shambogi - PRO\n"
+            "Shambogi - PRO EDA Kunti League\n"
             "7 INF++ mission(s)\n"
             "1 INF+++ mission(s)\n"
             "139,652 CR of Bounty Vouchers")
@@ -44,92 +44,92 @@ def test_tracker_init():
         (
             "EDA Kunti League", 
             "Journal.201018213100.01.log", 
-            ("9 G. Carinae - ANTI\n"
+            ("9 G. Carinae - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
             "\n"
-            "Kanates - PRO\n"
+            "Kanates - PRO EDA Kunti League\n"
             "3 INF+++ mission(s)\n"
             "1 INF++++ mission(s)\n"
             "436,046 CR of Bounty Vouchers\n"
             "61,635 CR of Cartography Data\n"
             "\n"
-            "Kutjara - ANTI\n"
+            "Kutjara - ANTI EDA Kunti League\n"
             "1 INF++++ mission(s)")
         ),
         (
             "EDA Kunti League", 
             "Journal.210101234033.01.log",
-            ("HR 1597 - PRO\n"
+            ("HR 1597 - PRO EDA Kunti League\n"
             "559,467 CR of Combat Bonds\n"
             "\n"
-            "LTT 2337 - PRO\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
             "718,360 CR of Bounty Vouchers\n"
             "141,361 CR of Cartography Data\n"
             "\n"
-            "Shambogi - PRO\n"
+            "Shambogi - PRO EDA Kunti League\n"
             "50,765 CR of Cartography Data")
         ),
         (
             "EDA Kunti League", 
             "Journal.201212203015.01.log",
-            ("Antai - PRO\n"
+            ("Antai - PRO EDA Kunti League\n"
             "2,840 T trade at 2,506 CR average profit per T")
         ),
         (
             "Green Party of Dulos", 
             "Journal.200630212114.01.log",
-            ("Dulos - ANTI\n"
+            ("Dulos - ANTI Green Party of Dulos\n"
             "28 T trade at 44 CR average profit per T\n"
             "\n"
-            "Dulos - PRO\n"
+            "Dulos - PRO Green Party of Dulos\n"
             "1 INF+++ mission(s)")
         ),
         (
             "EDA Kunti League", 
             "Journal.210102190919.01.log",
-            ("Groanomana - PRO\n"
+            ("Groanomana - PRO EDA Kunti League\n"
              "18,704,140 CR of Bounty Vouchers\n"
              "\n"
-             "HR 1597 - PRO\n"
+             "HR 1597 - PRO EDA Kunti League\n"
              "7,622,618 CR of Bounty Vouchers")
         ),
         (
             "EDA Kunti League", 
             "Journal.210105181410.01.log",
-            ("Anek Wango - ANTI\n"
+            ("Anek Wango - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "\n"
-            "LHS 1832 - ANTI\n"
+            "LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "1 INF+++ mission(s)\n"
             "\n"
-            "LHS 1832 - PRO\n"
+            "LHS 1832 - PRO EDA Kunti League\n"
             "1 INF++ mission(s)\n"
             "194,136 CR of Bounty Vouchers\n"
             "12,039 CR of Cartography Data\n"
             "\n"
-            "LPM 229 - ANTI\n"
+            "LPM 229 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "2 INF++ mission(s)\n"
             "\n"
-            "LTT 2337 - ANTI\n"
+            "LTT 2337 - ANTI EDA Kunti League\n"
             "2 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "6 T trade at -198 CR average profit per T\n"
             "\n"
-            "LTT 2337 - PRO\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
             "5 T trade at 265 CR average profit per T")
         ),
         (
             "EDA Kunti League", 
             "Journal.210105214916.01.log",
-            ("LHS 1832 - ANTI\n"
+            ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF+++ mission(s)\n"
             "\n"
-            "Shongbon - ANTI\n"
+            "Shongbon - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)")
         ),
     ])

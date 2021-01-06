@@ -60,13 +60,13 @@ class Tracker:
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""
-        sorted_event_summaries = sorted(sorted(sorted(event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: x.supports), key=lambda x: x.system_name)
-        for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.supports)):
-            result += f"{system_name} - {'PRO' if supports else 'ANTI'}\n"
+        sorted_event_summaries = sorted(sorted(sorted(sorted(event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: x.supports), key=lambda x: x.system_name), key=lambda x: x.minor_faction)
+        for (system_name, minor_faction, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.minor_faction, x.supports)):
+            result += f"{system_name} - {'PRO' if supports else 'ANTI'} {minor_faction}\n"
             for type_name, system_event_summaries_by_system_and_type in groupby(event_summaries_by_system, key=lambda x: type(x).__name__):
                 event_formatter = self._event_formatters.get(type_name, None)
                 if event_formatter:
-                     result += event_formatter.process(system_event_summaries_by_system_and_type)
+                    result += event_formatter.process(system_event_summaries_by_system_and_type)
             result += "\n"
         return result
         
