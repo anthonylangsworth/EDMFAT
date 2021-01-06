@@ -10,6 +10,7 @@ import edmfs
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Support"
 this.minor_faction = tk.StringVar()
+this.minor_faction_prefs = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
 
@@ -20,7 +21,7 @@ logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file_
 def plugin_start3(plugin_dir: str) -> str:
     this.tracker = edmfs.Tracker("EDA Kunti League")
     this.minor_faction.set(this.tracker.minor_faction)
-    clear_activity_summary()
+    this.activity_summary.set("(No activity)")
     return this.plugin_name
 
 # Called by EDMC to show plug-in details on EDMC main window
@@ -38,6 +39,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     PADX:int = 10
     PADY:int = 10
     instructions:str = "Track missions and activity for or against a minor faction.\n\nChanging the minor faction name below will clear all current activity. The name must EXACTLY match that in game, including capitalization and spacing.\n\nThe name is temporarily read-only until we iron out bugs and get to sufficient functionality."
+    this.minor_faction_prefs.set(this.minor_faction.get())
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
@@ -45,12 +47,12 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
-    myNotebook.Entry(frame, textvariable=this.minor_faction, width=30).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.Entry(frame, textvariable=this.minor_faction_prefs, width=30).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
 
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
-    this.minor_faction.set(this.minor_faction.get().strip())
+    this.minor_faction.set(this.minor_faction_prefs.get().strip())
     this.tracker.minor_faction = this.minor_faction.get()
 
 # Called by EDMC when a new entry is written to a journal file
@@ -67,6 +69,3 @@ def copy_activity_to_clipboard() -> None:
     root.clipboard_append(this.tracker.activity)
     root.update()
     root.destroy()
-
-def clear_activity_summary() -> None:
-    this.activity_summary.set("(No activity)")
