@@ -8,6 +8,15 @@ from .event_processors import EventProcessor, _default_event_processors, NoLastD
 from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
+# class TrackerObserver(ABC):
+#     @abstractmethod
+#     def on_activity_changed(self, tracker):
+#         pass
+
+#     @abstractmethod
+#     def on_minor_factions_changed(self, tracker):
+#         pass
+
 class Tracker:
     def __init__(self, minor_faction:str, logger:Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_faction = minor_faction

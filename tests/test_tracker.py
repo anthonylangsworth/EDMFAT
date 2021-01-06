@@ -1,6 +1,7 @@
 import pytest
 import copy
 import json
+import itertools
 
 from edmfs.state import PilotState, GalaxyState, Station
 from edmfs.tracker import Tracker

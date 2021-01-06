@@ -2,6 +2,7 @@ import sys
 import os
 from typing import Optional, Tuple, Dict, Any, Union
 import tkinter as tk
+import itertools
 import myNotebook
 from config import config, appname
 import logging
@@ -42,6 +43,9 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     PADX:int = 10
     PADY:int = 10
     instructions:str = "Track missions and activity for or against a minor faction. The name below must EXACTLY match the in-game name, including capitalization and spacing. Copy it from Inara or a similar source to be sure."
+
+    known_minor_factions = set(sorted(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values())))
+    known_minor_factions.update([this.tracker.minor_faction])
     this.minor_faction_prefs.set(this.minor_faction.get())
 
     frame = myNotebook.Frame(parent)
@@ -50,7 +54,9 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
-    myNotebook.Entry(frame, textvariable=this.minor_faction_prefs, width=30).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    # myNotebook.OptionMenu(frame, this.minor_faction_prefs, this.minor_faction_prefs.get(), *("a", "b", "EDA Kunti League")).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.OptionMenu(frame, this.minor_faction_prefs, this.minor_faction_prefs.get(), *known_minor_factions).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+    # myNotebook.Entry(frame, textvariable=this.minor_faction_prefs, width=30).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
 

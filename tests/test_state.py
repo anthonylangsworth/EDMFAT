@@ -29,6 +29,11 @@ def test_galaxy_state_init():
     galaxy_state = GalaxyState()
     assert(galaxy_state.systems == {})
 
+def test_galaxy_state_init_args():
+    SYSTEMS = {1234: StarSystem("Sol", 1234, ["a", "b"])}
+    galaxy_state = GalaxyState(SYSTEMS)
+    assert(galaxy_state.systems == SYSTEMS)
+
 def test_mission_init():
     ID = 564728
     MINOR_FACTION = "The Dark Wheel"
