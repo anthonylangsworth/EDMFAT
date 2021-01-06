@@ -8,7 +8,7 @@ import logging
 import edmfs
 
 this = sys.modules[__name__]
-this.plugin_name = "Minor Faction Support"
+this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_faction = tk.StringVar()
 this.minor_faction_prefs = tk.StringVar()
 this.activity_summary = tk.StringVar()
@@ -41,7 +41,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX:int = 10
     PADY:int = 10
-    instructions:str = "Track missions and activity for or against a minor faction.\n\nChanging the minor faction name below will clear all current activity. The name must EXACTLY match that in game, including capitalization and spacing.\n\nThe name is temporarily read-only until we iron out bugs and get to sufficient functionality."
+    instructions:str = "Track missions and activity for or against a minor faction. The name must EXACTLY match that in game, including capitalization and spacing."
     this.minor_faction_prefs.set(this.minor_faction.get())
 
     frame = myNotebook.Frame(parent)
