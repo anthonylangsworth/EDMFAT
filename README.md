@@ -27,7 +27,8 @@ To install:
 6. When done, press the "Copy" button to copy your activity to the Windows clipboard.
 7. Paste it into your squadron's Discord channels or wherever you report activity.
 
-Limitations:
+# Limitations
+
 1. The plug-in is not state-aware. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
 2. The plug-in can only track the work for one minor faction at a time. This is primarily a user interface limitation at this time.
 3. The plug-in does not store different minor factions for different commanders. However, many use multiple accounts for minor faction work.
