@@ -11,7 +11,6 @@ import edmfs
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_faction = tk.StringVar()
-this.minor_faction_prefs = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
 
@@ -42,11 +41,11 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX:int = 10
     PADY:int = 10
-    instructions:str = "Track missions and activity for or against a minor faction. The name below must EXACTLY match the in-game name, including capitalization and spacing. Copy it from Inara or a similar source to be sure."
+    instructions:str = "Track missions and activity for or against a minor faction. If the desired minor faction does not appear in the list, jump to a system where it is present and reopen this dialog."
 
     known_minor_factions = set(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values()))
     known_minor_factions.update([this.tracker.minor_faction])
-    this.minor_faction_prefs.set(this.minor_faction.get())
+    known_minor_factions = sorted(known_minor_factions)
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1)
@@ -54,12 +53,25 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
-    myNotebook.OptionMenu(frame, this.minor_faction_prefs, this.minor_faction_prefs.get(), *sorted(known_minor_factions)).grid(row=3, column=1, columnspan=7, padx=PADX, pady=PADY, sticky=tk.W)
+
+    this.minor_faction_list = tk.Listbox(frame)
+    this.minor_faction_list.config(height=10, width=50)
+    this.minor_faction_list.grid(row=3, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
+    this.minor_faction_list.insert(tk.END, *sorted(known_minor_factions))
+    selected_index = known_minor_factions.index(this.minor_faction.get())
+    this.minor_faction_list.selection_set(selected_index)
+    this.minor_faction_list.see(selected_index)
+
+    scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+    scrollbar.config(command=this.minor_faction_list.yview)
+    scrollbar.grid(row=3, column=1, sticky=tk.NS + tk.W, pady=PADY)
+
+    this.minor_faction_list.config(yscrollcommand=scrollbar.set)
     
     return frame
 
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
-    this.minor_faction.set(this.minor_faction_prefs.get().strip())
+    this.minor_faction.set(this.minor_faction_list.get(this.minor_faction_list.curselection()))
     this.tracker.minor_faction = this.minor_faction.get()
     config.set(CONFIG_MINOR_FACTION, this.minor_faction.get())
 
