@@ -24,6 +24,10 @@ class Tracker:
     def minor_faction(self) -> str:
         return self._minor_faction
 
+    @minor_faction.setter
+    def minor_faction(self, value) -> str:
+        self._minor_faction = value
+
     @property
     def pilot_state(self) -> PilotState:
         return self._pilot_state

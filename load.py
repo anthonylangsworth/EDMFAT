@@ -14,12 +14,15 @@ this.minor_faction_prefs = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
 
+CONFIG_MINOR_FACTION = "edmfat_minor_faction"
+
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    this.tracker = edmfs.Tracker("EDA Kunti League")
+    saved_minor_faction = config.get(CONFIG_MINOR_FACTION)
+    this.tracker = edmfs.Tracker(saved_minor_faction if saved_minor_faction else "EDA Kunti League")
     this.minor_faction.set(this.tracker.minor_faction)
     this.activity_summary.set("(No activity)")
     return this.plugin_name
@@ -54,6 +57,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
     this.minor_faction.set(this.minor_faction_prefs.get().strip())
     this.tracker.minor_faction = this.minor_faction.get()
+    config.set(CONFIG_MINOR_FACTION, this.minor_faction.get())
 
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
