@@ -19,7 +19,7 @@ To install:
 # Use
 
 1. Start EDMC. This is important. If you start EDMC while Elite: Dangerous is running, the plug-in may miss important events.
-2. (Optional) Go to "File" -> "Preferences", navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one you want to support or undermine. This name must EXACTLY match that in game. I recommend copying it from Inara or similar to be certain. This is saved and so only need to be done once.
+2. (Optional) Go to "File" -> "Preferences", navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one you want to support or undermine. This name must EXACTLY match the in-game name. I recommend copying it from Inara or similar to be certain. This is saved and so only need to be done once.
 3. Play Elite: Dangerous, supporting your minor faction. 
 4. Minor faction-relevant activity will be captured and appear in the EDMC window. It tracks missions, selling bounty vouchers, selling combat bonds, trade (positive, negative and black market) and selling cartography data.
 5. When done, press the "Copy" button to copy the activity to the clipboard.
