@@ -13,6 +13,7 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_faction = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
+this.version = (0,6)
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 
