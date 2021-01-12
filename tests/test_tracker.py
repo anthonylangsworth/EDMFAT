@@ -142,3 +142,23 @@ def test_journal_file(minor_faction:str, journal_file_name:str, expected_activit
     for event in events:
         tracker.on_event(event)
     assert(tracker.activity == expected_activity)
+
+@pytest.mark.parametrize(
+    "journal_file_name",
+    [
+        None,
+        "Journal.201019220908.01.log"
+    ]
+)
+def test_tracker_clear_activity(journal_file_name):
+    events = []
+    if(journal_file_name):
+        with open("tests/journal_files/" + journal_file_name) as journal_file:
+            events = [json.loads(line) for line in journal_file.readlines()]
+
+    MINOR_FACTION = "EDA Kunti League"
+    tracker = Tracker(MINOR_FACTION)
+    for event in events:
+        tracker.on_event(event)
+    tracker.clear_activity()
+    assert(tracker.activity == "")

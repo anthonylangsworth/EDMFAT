@@ -14,8 +14,7 @@ class Tracker:
         self._logger = logger
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState()
-        self._event_summaries = []
-        self._activity = ""
+        self.clear_activity()
         self._event_processors = event_processors if event_processors else _default_event_processors
         self._event_formatters = event_formatters if event_formatters else _default_event_formatters
         self._event_summary_order = tuple(event_summary_order if event_summary_order else _default_event_summary_order)
@@ -39,6 +38,10 @@ class Tracker:
     @property
     def activity(self) -> str:
         return self._activity
+
+    def clear_activity(self) -> None:
+        self._event_summaries = []
+        self._activity = ""
 
     def on_event(self, event:Dict[str, Any]) -> bool:
         new_event_summaries = self._process_event(event)
