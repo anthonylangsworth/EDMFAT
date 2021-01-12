@@ -30,10 +30,12 @@ def plugin_start3(plugin_dir: str) -> str:
 # Called by EDMC to show plug-in details on EDMC main window
 def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
     frame:tk.Frame = tk.Frame(parent)
+    frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
-    tk.Label(frame, textvariable=this.minor_faction, anchor=tk.W).grid(row=0, column=0)
-    tk.Button(frame, text="Copy", command=copy_activity_to_clipboard).grid(row=0, column=1, sticky=tk.E)
-    tk.Label(frame, textvariable=this.activity_summary, anchor=tk.W, justify=tk.LEFT, pady=10).grid(row=1, column=0, columnspan=2, sticky=tk.W)
+    tk.Label(frame, textvariable=this.minor_faction, anchor=tk.W).grid(row=0, column=0, columnspan=2)
+    tk.Button(frame, text="Copy", command=copy_activity_to_clipboard).grid(row=1, column=0, sticky=tk.E, padx=10)
+    tk.Button(frame, text="Copy + Reset", command=copy_activity_to_clipboard_and_reset).grid(row=1, column=1, sticky=tk.W, padx=10)
+    tk.Label(frame, textvariable=this.activity_summary, anchor=tk.W, justify=tk.LEFT, pady=10).grid(row=2, column=0, columnspan=2, sticky=tk.W)
 
     return frame
 
@@ -48,7 +50,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     known_minor_factions = sorted(known_minor_factions)
 
     frame = myNotebook.Frame(parent)
-    frame.columnconfigure(1, weight=1)
+    frame.columnconfigure(0, weight=1)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
@@ -89,3 +91,7 @@ def copy_activity_to_clipboard() -> None:
     root.clipboard_append(this.tracker.activity)
     root.update()
     root.destroy()
+
+def copy_activity_to_clipboard_and_reset() -> None:
+    copy_activity_to_clipboard()
+    this.tracker.clear_activity()
