@@ -6,7 +6,7 @@ This plug-in is aimed at **Elite: Dangerous** squadrons that support a minor fac
 
 Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), the long term goal is to generalize this plug-in into something useful for the broader **Elite: Dangerous** community.
 
-# Installation
+# Installation and Upgrade
 
 Requirements:
 1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
