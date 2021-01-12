@@ -11,6 +11,10 @@ Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/sq
 Requirements:
 1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
 
+To upgrade from an earlier version:
+1. Delete the existing EDMFAT plug-in folder, normally found at `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins\EDMFAT` on Windows.
+2. Follow the steps under "To install" below.
+
 To install:
 1. Download the latest ZIP file under "Releases" at the top right.
 2. Copy the ZIP file into your EDMC plug-ins folder, normally `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins` on Windows.
@@ -20,7 +24,7 @@ To install:
 # Use
 
 1. Start EDMC. This is important. If you start EDMC while Elite: Dangerous is running, the plug-in may miss important events.
-2. (Optional) Go to "File" -> "Preferences", navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one you want to support or undermine. If it does not appear in the list, travel to a system where the faction is present then reopn the preferences dialog. The minor faction is saved and so only needs to be done once.
+2. (Optional) Go to "File" -> "Preferences", navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one you want to support or undermine. If it does not appear in the list, travel to a system where the faction is present then reopn the preferences dialog. The minor faction is saved and so only needs to be done once. The list of minor factions is not saved.
 3. Play **Elite: Dangerous**, supporting or undermining your minor faction. 
 4. Minor faction-relevant activity will be captured and appear in the EDMC window. The plug-in tracks completing missions, selling bounty vouchers, selling combat bonds, trade (positive, negative and black market) and selling cartography data. The plug-in does not track failed missions or clean ship kills, which may be added in the future. The plug-in cannot track conflict zones due to limitations with **Elite: Dangerous**. 
 5. (Optional) Change the minor faction to report activity for or against a different minor faction as per step 2. This can be done at any time. Previous activity is retained.
@@ -30,7 +34,7 @@ To install:
 # Limitations
 
 1. The plug-in is not state-aware. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
-2. The plug-in can only track the work for one minor faction at a time. This is primarily a user interface limitation but may be addressed in the future.
+2. The plug-in can only track the work for one minor faction at a time. This may be addressed in the future.
 3. The plug-in does not store different minor factions for different commanders. However, many use multiple accounts for minor faction work.
 4. The plug-in is not localized. It is English only.
 5. This plug-in does not support console players. Sorry. This is a limitation of EDMC.
