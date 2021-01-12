@@ -162,3 +162,4 @@ def test_tracker_clear_activity(journal_file_name):
         tracker.on_event(event)
     tracker.clear_activity()
     assert(tracker.activity == "")
+    assert(tracker._event_summaries == [])
