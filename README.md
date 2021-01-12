@@ -29,6 +29,7 @@ To install:
 4. Minor faction-relevant activity will be captured and appear in the EDMC window. The plug-in tracks completing missions, selling bounty vouchers, selling combat bonds, trade (positive, negative and black market) and selling cartography data. The plug-in does not track failed missions or clean ship kills, which may be added in the future. The plug-in cannot track conflict zones due to limitations with **Elite: Dangerous**. 
 5. (Optional) Change the minor faction to support or undermine as per step 2. This can be done at any time. Previous activity is retained.
 6. When done, press the "Copy" button to copy your activity to the Windows clipboard.
+6. (Optional) Press the "Copy + Reset" button to copy your activity to the Windows clipboard and clear any activity. This can be useful if you want to report activity part way through a session, such as before the daily or weekly tick.
 7. Paste it into your squadron's Discord channel or wherever you report activity.
 
 # Limitations

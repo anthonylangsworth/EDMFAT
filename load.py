@@ -16,6 +16,8 @@ this.current_station = ""
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 
+NO_ACTIVITY = "(No activity)"
+
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 
@@ -24,7 +26,7 @@ def plugin_start3(plugin_dir: str) -> str:
     saved_minor_faction = config.get(CONFIG_MINOR_FACTION)
     this.tracker = edmfs.Tracker(saved_minor_faction if saved_minor_faction else "EDA Kunti League")
     this.minor_faction.set(this.tracker.minor_faction)
-    this.activity_summary.set("(No activity)")
+    this.activity_summary.set(NO_ACTIVITY)
     return this.plugin_name
 
 # Called by EDMC to show plug-in details on EDMC main window
@@ -95,3 +97,4 @@ def copy_activity_to_clipboard() -> None:
 def copy_activity_to_clipboard_and_reset() -> None:
     copy_activity_to_clipboard()
     this.tracker.clear_activity()
+    this.activity_summary.set(NO_ACTIVITY)
