@@ -1,7 +1,7 @@
 from typing import Dict, Any, Set
 from abc import ABC, abstractmethod
 from itertools import groupby
-from logging import Logger
+import logging
 
 from .state import Station, PilotState, GalaxyState
 from .event_processors import EventProcessor, _default_event_processors, NoLastDockedStationError, UnknownStarSystemError
@@ -9,9 +9,9 @@ from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
 class Tracker:
-    def __init__(self, minor_factions:iter, logger:Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
+    def __init__(self, minor_factions:iter, logger:logging.Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_factions = set(minor_factions)
-        self._logger = logger
+        self._logger = logger if logger else logging
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState()
         self.clear_activity()
@@ -49,8 +49,7 @@ class Tracker:
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries).rstrip("\n")
-            if self._logger:
-                self._logger.info(f"{ event } created { new_event_summaries }")
+            self._logger.info(f"{ event } created { new_event_summaries }")
             activity_updated = True
         return activity_updated
 

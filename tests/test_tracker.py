@@ -171,6 +171,22 @@ def test_tracker_init():
             "LHS 1832 - PRO LHS 1832 Labour\n"
             "1 INF+ mission(s)")
         ),
+        (
+            [
+                "EDA Kunti League"
+            ], 
+            "LesPaul58_Journal.210117142551.01.log",
+            ("Arun - ANTI EDA Kunti League\n"
+            "1 INF+++++ mission(s)\n"
+            "\n"
+            "LHS 1832 - ANTI EDA Kunti League\n"
+            "2 T trade at 51,622 CR average profit per T\n"
+            "\n"
+            "Trumuye - ANTI EDA Kunti League\n"
+            "7 INF++ mission(s)\n"
+            "3 INF+++ mission(s)\n"
+            "8 INF+++++ mission(s)")
+        )        
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
     with open("tests/journal_files/" + journal_file_name) as journal_file:
