@@ -1,5 +1,5 @@
 import copy
-from typing import Dict, Any
+from typing import Dict, Any, Set
 import pytest
 
 from edmfs.event_processors import _supports_minor_faction, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor
@@ -144,39 +144,39 @@ def test_redeem_voucher_init():
     assert(redeem_voucher_event_procesor.eventName == "RedeemVoucher")
     
 @pytest.mark.parametrize(
-    "minor_faction, star_system, last_docked_station, redeem_voucher_event, expected_results",
+    "minor_factions, star_system, last_docked_station, redeem_voucher_event, expected_results",
     [     
         # Bounty 
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief",)), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T04:43:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":42350, "Factions":[ { "Faction":"The Fuel Rats Mischief", "Amount":42350 } ] }, 
             [ RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", True, "bounty", 42350)]
         ),
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Findja Empire Assembly")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, 
             [RedeemVoucherEventSummary("Fuelum", "The Fuel Rats Mischief", False, "bounty", 25490)]
         ),
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("Findja", 1000, ("The Fuel Rats Mischief",)), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-05-09T03:42:31Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage":25.000000 }, 
             []
         ),
         (
-            "CPD-59 314 Imperial Society", 
+            { "CPD-59 314 Imperial Society" }, 
             StarSystem("CPD-59 314", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-15T14:45:16Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":1779467, "Factions":[ { "Faction":"CPD-59 314 Imperial Society", "Amount":1779467 } ], "BrokerPercentage":25.000000 }, 
             [ RedeemVoucherEventSummary("CPD-59 314", "CPD-59 314 Imperial Society", True, "bounty", 1779467)]
         ),
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Rabh Empire Pact", "Kacomam Empire Group", "Trumuye Emperor's Grace", "EDA Kunti League")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
@@ -188,7 +188,7 @@ def test_redeem_voucher_init():
             ]
         ),
         (
-            "Rabh Empire Pact", 
+            { "Rabh Empire Pact" }, 
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Rabh Empire Pact", "Kacomam Empire Group", "Trumuye Emperor's Grace", "EDA Kunti League")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-12-13T02:02:04Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":5924586, "Factions":[ { "Faction":"Rabh Empire Pact", "Amount":385660 }, { "Faction":"Kacomam Empire Group", "Amount":666873 }, { "Faction":"Trumuye Emperor's Grace", "Amount":545094 }, { "Faction":"EDA Kunti League", "Amount":4326959 } ] }, 
@@ -202,35 +202,35 @@ def test_redeem_voucher_init():
 
         # Combat Bond
         (
-            "EDA Kunti League", 
+            { "EDA Kunti League" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief", "EDA Kunti League")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-11-27T11:46:17Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1622105, "Faction":"EDA Kunti League" }, 
             [RedeemVoucherEventSummary("", "EDA Kunti League", True, "CombatBond", 1622105)]
         ),
         (
-            "EDA Kunti League", 
+            { "EDA Kunti League" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
             []
         ),
         (
-            "EDA Kunti League", 
+            { "EDA Kunti League" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
             []
         ),
         (
-            "EDA Kunti League", 
+            { "EDA Kunti League" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 }, 
             []
         ),
         (
-            "HR 1597 & Co", 
+            { "HR 1597 & Co" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 }, 
@@ -262,21 +262,21 @@ def test_redeem_voucher_init():
 
         # BGS irrelevant types
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-07-05T10:26:31Z", "event":"RedeemVoucher", "Type":"codex", "Amount":5000, "Faction":"" }, 
             []
         ),
         (
-            "The Fuel Rats Mischief", 
+            { "The Fuel Rats Mischief" }, 
             StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             { "timestamp":"2020-12-27T07:48:49Z", "event":"RedeemVoucher", "Type":"settlement", "Amount":4352, "Faction":"" }, 
             []
         ),        
     ])
-def test_redeem_voucher_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
+def test_redeem_voucher_single(minor_factions:Set[str], star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
@@ -285,7 +285,7 @@ def test_redeem_voucher_single(minor_faction:str, star_system:StarSystem, last_d
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     redeem_voucher_event_processor:RedeemVoucherEventProcessor = RedeemVoucherEventProcessor()
-    results = redeem_voucher_event_processor.process(redeem_voucher_event, minor_faction, pilot_state, galaxy_state)
+    results = redeem_voucher_event_processor.process(redeem_voucher_event, minor_factions, pilot_state, galaxy_state)
 
     assert(results == expected_results)
     assert(pilot_state == expected_pilot_state)
@@ -320,31 +320,31 @@ def test_sell_exploration_data_init():
     assert(sell_exploration_event_processor.eventName == "SellExplorationData")
 
 @pytest.mark.parametrize(
-   "minor_faction, star_system, last_docked_station, sell_exploration_data_event, expected_results",
+   "minor_factions, star_system, last_docked_station, sell_exploration_data_event, expected_results",
     [     
         (
-            "HR 1597 & Co",
+            { "HR 1597 & Co" },
             StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
             Station("Elsa Prospect", 1000, "HR 1597 & Co"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
             [ SellExplorationDataEventSummary("HR 1597", "HR 1597 & Co",True, 47743)]
         ),
         (
-            "HR 1597 & Co",
+            { "HR 1597 & Co" },
             StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
             Station("Elsa Prospect", 1000, "EDA Kunti League"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
             [ SellExplorationDataEventSummary("HR 1597", "HR 1597 & Co",False, 47743)]
         ),
         (
-            "The Dark Wheel",
+            { "The Dark Wheel" },
             StarSystem("HR 1597", 1000, ("EDA Kunti League", "HR 1597 & Co")), 
             Station("Elsa Prospect", 1000, "EDA Kunti League"), 
             { "timestamp":"2020-05-15T13:13:38Z", "event":"MultiSellExplorationData", "Discovered":[ { "SystemName":"Shui Wei Sector PO-Q b5-1", "NumBodies":25 }, { "SystemName":"Pera", "NumBodies":22 } ], "BaseValue":47743, "Bonus":0, "TotalEarnings":47743 },
             [ ]
         )
     ])
-def test_sell_exploration_data_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, sell_exploration_data_event:Dict[str, Any], expected_results:list):
+def test_sell_exploration_data_single(minor_factions:str, star_system:StarSystem, last_docked_station:Station, sell_exploration_data_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
@@ -353,7 +353,7 @@ def test_sell_exploration_data_single(minor_faction:str, star_system:StarSystem,
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     sell_exploration_data_event_processor = SellExplorationDataEventProcessor()
-    result = sell_exploration_data_event_processor.process(sell_exploration_data_event, minor_faction, pilot_state, galaxy_state)
+    result = sell_exploration_data_event_processor.process(sell_exploration_data_event, minor_factions, pilot_state, galaxy_state)
     assert(result == expected_results)
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
@@ -363,45 +363,45 @@ def test_market_sell_init():
     assert(market_sell_event_processor.eventName == "MarketSell")
 
 @pytest.mark.parametrize(
-   "minor_faction, star_system, last_docked_station, market_sell_event, expected_results",
+   "minor_factions, star_system, last_docked_station, market_sell_event, expected_results",
     (
         (
-            "Soverign Justice League",
+            { "Soverign Justice League" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
             [ MarketSellEventSummary("Afli", "Soverign Justice League",True, 756, 59759, 4568)]
         ),
         (
-            "Afli Blue Society",
+            { "Afli Blue Society" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
             [ MarketSellEventSummary("Afli", "Afli Blue Society",False, 756, 59759, 4568)]
         ),
         (
-            "Soverign Justice League",
+            { "Soverign Justice League" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
             [ MarketSellEventSummary("Afli", "Soverign Justice League",False, 1, 7111, 0)]
         ),
         (
-            "Afli Blue Society",
+            { "Afli Blue Society" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
             [ MarketSellEventSummary("Afli", "Afli Blue Society",True, 1, 7111, 0)]
         ),
         (
-            "Soverign Justice League",
+            { "Soverign Justice League" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080 },
             [ MarketSellEventSummary("Afli", "Soverign Justice League",False, 64, 80, 1080)]
         ),
         (
-            "Kunti Dragons",
+            { "Kunti Dragons" },
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
@@ -409,7 +409,7 @@ def test_market_sell_init():
         )        
     )
 )
-def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_docked_station:Station, market_sell_event:Dict[str, Any], expected_results:list):
+def test_market_sell_single(minor_factions:str, star_system:StarSystem, last_docked_station:Station, market_sell_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
@@ -418,23 +418,23 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     market_sell_event_processor = MarketSellEventProcessor()
-    result = market_sell_event_processor.process(market_sell_event, minor_faction, pilot_state, galaxy_state)
+    result = market_sell_event_processor.process(market_sell_event, minor_factions, pilot_state, galaxy_state)
     assert(result == expected_results)
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
 
 @pytest.mark.parametrize(
-   "minor_faction, star_system, station, mission, mission_accepted_event",
+   "minor_factions, star_system, station, mission, mission_accepted_event",
     (
         (
-            "Luchu Purple Hand Gang",
+            { "Luchu Purple Hand Gang" },
             StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
             Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
             Mission(685926938, "Luchu Purple Hand Gang", "++", 86306249), 
             { "timestamp":"2020-12-31T13:47:32Z", "event":"MissionAccepted", "Faction":"Luchu Purple Hand Gang", "Name":"Mission_Courier", "LocalisedName":"Courier Job Available", "TargetFaction":"LTT 2337 Empire Party", "DestinationSystem":"LTT 2337", "DestinationStation":"Bowen Terminal", "Expiry":"2021-01-01T13:46:03Z", "Wing":False, "Influence":"++", "Reputation":"+", "Reward":51607, "MissionID":685926938 }
         ),
         (
-            "LHS 1832 Labour",
+            { "LHS 1832 Labour" },
             StarSystem("Luchu", 86306249, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality"]),
             Station("Neumann Enterprise", 86306249, "Luchu Purple Hand Gang"),
             Mission(685926779, "LHS 1832 Labour", "++", 86306249), 
@@ -442,7 +442,7 @@ def test_market_sell_single(minor_faction:str, star_system:StarSystem, last_dock
         )
     )
 )
-def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, station:Station, mission:Mission, mission_accepted_event:Dict[str, Any]):
+def test_mission_accepted_single(minor_factions:str, star_system:StarSystem, station:Station, mission:Mission, mission_accepted_event:Dict[str, Any]):
     pilot_state = PilotState()
     pilot_state.last_docked_station = station
     galaxy_state = GalaxyState()
@@ -452,16 +452,16 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     mission_accepted_event_processor = MissionAcceptedEventProcessor()
-    result = mission_accepted_event_processor.process(mission_accepted_event, minor_faction, pilot_state, galaxy_state)
+    result = mission_accepted_event_processor.process(mission_accepted_event, minor_factions, pilot_state, galaxy_state)
     assert(result == [])    
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)
 
 @pytest.mark.parametrize(
-   "minor_faction, star_systems, station, mission, mission_completed_event, expected_results",
+   "minor_factions, star_systems, station, mission, mission_completed_event, expected_results",
     (
         (
-            "Luchu Purple Hand Gang",
+            { "Luchu Purple Hand Gang" },
             [
                 StarSystem("Luchu", 2871051298217, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"]),
                 StarSystem("LTT 2337", 908620436178, ["LTT 2337 United Holdings", "LTT 2337 Empire Party", "Independent LTT 2337 Values Party", "LTT 2337 Flag", "LTT 2337 Jet Brothers", "The Nova Alliance", "EDA Kunti League"])
@@ -474,7 +474,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             ]
         ),
         (
-            "EDA Kunti League",
+            { "EDA Kunti League" },
             [
                 StarSystem("Luchu", 2871051298217, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"]),
                 StarSystem("LTT 2337", 908620436178, ["LTT 2337 United Holdings", "LTT 2337 Empire Party", "Independent LTT 2337 Values Party", "LTT 2337 Flag", "LTT 2337 Jet Brothers", "The Nova Alliance", "EDA Kunti League"])
@@ -488,7 +488,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             ]
         ),
         (
-            "EDA Kunti League",
+            { "EDA Kunti League" },
             [
                 StarSystem("Luchu", 2871051298217, ["Luchu Purple Hand Gang", "LHS 1832 Labour", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"]),
                 StarSystem("Trumuye", 11667412755873, ["Antai Energy Group", "Trumuye Emperor's Grace", "Trumuye Incorporated", "League of Trumuye League", "United Trumuye Progressive Party", "EDA Kunti League"])
@@ -503,7 +503,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             ]
         ),
         (
-            "Pilots' Federation Administration",
+            { "Pilots' Federation Administration" },
             [
                 StarSystem("Otegine", 5370319620984, ["Pilots' Federation Administration"]),
                 StarSystem("Dromi", 1213084977515, ["Pilots' Federation Administration"])
@@ -514,7 +514,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             []
         ),
         (
-            "EG Union",
+            { "EG Union" },
             [
                 StarSystem("Gebel", 3107576582874, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
                 StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
@@ -527,7 +527,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
             ]
         ),
         (
-            "LHS 3802 Rats",
+            { "LHS 3802 Rats" },
             [
                 StarSystem("Gebel", 3107576582874, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
                 StarSystem("LHS 3802", 2870245991865, ["LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Rats", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", ])
@@ -556,7 +556,7 @@ def test_mission_accepted_single(minor_faction:str, star_system:StarSystem, stat
         # 1. Mission with the same faction and system, e.g. trade
     )
 )
-def test_mission_completed_single(minor_faction:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):
+def test_mission_completed_single(minor_factions:str, star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = station
     pilot_state.missions[mission.id] = mission
@@ -567,7 +567,7 @@ def test_mission_completed_single(minor_faction:str, star_systems:list, station:
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     mission_completed_event_processor = MissionCompletedEventProcessor()
-    result = mission_completed_event_processor.process(mission_completed_event, minor_faction, pilot_state, galaxy_state)
+    result = mission_completed_event_processor.process(mission_completed_event, minor_factions, pilot_state, galaxy_state)
     assert(result == expected_results)    
     assert(pilot_state == expected_pilot_state)
     assert(galaxy_state == expected_galaxy_state)

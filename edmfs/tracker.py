@@ -49,7 +49,8 @@ class Tracker:
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries).rstrip("\n")
-            self._logger.info(f"{ event } created { new_event_summaries }")
+            if self._logger:
+                self._logger.info(f"{ event } created { new_event_summaries }")
             activity_updated = True
         return activity_updated
 
@@ -57,13 +58,12 @@ class Tracker:
         event_processor = self._event_processors.get(event["event"], None)
         result = []
         if event_processor != None:
-            for minor_faction in self._minor_factions:
-                try:
-                    result.extend(event_processor.process(event, minor_faction, self.pilot_state, self.galaxy_state))
-                except NoLastDockedStationError:
-                    self._logger.exception(f"Last docked station required for {str(event)}")
-                except UnknownStarSystemError as unknown_star_system_error:
-                    self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
+            try:
+                result.extend(event_processor.process(event, self.minor_factions, self.pilot_state, self.galaxy_state))
+            except NoLastDockedStationError:
+                self._logger.exception(f"Last docked station required for {str(event)}")
+            except UnknownStarSystemError as unknown_star_system_error:
+                self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
         return result
     
     def _update_activity(self, event_summaries:list) -> str:

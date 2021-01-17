@@ -55,7 +55,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     known_minor_factions = sorted(known_minor_factions)
 
     frame = myNotebook.Frame(parent)
-    frame.columnconfigure(0, weight=1)
+    frame.columnconfigure(1, weight=1) # Required for listbox scrollbar
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
 
