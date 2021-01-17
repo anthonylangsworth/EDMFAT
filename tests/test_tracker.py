@@ -18,7 +18,7 @@ def test_tracker_init():
     "minor_faction, journal_file_name, expected_activity",
     [
         (
-            set(["HR 1597 & Co"]), 
+            {"HR 1597 & Co"}, 
             "Journal.201019220908.01.log", 
             ("HR 1597 - ANTI HR 1597 & Co\n"
             "1,916,227 CR of Bounty Vouchers\n"
@@ -29,7 +29,7 @@ def test_tracker_init():
             "12,801,574 CR of Bounty Vouchers")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.200913212207.01.log", 
             ("Kunti - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
@@ -43,7 +43,7 @@ def test_tracker_init():
             "139,652 CR of Bounty Vouchers")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.201018213100.01.log", 
             ("9 G. Carinae - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
@@ -58,7 +58,7 @@ def test_tracker_init():
             "1 INF++++ mission(s)")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.210101234033.01.log",
             ("HR 1597 - PRO EDA Kunti League\n"
             "559,467 CR of Combat Bonds\n"
@@ -71,13 +71,13 @@ def test_tracker_init():
             "50,765 CR of Cartography Data")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.201212203015.01.log",
             ("Antai - PRO EDA Kunti League\n"
             "2,840 T trade at 2,506 CR average profit per T")
         ),
         (
-            set(["Green Party of Dulos"]), 
+            {"Green Party of Dulos"}, 
             "Journal.200630212114.01.log",
             ("Dulos - ANTI Green Party of Dulos\n"
             "28 T trade at 44 CR average profit per T\n"
@@ -86,7 +86,7 @@ def test_tracker_init():
             "1 INF+++ mission(s)")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.210102190919.01.log",
             ("Groanomana - PRO EDA Kunti League\n"
              "18,704,140 CR of Bounty Vouchers\n"
@@ -95,7 +95,7 @@ def test_tracker_init():
              "7,622,618 CR of Bounty Vouchers")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.210105181410.01.log",
             ("Anek Wango - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
@@ -124,7 +124,7 @@ def test_tracker_init():
             "5 T trade at 265 CR average profit per T")
         ),
         (
-            set(["EDA Kunti League"]), 
+            {"EDA Kunti League"}, 
             "Journal.210105214916.01.log",
             ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
@@ -134,10 +134,10 @@ def test_tracker_init():
             "1 INF+++ mission(s)")
         ),
         (
-            [
+            {
                 "EDA Kunti League",
                 "LHS 1832 Labour"
-            ], 
+            }, 
             "Journal.210105214916.01.log",
             ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"

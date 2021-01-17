@@ -22,6 +22,10 @@ class Tracker:
     @property
     def minor_factions(self) -> Set[str]:
         return self._minor_factions
+    
+    @minor_factions.setter
+    def minor_factions(self, value:iter) -> None:
+        self._minor_factions = set(value)
 
     @property
     def pilot_state(self) -> PilotState:
