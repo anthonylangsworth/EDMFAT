@@ -2,6 +2,8 @@ import pytest
 import copy
 import json
 import itertools
+import logging
+import io
 
 from edmfs.state import PilotState, GalaxyState, Station
 from edmfs.tracker import Tracker
@@ -15,7 +17,7 @@ def test_tracker_init():
     assert(tracker.activity == "")
 
 @pytest.mark.parametrize(
-    "minor_faction, journal_file_name, expected_activity",
+    "minor_factions, journal_file_name, expected_activity",
     [
         (
             {"HR 1597 & Co"}, 
@@ -179,23 +181,45 @@ def test_tracker_init():
             ("Arun - ANTI EDA Kunti League\n"
             "1 INF+++++ mission(s)\n"
             "\n"
-            "LHS 1832 - ANTI EDA Kunti League\n"
+            "LHS 1832 - ANTI EDA Kunti League\n"    
             "2 T trade at 51,622 CR average profit per T\n"
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
             "7 INF++ mission(s)\n"
             "3 INF+++ mission(s)\n"
             "8 INF+++++ mission(s)")
-        )        
+        ),
+        (
+            {
+                "EDA Kunti League"
+            }, 
+            "696613390.txt",
+            ("Trumuye - ANTI EDA Kunti League\n"
+            "1 INF+++ mission(s)")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            }, 
+            "696609571.txt",
+            ("Trumuye - ANTI EDA Kunti League\n"
+            "1 INF++ mission(s)")
+        )
     ])
-def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
+def test_journal_file(minor_factions:str, journal_file_name:str, expected_activity:str):
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         events = [json.loads(line) for line in journal_file.readlines()]
 
-    tracker = Tracker(minor_faction)
-    for event in events:
-        tracker.on_event(event)
-    assert(tracker.activity == expected_activity)
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    with io.StringIO() as stream:
+        logger.addHandler(logging.StreamHandler(stream))
+
+        tracker = Tracker(minor_factions, logger)
+        for event in events:
+            tracker.on_event(event)
+        assert(tracker.activity == expected_activity)
+        print(stream.getvalue())
 
 @pytest.mark.parametrize(
     "journal_file_name",
