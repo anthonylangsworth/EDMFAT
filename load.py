@@ -13,22 +13,21 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
-this.version = (0,6)
+this.version = (0,7)
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 DEFAULT_MINOR_FACTIONS = {"EDA Kunti League"}
 NO_ACTIVITY = "(No activity)"
+NO_MINOR_FACTIONS = "(Select minor faction(s) in the Settings dialog)"
 
 # Setup logging
 logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    saved_minor_factions = config.get(CONFIG_MINOR_FACTION)
-    if(isinstance(saved_minor_factions, str)):
-        saved_minor_factions = set([saved_minor_factions])
     this.tracker = edmfs.Tracker([])
-    set_minor_factions(saved_minor_factions if saved_minor_factions else DEFAULT_MINOR_FACTIONS)
+    saved_minor_factions = load_config()
+    set_minor_factions(saved_minor_factions if saved_minor_factions != None else DEFAULT_MINOR_FACTIONS)
     clear_activity()
     return this.plugin_name
 
@@ -56,7 +55,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     known_minor_factions = sorted(known_minor_factions)
 
     frame = myNotebook.Frame(parent)
-    frame.columnconfigure(1, weight=1)
+    frame.columnconfigure(0, weight=1)
     myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
     myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
 
@@ -106,8 +105,24 @@ def copy_activity_to_clipboard_and_reset() -> None:
     clear_activity()
 
 def set_minor_factions(minor_factions: List[str]) -> None:
-    this.minor_factions.set(", ".join(minor_factions))
+    if len(minor_factions) > 0:
+        this.minor_factions.set(", ".join(minor_factions))
+    else:
+        this.minor_factions.set(NO_MINOR_FACTIONS)
     this.tracker.minor_factions = minor_factions
 
 def clear_activity() -> None:
     this.activity_summary.set(NO_ACTIVITY)
+
+def load_config() -> List[str]:
+    saved_minor_factions = config.get(CONFIG_MINOR_FACTION)
+    logger.info(f"Loading saved minor factions. Type: '{type(saved_minor_factions)}'. Value: '{ saved_minor_factions }'. Length: {len(saved_minor_factions)}")
+    if isinstance(saved_minor_factions, List) and len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
+        # Windows config saves list with a single empty string instead of an empty list when empty
+        saved_minor_factions = {}
+    elif isinstance(saved_minor_factions, str):
+        if len(saved_minor_factions.trim()) > 0:
+            saved_minor_factions = set([saved_minor_factions])
+        else:
+            saved_minor_factions = {}
+    return saved_minor_factions
