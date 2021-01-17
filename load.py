@@ -116,7 +116,7 @@ def clear_activity() -> None:
 
 def load_config() -> List[str]:
     saved_minor_factions = config.get(CONFIG_MINOR_FACTION)
-    logger.info(f"Loading saved minor factions. Type: '{type(saved_minor_factions)}'. Value: '{ saved_minor_factions }'. Length: {len(saved_minor_factions)}")
+    logger.info(f"Loading saved minor factions: '{ saved_minor_factions }'")
     if isinstance(saved_minor_factions, List) and len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
         # Windows config saves list with a single empty string instead of an empty list when empty
         saved_minor_factions = {}

@@ -49,6 +49,7 @@ class Tracker:
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
             self._activity = self._update_activity(self._event_summaries).rstrip("\n")
+            self._logger.info(f"{ event } created { new_event_summaries }")
             activity_updated = True
         return activity_updated
 
