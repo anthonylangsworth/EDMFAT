@@ -133,6 +133,44 @@ def test_tracker_init():
             "Shongbon - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)")
         ),
+        (
+            [
+                "EDA Kunti League",
+                "LHS 1832 Labour"
+            ], 
+            "Journal.210105214916.01.log",
+            ("LHS 1832 - ANTI EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "Shongbon - ANTI EDA Kunti League\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "LHS 1832 - ANTI LHS 1832 Labour\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "LHS 1832 - PRO LHS 1832 Labour\n"
+            "1 INF+ mission(s)")
+        ),
+        (
+            [
+                "LHS 1832 Labour",
+                "EDA Kunti League"
+            ], 
+            "Journal.210105214916.01.log",
+            ("LHS 1832 - ANTI EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "Shongbon - ANTI EDA Kunti League\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "LHS 1832 - ANTI LHS 1832 Labour\n"
+            "1 INF+++ mission(s)\n"
+            "\n"
+            "LHS 1832 - PRO LHS 1832 Labour\n"
+            "1 INF+ mission(s)")
+        ),
     ])
 def test_journal_file(minor_faction:str, journal_file_name:str, expected_activity:str):
     with open("tests/journal_files/" + journal_file_name) as journal_file:
