@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Set
 from abc import ABC, abstractmethod
 from itertools import groupby
 from logging import Logger
@@ -9,8 +9,8 @@ from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
 class Tracker:
-    def __init__(self, minor_faction:str, logger:Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
-        self._minor_faction = minor_faction
+    def __init__(self, minor_factions:iter, logger:Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
+        self._minor_factions = set(minor_factions)
         self._logger = logger
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState()
@@ -20,12 +20,8 @@ class Tracker:
         self._event_summary_order = tuple(event_summary_order if event_summary_order else _default_event_summary_order)
     
     @property
-    def minor_faction(self) -> str:
-        return self._minor_faction
-
-    @minor_faction.setter
-    def minor_faction(self, value) -> str:
-        self._minor_faction = value
+    def minor_factions(self) -> Set[str]:
+        return self._minor_factions
 
     @property
     def pilot_state(self) -> PilotState:
@@ -56,13 +52,14 @@ class Tracker:
         event_processor = self._event_processors.get(event["event"], None)
         result = []
         if event_processor != None:
-            try:
-                result = event_processor.process(event, self.minor_faction, self.pilot_state, self.galaxy_state)
-            except NoLastDockedStationError:
-                self._logger.exception(f"Last docked station required for {str(event)}")
-            except UnknownStarSystemError as unknown_star_system_error:
-                self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
-            return result
+            for minor_faction in self._minor_factions:
+                try:
+                    result.extend(event_processor.process(event, minor_faction, self.pilot_state, self.galaxy_state))
+                except NoLastDockedStationError:
+                    self._logger.exception(f"Last docked station required for {str(event)}")
+                except UnknownStarSystemError as unknown_star_system_error:
+                    self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
+        return result
     
     def _update_activity(self, event_summaries:list) -> str:
         result = ""
