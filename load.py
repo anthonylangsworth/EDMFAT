@@ -115,6 +115,7 @@ def clear_activity() -> None:
     this.activity_summary.set(NO_ACTIVITY)
 
 def load_config() -> List[str]:
+    # Settings at HKEY_CURRENT_USER\SOFTWARE\Marginal\EDMarketConnector\WinSparkle
     saved_minor_factions = config.get(CONFIG_MINOR_FACTION)
     logger.info(f"Loading saved minor factions: '{ saved_minor_factions }'")
     if isinstance(saved_minor_factions, List) and len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
