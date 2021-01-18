@@ -23,8 +23,8 @@ To install:
 
 # Use
 
-1. Start EDMC. This is important. If you start EDMC while Elite: Dangerous is running, the plug-in may miss important events.
-2. (Optional) Go to the "File" -> "Settings" menu, navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one(s) you want to support or undermine. If they do not appear in the list, travel to a system where the faction is present then reopn the Settings dialog. This plug-in saves the selected minor factions when EDMC shuts down and so only needs to be done once. This plug-in does not save the list of minor factions.
+1. Start EDMC. This is important. If you start EDMC while **Elite: Dangerous** is running, the plug-in may miss important events.
+2. (Optional) Go to the "File" -> "Settings" menu, navigate to the "Minor Faction Activity Tracker" tab and change the "Minor Faction" to the one(s) you want to support or undermine. If they do not appear in the list, travel to a system where the faction is present then reopen the Settings dialog. This plug-in saves the selected minor factions when EDMC shuts down and so only needs to be done once. This plug-in does not save the list of minor factions.
 3. Play **Elite: Dangerous**, supporting or undermining your minor faction. 
 4. Minor faction-relevant activity will be captured and appear in the EDMC window. The plug-in tracks completing missions, selling bounty vouchers, selling combat bonds, trade (positive, negative and black market) and selling cartography data. The plug-in does not track failed missions or clean ship kills, which may be added in the future. The plug-in cannot track conflict zones due to limitations with **Elite: Dangerous**. 
 5. (Optional) Change the minor faction(s) to support or undermine as per step 2. This can be done at any time. Previous activity is retained.
@@ -35,6 +35,6 @@ To install:
 # Limitations
 
 1. The plug-in is not state-aware. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
-2. The plug-in does not store different minor factions for different commanders. However, many use multiple accounts for minor faction work.
+2. The plug-in does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
 3. The plug-in is not localized. It is English only.
 4. This plug-in does not support console players. Sorry. This is a limitation of EDMC.
