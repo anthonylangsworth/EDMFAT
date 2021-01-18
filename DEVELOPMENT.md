@@ -1,15 +1,17 @@
 This a scratch pad to record development-specific details, keeping them separate from user documentation.
 
-TODO:
-1. Add to troubleshooting: Missing data if EDMC started while docked.
-2. Test selling bonds, bounties at a interstellar factor or carrier in game.
-3. Missions
-4. Passenger missions
-5. Killing clean ships
+# Development Principles
 
-Does not do:
-1. Handle state-specific requirements. E.g. handing in combat bonds to factions in Election or War state will not affect influence.
-2. Handle things that are not in journal files, e.g. conflict zones.
+1. Ease of Use. For example, "Copy + Reset" instead of Reset button. Avoid non-game abbreviations in activity.
+2. Try to follow in-game values where possible. The journal file sometimes makes that unclear.
+3. Keep the code simple. For exampe, eschew plug-ins or dependencies unless necessary.
+
+# TODO
+
+1. Add to troubleshooting: Missing data if EDMC started while docked.
+2. Looking system if not found, e.g. handing in a wing mission.
+3. Test passenger missions
+4. Killing clean ships
 
 # References
 
