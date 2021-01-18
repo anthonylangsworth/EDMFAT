@@ -193,7 +193,7 @@ def test_tracker_init():
             {
                 "EDA Kunti League"
             }, 
-            "696613390.txt",
+            "696613390.log",
             ("Trumuye - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)")
         ),
@@ -201,7 +201,7 @@ def test_tracker_init():
             {
                 "EDA Kunti League"
             }, 
-            "696609571.txt",
+            "696609571.log",
             ("Trumuye - ANTI EDA Kunti League\n"
             "1 INF++ mission(s)")
         )
