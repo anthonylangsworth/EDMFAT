@@ -35,6 +35,6 @@ To install:
 # Limitations
 
 1. The plug-in is not state-aware. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
-2. The plug-in does not store different minor factions for different commanders. However, many use multiple accounts for minor faction work.
+2. The plug-in does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
 3. The plug-in is not localized. It is English only.
 4. This plug-in does not support console players. Sorry. This is a limitation of EDMC.
