@@ -122,7 +122,7 @@ def load_config() -> List[str]:
         # Windows config saves list with a single empty string instead of an empty list when empty
         saved_minor_factions = {}
     elif isinstance(saved_minor_factions, str):
-        if len(saved_minor_factions.trim()) > 0:
+        if len(saved_minor_factions.strip()) > 0:
             saved_minor_factions = set([saved_minor_factions])
         else:
             saved_minor_factions = {}
