@@ -12,6 +12,7 @@ This a scratch pad to record development-specific details, keeping them separate
 2. Looking system if not found, e.g. handing in a wing mission.
 3. Test passenger missions
 4. Killing clean ships
+5. Add troubleshooting, e.g. %userprofile%\AppData\Local\EDMarketConnector\plugins\EDMFAT, %TEMP%\EDMarketConnector.log
 
 # References
 
