@@ -13,7 +13,7 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
-this.version = (0,7)
+this.version = (0,8)
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 DEFAULT_MINOR_FACTIONS = {"EDA Kunti League"}
