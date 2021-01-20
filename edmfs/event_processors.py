@@ -217,6 +217,8 @@ class MissionCompletedEventProcessor(EventProcessor):
                             if supports != None:
                                 result.append(MissionCompletedEventSummary(destination_system.name, minor_faction, supports, max_influence))                            
 
+                # Technically, we should remove the mission as it is now completed.
+
         return result
     
 # Module non-public
