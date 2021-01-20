@@ -1,4 +1,4 @@
-from typing import Dict, Union, Any, Set
+from typing import Optional, Dict, Union, Any, Set
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
@@ -26,7 +26,7 @@ class UnknownMissionError(Exception):
     def id(self) -> int:
         return self._id
 
-def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False):
+def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False) -> Optional[bool]:
     if not supported_minor_faction in system_minor_factions:
         supports = None
     elif minor_faction == supported_minor_faction:
