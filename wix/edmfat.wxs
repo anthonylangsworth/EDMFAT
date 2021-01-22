@@ -4,8 +4,9 @@
             UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935">
         <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+        <Property Id="ALLUSERS" Value="0" />
         <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="LocalAppDataFolder">
+            <Directory Id="LocalAppDataFolder" >
                 <Directory Id="EDMarketConnectorFolder" Name="EDMarketConnector">
                     <Directory Id="PluginsFolder" Name="Plugins" />
                 </Directory>
@@ -17,7 +18,7 @@
                     <File Id="load.py" Source="..\load.py" Checksum="yes"/>
                     <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\load.py" Type="string" Value="" KeyPath="yes" />
                     <CreateFolder />
-                    <RemoveFolder Id="RemoveEDMFATFolder" Directory="EDMFATFolder" On="uninstall" />
+                    <RemoveFolder Id="RemoveEDMFATFolder" On="uninstall" />
                     <RemoveFile Id="RemoveLoadPy" Name="load.py" On="uninstall" />
                 </Component>
                 <Directory Id="edmfsFolder" Name="edmfs">
@@ -26,33 +27,38 @@
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\__init__.py" 
                             Type="string" Value="__init__.py" KeyPath="yes" />
                         <CreateFolder />
-                        <RemoveFolder Id="RemoveEdmfsFolder" Directory="edmfsFolder" On="uninstall" />
-                        <RemoveFile Id="RemoveEdmfsFiles" Name="*.*" On="uninstall" />
+                        <RemoveFolder Id="RemoveEdmfsFolder" On="uninstall" />
+                        <RemoveFile Id="RemoveInitPyStateFile" Name="__init__.py" On="uninstall" />
                     </Component>
                     <Component Id="event_formatters.py" Guid="3c2791bc-22a6-42af-a897-0f17e03405a3">
                         <File Id="event_formatters.py" Source="..\edmfs\event_formatters.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\event_formatters.py" 
                             Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveEventFormattersFile" Name="event_formatters.py" On="uninstall" />
                     </Component>
                     <Component Id="event_processors.py" Guid="232ec5bb-9e74-4584-a8c0-4db7bc7abade">
                         <File Id="event_processors.py" Source="..\edmfs\event_processors.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\event_processors.py" 
                             Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveEventProcessorsFile" Name="event_processors.py" On="uninstall" />
                     </Component>
                     <Component Id="event_summaries.py" Guid="5b6cf2bd-b081-4397-87b8-a6015c51b945">
                         <File Id="event_summaries.py" Source="..\edmfs\event_summaries.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\event_summaries.py" 
                             Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveEventSummariesFile" Name="event_summaries.py" On="uninstall" />
                     </Component>
                     <Component Id="state.py" Guid="e69edfff-97bc-4df5-9386-aeee7189cc1a">
                         <File Id="state.py" Source="..\edmfs\state.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\state.py" 
                             Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveStateFile" Name="state.py" On="uninstall" />
                     </Component>
                     <Component Id="tracker.py" Guid="96930b31-fbc8-4a91-bb49-40680a3507b0">
                         <File Id="tracker.py" Source="..\edmfs\tracker.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\tracker.py" 
                             Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveTrackerFile" Name="tracker.py" On="uninstall" />
                     </Component>
                 </Directory>
             </Directory>
