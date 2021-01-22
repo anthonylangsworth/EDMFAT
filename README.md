@@ -14,7 +14,12 @@ Requirements:
 To install or upgrade:
 1. Download the latest MSI file under "Releases" at the top right.
 2. Run the MSI. This installs the plug-in, upgrading if an earlier version is present. It does not require local administrative privileges.
-4. Restart EDMC if it was already running.
+3. Restart EDMC if it was already running.
+
+To remove or uninstall:
+1. Stop EDMC if it is running.
+2. Run "Add or Remove Programs" from the Windows Start menu.
+3. Select "Elite: Dangerous Minor Faction Activity Tracker (EDMFAT)" then press "Uninstall".
 
 # Use
 
