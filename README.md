@@ -11,14 +11,9 @@ Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/sq
 Requirements:
 1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
 
-To upgrade from an earlier version:
-1. Delete the existing EDMFAT plug-in folder, normally found at `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins\EDMFAT` on Windows.
-2. Follow the steps under "To install" below.
-
-To install:
-1. Download the latest ZIP file under "Releases" at the top right.
-2. Copy the ZIP file into your EDMC plug-ins folder, normally `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins` on Windows.
-3. Expand the ZIP file. This should create and "EDMFAT" folder with the plug-in files inside it.
+To install or upgrade:
+1. Download the latest MSI file under "Releases" at the top right.
+2. Run the MSI. This installs the plug-in. It does not require local administrative privileges.
 4. Restart EDMC if it was already running.
 
 # Use
