@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Bundle Name="EDMFAT" Language="1033" Version="0.8" Manufacturer="EDMFAT" UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935">
+        <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" />
+        <Chain>
+            <MsiPackage>
+
+        </Chain>
+    </Bundle>
+    <Directory Id="LocalAppDataFolder">
+        <Directory Id="EDMarketConnectorFolder" Name="EDMarketConnector">
+            <Directory Id="PluginsFolder" Name="plugins">
+                <Directory Id="TARGETDIR" Name="EDMFAT">
+                    <Directory Id="edmfsFolder" Name="edmfs"/>
+                </Directory>
+            </Directory>
+        </Directory>
+    </Directory>
+    <Component Id="plugin" Guid="df383eb4-c1cd-4517-8173-f347c1a1771f">
+        <DirectoryRef Id="TARGETDIR">
+            <File Id="load.py" Source="..\load.py" KeyPath="yes" Checksum="yes"/>
+        </DirectoryRef>     
+        <DirectoryRef Id="edmfsFolder">
+            <File Id="__init__.py" Source="..\edmfs\__init__.py" KeyPath="yes" Checksum="yes"/>
+            <File Id="event_formatters.py" Source="..\edmfs\event_formatters.py" KeyPath="yes" Checksum="yes"/>
+            <File Id="event_processors.py" Source="..\edmfs\event_processors.py" KeyPath="yes" Checksum="yes"/>
+            <File Id="event_summaries.py" Source="..\edmfs\event_summaries.py" KeyPath="yes" Checksum="yes"/>
+            <File Id="state.py" Source="..\edmfs\state.py" KeyPath="yes" Checksum="yes"/>
+            <File Id="tracker.py" Source="..\edmfs\tracker.py" KeyPath="yes" Checksum="yes"/>
+        </DirectoryRef>     
+    </Component>
+    <Feature Id="DefaultFeature" Level="1">
+        <ComponentRef="plugin" />
+    </Feature>
+</Wix>
