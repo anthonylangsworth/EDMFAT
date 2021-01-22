@@ -1,3 +1,6 @@
 __pycache__/
 .pytest_cache/
 *~
+*.wixobj
+*.wixpdb
+*.msi
