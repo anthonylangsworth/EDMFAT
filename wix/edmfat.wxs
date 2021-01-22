@@ -4,56 +4,62 @@
             UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935">
         <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
-        <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="LocalAppDataFolder">
-                <Directory Id="EDMarketConnectorFolder">
-                    <Directory Id="PluginsFolder">
-                        <Directory Id="EDMFATFolder" Name="EDMFAT">
-                            <Directory Id="edmfsFolder" Name="edmfs"/>
+        <Property Id="PLUGINS_FOLDER_PATH">
+            <Directory Id="TARGETDIR" Name="SourceDir">
+                <Directory Id="LocalAppDataFolder">
+                    <Directory Id="EDMarketConnectorFolder" Name="EDMarketConnector">
+                        <Directory Id="PluginsFolder" Name="Plugins">
                         </Directory>
                     </Directory>
                 </Directory>
             </Directory>
-        </Directory>
-        <DirectoryRef Id="EDMFATFolder">
-            <Component Id="load.py" Guid="df383eb4-c1cd-4517-8173-f347c1a1771f">
-                <File Id="load.py" Source="..\load.py" Checksum="yes"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\" 
-                    Type="string" Value="load.py" KeyPath="yes" />
-            </Component>
-        </DirectoryRef>     
-        <DirectoryRef Id="edmfsFolder">
-            <Component Id="__init__.py" Guid="8cbb2ea1-fe63-4614-b201-2ed9ed60d31f">
-                <File Id="__init__.py" Source="..\edmfs\__init__.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="__init__.py" KeyPath="yes" />
-            </Component>
-            <Component Id="event_formatters.py" Guid="3c2791bc-22a6-42af-a897-0f17e03405a3">
-                <File Id="event_formatters.py" Source="..\edmfs\event_formatters.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="event_formatters.py" KeyPath="yes" />
-            </Component>
-            <Component Id="event_processors.py" Guid="232ec5bb-9e74-4584-a8c0-4db7bc7abade">
-                <File Id="event_processors.py" Source="..\edmfs\event_processors.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="event_processors.py" KeyPath="yes" />
-            </Component>
-            <Component Id="event_summaries.py" Guid="5b6cf2bd-b081-4397-87b8-a6015c51b945">
-                <File Id="event_summaries.py" Source="..\edmfs\event_summaries.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="event_summaries.py" KeyPath="yes" />
-            </Component>
-            <Component Id="state.py" Guid="e69edfff-97bc-4df5-9386-aeee7189cc1a">
-                <File Id="state.py" Source="..\edmfs\state.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="state.py" KeyPath="yes" />
-            </Component>
-            <Component Id="tracker.py" Guid="96930b31-fbc8-4a91-bb49-40680a3507b0">
-                <File Id="tracker.py" Source="..\edmfs\tracker.py"/>
-                <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
-                    Type="string" Value="tracker.py" KeyPath="yes" />
-            </Component>
-        </DirectoryRef>     
+        </Property>
+        <DirectoryRef Id="PluginsFolder">
+            <Directory Id="EDMFATFolder" Name="EDMFAT">
+                <Component Id="load.py" Guid="df383eb4-c1cd-4517-8173-f347c1a1771f">
+                    <File Id="load.py" Source="..\load.py" Checksum="yes"/>
+                    <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\Installed" Type="string" Value="" KeyPath="yes" />
+                    <CreateFolder />
+                    <RemoveFolder Id="EDMFATFolder" On="uninstall" />
+                    <RemoveFile Id="RemoveLoadPy" Name="*.*" On="uninstall" />
+                </Component>
+                <Directory Id="edmfsFolder" Name="edmfs">
+                    <Component Id="__init__.py" Guid="8cbb2ea1-fe63-4614-b201-2ed9ed60d31f">
+                        <File Id="__init__.py" Source="..\edmfs\__init__.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="__init__.py" KeyPath="yes" />
+                        <CreateFolder />
+                        <RemoveFolder Id="EDMFATFolder" On="uninstall" />
+                        <RemoveFile Id="RemoveEdmfsFiles" Name="*.*" On="uninstall" />
+                    </Component>
+                    <Component Id="event_formatters.py" Guid="3c2791bc-22a6-42af-a897-0f17e03405a3">
+                        <File Id="event_formatters.py" Source="..\edmfs\event_formatters.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="event_formatters.py" KeyPath="yes" />
+                    </Component>
+                    <Component Id="event_processors.py" Guid="232ec5bb-9e74-4584-a8c0-4db7bc7abade">
+                        <File Id="event_processors.py" Source="..\edmfs\event_processors.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="event_processors.py" KeyPath="yes" />
+                    </Component>
+                    <Component Id="event_summaries.py" Guid="5b6cf2bd-b081-4397-87b8-a6015c51b945">
+                        <File Id="event_summaries.py" Source="..\edmfs\event_summaries.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="event_summaries.py" KeyPath="yes" />
+                    </Component>
+                    <Component Id="state.py" Guid="e69edfff-97bc-4df5-9386-aeee7189cc1a">
+                        <File Id="state.py" Source="..\edmfs\state.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="state.py" KeyPath="yes" />
+                    </Component>
+                    <Component Id="tracker.py" Guid="96930b31-fbc8-4a91-bb49-40680a3507b0">
+                        <File Id="tracker.py" Source="..\edmfs\tracker.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs" 
+                            Type="string" Value="tracker.py" KeyPath="yes" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
         <Feature Id="DefaultFeature" Level="1">
             <ComponentRef Id="load.py" />
             <ComponentRef Id="__init__.py" />
