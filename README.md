@@ -39,3 +39,7 @@ To install:
 3. The plug-in does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
 4. The plug-in is not localized. It is English only.
 5. This plug-in does not support console players. Sorry. This is a limitation of EDMC.
+
+# Contributing and Development
+
+See [Contributing](doc/contributing.md).
