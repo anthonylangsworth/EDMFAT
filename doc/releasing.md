@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-1. For MSI installs, download the latest version of the [Wix toolset](https://wixtoolset.org/releases/).
-2. Ensure the tools folder, `%ProgramFiles(x86)%\WiX Toolset v3.11\bin\` by default, is in the PATH.
+1. For MSI installs, download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/).
+2. Ensure the WiX Toolset bin folder, `%ProgramFiles(x86)%\WiX Toolset v3.11\bin\` by default, is in the PATH.
 
 ## Process
 
