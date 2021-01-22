@@ -27,6 +27,11 @@ class UnknownMissionError(Exception):
         return self._id
 
 def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False) -> Optional[bool]:
+    # Technically, there are four states but a bool is sufficient for this plug-in. The states are:
+    # 1. Direct support: Increases the influence of that minor faction, such as completing a mission for that faction.
+    # 2. Direct undermine: Decrease the influence of that minor faction, such as an assassination mission against a ship for that faction.
+    # 3. Indirect support: Decrease the influence of another minor faction in that system.
+    # 4. Indirect undermine: Increase the influence of another minor faction in that system.
     if not supported_minor_faction in system_minor_factions:
         supports = None
     elif minor_faction == supported_minor_faction:
@@ -195,11 +200,13 @@ class MissionCompletedEventProcessor(EventProcessor):
 
                 # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
+                # The source or destination system may be unknown (1) for shared wing missions and (2) when EDMC is started after mission acceptance.
+
                 # Add the source system if missing and the mission is known
                 if mission:
                     source_system = galaxy_state.systems.get(mission.system_address, None)
                     if not source_system:
-                        raise UnknownStarSystemError(mission.system_address)
+                        raise UnknownStarSystemError(mission.system_address) # TODO: Call the EDSM or similar API to determine this
                     if not any([x for x in result if x.system_name == source_system.name]):
                         supports = _supports_minor_faction(event["Faction"], minor_faction, source_system.minor_factions)
                         if supports != None:
@@ -211,7 +218,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     if destination_system_name:
                         destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
                         if not destination_system:
-                            raise UnknownStarSystemError(destination_system_name)
+                            raise UnknownStarSystemError(destination_system_name) # TODO: Call the EDSM or similar API to determine this
                         if not any([x for x in result if x.system_name == destination_system_name]):
                             supports = _supports_minor_faction(event["TargetFaction"], minor_faction, destination_system.minor_factions)
                             if supports != None:
