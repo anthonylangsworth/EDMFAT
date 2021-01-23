@@ -37,7 +37,7 @@ A rough backlog:
 2. Tracking killing clean ships
 3. Add troubleshooting FAQs, e.g. Check %userprofile%\AppData\Local\EDMarketConnector\plugins\EDMFAT, check %TEMP%\EDMarketConnector.log
 4. (low) Evangelizing the plug-in.
-5. (low) Reformat the files to be PEP8 compliant.
+5. (low) Reformat the py files to be PEP8 compliant.
 
 ## References
 
