@@ -6,6 +6,8 @@ This plug-in is aimed at **Elite: Dangerous** squadrons that support a minor fac
 
 Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), the long term goal is to generalize this plug-in into something useful for the broader **Elite: Dangerous** community.
 
+Fly safe, commanders from CMDR Akton!
+
 # Installation and Upgrade
 
 Requirements:
@@ -43,3 +45,5 @@ To remove or uninstall:
 # Contributing and Development
 
 See [Contributing](doc/contributing.md).
+
+Bugs and suggestions are welcome! Please reach out to me via the contact methods in my [github profile](https://github.com/anthonylangsworth) or raise an issue in the tab above.
