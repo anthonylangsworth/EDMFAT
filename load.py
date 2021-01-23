@@ -1,11 +1,14 @@
 import sys
 import os
 from typing import Optional, List, Tuple, Dict, Any, Union
+import logging
+
 import tkinter as tk
 import itertools
 import myNotebook
+from ttkHyperlinkLabel import HyperlinkLabel
+
 from config import config, appname
-import logging
 import edmfs
 
 this = sys.modules[__name__]
@@ -47,7 +50,9 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX = 10
     PADY = 10
-    instructions = "Track missions and activity for or against minor faction(s). Multiple selection is allowed.\n\nIf the desired minor faction does not appear in the list, jump to a system where it is present and reopen this dialog."
+    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Multiple selection is allowed.\n\nIf the desired minor faction does not appear in the list, jump to a system where it is present and reopen this dialog."
+    VERSION = f"Version: {'.'.join(map(str, this.version))}"
+    URL = "https://github.com/anthonylangsworth/EDMFAT"
 
     # known_minor_factions = {"EDA Kunti League", "Kunti Dragons", "LTT 2337 Empire Party", "HR 1597 & Co", "The Fuel Rats Mischief", "The Scovereign Justice League", "Hutton Orbital Truckers", "The Dark Wheel", "Edge Fraternity", "Colonia Citizens Network", "Mobius Colonial Republic Navy", "Tenjin Pioneers Colonia", "Knights of Colonial Karma", "Ed's 38"}
     known_minor_factions = set(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values()))
@@ -56,12 +61,17 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     frame = myNotebook.Frame(parent)
     frame.columnconfigure(1, weight=1) # Required for listbox scrollbar
-    myNotebook.Label(frame, text=instructions, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=1, column=0, columnspan=8, padx=PADX, sticky=tk.W)
-    myNotebook.Label(frame, text="Minor Faction").grid(row=3, column=0, padx=PADX, sticky=tk.W)
+
+    HyperlinkLabel(
+        frame, text=this.plugin_name, background=myNotebook.Label().cget("background"), url=URL, underline=True
+    ).grid(row=0, padx=PADX, pady=PADY, sticky=tk.W)
+    myNotebook.Label(frame, text=VERSION).grid(row=0, column=3, padx=PADX, sticky=tk.E)
+
+    myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
 
     this.minor_faction_list = tk.Listbox(frame, selectmode="multiple")
     this.minor_faction_list.config(height=10, width=50)
-    this.minor_faction_list.grid(row=3, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
+    this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
     this.minor_faction_list.insert(tk.END, *sorted(known_minor_factions))
 
     first_minor_faction_visible = False
@@ -73,7 +83,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
     scrollbar.config(command=this.minor_faction_list.yview)
-    scrollbar.grid(row=3, column=1, sticky=tk.NS + tk.W, pady=PADY)
+    scrollbar.grid(row=5, column=1, sticky=tk.NS + tk.W, pady=PADY)
 
     this.minor_faction_list.config(yscrollcommand=scrollbar.set)
     
