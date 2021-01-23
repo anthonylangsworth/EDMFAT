@@ -46,4 +46,4 @@ To remove or uninstall:
 
 See [Contributing](doc/contributing.md).
 
-Bugs reports and suggestions are welcome! Please reach out to me via the contact methods in [my github profile](https://github.com/anthonylangsworth) or raise an issue in the tab above.
+Bugs reports and suggestions are welcome! Please reach out to me via the contact methods in [my github profile](https://github.com/anthonylangsworth) or [raise an issue in the tab above](https://github.com/anthonylangsworth/EDMFAT/issues).
