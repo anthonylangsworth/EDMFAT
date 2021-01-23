@@ -23,7 +23,7 @@ def test_tracker_init():
             {"HR 1597 & Co"}, 
             "Journal.201019220908.01.log", 
             ("HR 1597 - ANTI HR 1597 & Co\n"
-            "1,916,227 CR of Bounty Vouchers\n"
+            "1,852,906 CR of Bounty Vouchers\n"
             "\n"
             "HR 1597 - PRO HR 1597 & Co\n"
             "1 INF++ mission(s)\n"
@@ -204,6 +204,13 @@ def test_tracker_init():
             "696609571.log",
             ("Trumuye - ANTI EDA Kunti League\n"
             "1 INF++ mission(s)")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210122183958.01.log",
+            ("")
         )
     ])
 def test_journal_file(minor_factions:str, journal_file_name:str, expected_activity:str):
@@ -218,7 +225,7 @@ def test_journal_file(minor_factions:str, journal_file_name:str, expected_activi
         tracker = Tracker(minor_factions, logger)
         for event in events:
             tracker.on_event(event)
-        assert(tracker.activity == expected_activity)
+        assert tracker.activity == expected_activity, f"{print(tracker.activity)}\ndoes not match:\n{print(expected_activity)}"
         print(stream.getvalue())
 
 @pytest.mark.parametrize(

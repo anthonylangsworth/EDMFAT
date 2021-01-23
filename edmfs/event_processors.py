@@ -119,7 +119,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
         result = []
         for minor_faction in minor_factions:    
-            if minor_faction in star_system.minor_factions: # Exclude interstellar factors
+            if minor_faction in star_system.minor_factions and event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
                 if event["Type"] == "bounty":
                     result.extend(self._process_bounty(event, star_system.name, minor_faction, star_system.minor_factions))
                 elif event["Type"] == "CombatBond": 
