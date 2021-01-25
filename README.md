@@ -34,6 +34,8 @@ To remove or uninstall:
 6. (Optional) Press the "Copy + Reset" button to copy your activity to the Windows clipboard and clear any activity. This can be useful if you want to report activity part way through a session, such as before the daily or weekly tick.
 7. Paste it into your squadron's Discord channel or wherever you report activity.
 
+Please read the [FAQ](doc/faq.md) for more details.
+
 # Limitations
 
 1. Mission influence accuracy is limited by **Elite: Dangerous** as described under [missions](doc/missions.md).
@@ -44,6 +46,6 @@ To remove or uninstall:
 
 # Contributing and Development
 
-See [Contributing](doc/contributing.md).
+Bugs reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for details.
 
-Bugs reports and suggestions are welcome! Please reach out to me via the contact methods in [my github profile](https://github.com/anthonylangsworth) or [raise an issue in the tab above](https://github.com/anthonylangsworth/EDMFAT/issues).
+See [Contributing](doc/contributing.md) if you want to help with development.
