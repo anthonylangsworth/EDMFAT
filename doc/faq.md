@@ -37,3 +37,7 @@ This plug-in saves the selected minor factions. If you exit EDMC and start it la
 I do not know. However, I plan to test the plug-in and add any new, relevant Odyssey features when it is released.
 
 The plug-in intentionally excludes any events from beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any Odyssey alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
+
+### 5. I accidentally did a mission that hurt my minor faction. Help!
+
+Don't Panic! This commonly happens when you do not check a mission's target faction. Treat it as a learning experience. 
