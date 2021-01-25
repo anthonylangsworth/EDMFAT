@@ -210,7 +210,30 @@ def test_tracker_init():
                 "EDA Kunti League"
             },
             "Journal.210122183958.01.log",
-            ("")
+            ""
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210125173739.01.log",
+            (
+                "San Davokje - ANTI EDA Kunti League\n"
+                "80 T trade at 3,477 CR average profit per T\n"
+                "\n"
+                "San Davokje - PRO EDA Kunti League\n1 INF++++ mission(s)"
+            )
+        )
+,
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210125115425.01.log",
+            (
+                "HR 1597 - PRO EDA Kunti League\n"
+                "5 T trade at 3,734 CR average profit per T"
+            )
         )
     ])
 def test_journal_file(minor_factions:str, journal_file_name:str, expected_activity:str):
