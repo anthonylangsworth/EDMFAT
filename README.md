@@ -14,7 +14,7 @@ Requirements:
 1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
 
 To install or upgrade:
-1. Download the latest MSI file under [Releases](https://github.com/anthonylangsworth/EDMFAT/releases) at the top right. You may get a warning saying it is harmful. Please ignore these warnings.
+1. Download the latest MSI file under [Releases](https://github.com/anthonylangsworth/EDMFAT/releases) at the top right. You may get a warning saying it is potentially harmful. Please ignore these warnings.
 2. Run the MSI. This installs the plug-in, upgrading if an earlier version is present. Running the MSI does not require local administrative privileges.
 3. Restart EDMC if it was already running.
 
