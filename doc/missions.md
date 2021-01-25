@@ -12,13 +12,15 @@ If you want a completely accurate mission influence record, such as for detailed
 
 If you want to compete with other players to determine who helps or hinders more, influence from missions completed in the short term (for example, a typical play session of a few hours) is often constrained by the randomly generated missions and less by player skill. While players with higher reputation and combat/exploration/trade ranks tend to get higher rewarding missions, this is not guaranteed. Tracking comparative effort may be possible over extended periods (for example, months) but the plug-in does not currently retain tracked activity after exiting EDMC.
 
+The in-game UI may not be literal or even correct. In-game influence values may be an average, rounded to the nearast "+" or indicative.
+
 Therefore, the recommended use for the mission influence results (and the plug-in generally) is a guide. It helps squadron members or other players understand where you have focused your time. They can then assist, if more effort is needed, or work elsewhere, if not. Occasional extra or omitted influence "+"s will not affect that.
 
-Similarly, this plug-in simplifies minor faction missions into increasing (PRO) or decreasing (ANTI) a minor faction's influence. More accurately, four types of missions impact a minor faction's influence:
-1.	Direct support: Increases the minor faction's influence, such as completing a mission for that faction.
-2.	Direct undermine: Decrease the minor faction's influence, such as an assassination mission destroying a ship owned by that minor faction.
-3.	Indirect support: Decrease another minor faction's influence in that system. This effectively boosts the influence of all other minor factions in that system. It is a smaller influence increase than direct support.
-4.	Indirect undermine: Increase another minor faction's influence in that system. This effectively decreases the influence of all other minor factions in that system. It is a smaller influence decrease than direct undermine.
+To keep things simple, this plug-in simplifies minor faction missions into increasing (PRO) or decreasing (ANTI) a minor faction's influence. More accurately, the four types of missions impact a minor faction's influence are:
+1.	Direct support: Increases the minor faction's influence, such as completing a mission for that faction. The plug-in calls this "PRO".
+2.	Direct undermine: Decrease the minor faction's influence, such as an assassination mission destroying a ship owned by that minor faction. The plug-in calls this "ANTI".
+3.	Indirect support: Decrease another minor faction's influence in that system. This effectively boosts the influence of all other minor factions in that system. It is a smaller influence increase than direct support. The plug-in calls this "PRO".
+4.	Indirect undermine: Increase another minor faction's influence in that system. This effectively decreases the influence of all other minor factions in that system. It is a smaller influence decrease than direct undermine. The plug-in calls this "ANTI".
 
 Have fun and fly safely from CMDR Akton!
 
