@@ -27,6 +27,6 @@ Have fun and fly safely from CMDR Akton!
 # Known Mission Issues
 
 This plug-in may not track:
-1. wing missions. Sometimes **Elite: Dangerous** does not write journal entries for wing missions.
+1. wing missions. Sometimes **Elite: Dangerous** does not write journal entries for wing missions for those other than the mission sharer.
 2. completing shared wing missions where the player has not visited the system the mission was given (accepted). This plug-in needs details of the source system to determine whether the mission affected the minor faction's(s') influence.
 3. completing missions if (1) the mission was accepted when EDMC was not running or (2) EDMC was restarted since the mission was accepted.
