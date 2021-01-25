@@ -10,7 +10,8 @@ Assuming the problem is not due to known issues with missions, please either:
 
 I will need:
 1. The relevant journal file(s) from the play session. These are usually found in `%userprofile%\Saved Games\Frontier Developments\Elite Dangerous\` in the form of `Journal.YYYYMMDDHHmmSS.01.log` where YYYYMMDDHHmmSS is a date and time in reverse order.
-2. An explanation of what should have happened. For example, if sold cartography data does not appear, please tell me where you sold it (the station or settlement) and when (the rough game time).
+2. The minor faction(s) being supported or undermined.
+3. An explanation of what should have happened. For example, if sold cartography data does not appear, please tell me where you sold it (the station or settlement) and when (the rough game time).
 
 ### 2. The EDMC plug-in is not loading or not working correctly. How do I fix this?
 
