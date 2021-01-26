@@ -51,3 +51,5 @@ Please read the [FAQ](doc/faq.md) for more details.
 Bugs reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for details.
 
 See [Contributing](doc/contributing.md) if you want to help with development.
+
+See [LICENSE](LICENSE) for the license.
