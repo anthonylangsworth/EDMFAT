@@ -10,6 +10,7 @@ from ttkHyperlinkLabel import HyperlinkLabel
 
 from config import config, appname
 import edmfs
+import edmfs.resolvers
 
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Activity Tracker"
