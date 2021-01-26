@@ -46,10 +46,10 @@ def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
     if not pilot_state.last_docked_station:
         raise NoLastDockedStationError()
 
-    if not galaxy_state.systems.get(pilot_state.last_docked_station.system_address, None):
+    if not galaxy_state.get_system(pilot_state.last_docked_station.system_address):
         raise UnknownStarSystemError(pilot_state.last_docked_station.system_address)
 
-    star_system = galaxy_state.systems[pilot_state.last_docked_station.system_address]
+    star_system = galaxy_state.get_system(pilot_state.last_docked_station.system_address)
     station = pilot_state.last_docked_station
 
     return (star_system, station)
@@ -191,7 +191,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                 # Try the Influence entries
                 for faction_effect in event["FactionEffects"]:
                     for influence_effect in faction_effect["Influence"]:
-                        star_system = galaxy_state.systems.get(influence_effect["SystemAddress"], None)
+                        star_system = galaxy_state.get_system(influence_effect["SystemAddress"])
                         if not star_system:
                             raise UnknownStarSystemError(influence_effect["SystemAddress"])
                         supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
@@ -201,10 +201,11 @@ class MissionCompletedEventProcessor(EventProcessor):
                 # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
                 # The source or destination system may be unknown (1) for shared wing missions and (2) when EDMC is started after mission acceptance.
+                # Adding a resolver to galaxy_state hopefully remediates that.
 
                 # Add the source system if missing and the mission is known
                 if mission:
-                    source_system = galaxy_state.systems.get(mission.system_address, None)
+                    source_system = galaxy_state.get_system(mission.system_address)
                     if not source_system:
                         raise UnknownStarSystemError(mission.system_address) # TODO: Call the EDSM or similar API to determine this
                     if not any([x for x in result if x.system_name == source_system.name]):

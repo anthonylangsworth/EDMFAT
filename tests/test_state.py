@@ -29,6 +29,11 @@ def test_galaxy_state_init():
     galaxy_state = GalaxyState()
     assert galaxy_state.systems == {}
 
+def test_galaxy_state_init_args():
+    SYSTEMS = {1234: StarSystem("Sol", 1234, ["a", "b"])}
+    galaxy_state = GalaxyState(None, SYSTEMS)
+    assert galaxy_state.systems == SYSTEMS
+
 @pytest.mark.parametrize(
     "resolver, star_systems, system_address, expected_star_system",
     [
@@ -43,12 +48,10 @@ def test_galaxy_state_init():
     ]
 )
 def test_galaxy_state_get_system(resolver, star_systems, system_address, expected_star_system):
-    assert GalaxyState(resolver, star_systems).get_system(system_address) == expected_star_system
-
-def test_galaxy_state_init_args():
-    SYSTEMS = {1234: StarSystem("Sol", 1234, ["a", "b"])}
-    galaxy_state = GalaxyState(None, SYSTEMS)
-    assert galaxy_state.systems == SYSTEMS
+    galaxy_state = GalaxyState(resolver, star_systems)
+    assert galaxy_state.get_system(system_address) == expected_star_system
+    if expected_star_system:
+        assert galaxy_state.systems[system_address] == expected_star_system
 
 def test_mission_init():
     ID = 564728
