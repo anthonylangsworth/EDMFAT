@@ -2,6 +2,8 @@
 
 ## Contributing
 
+Run the following to install required modules: `pip install pytest requests` 
+
 Contributions are welcome. A rough process:
 1. Please contact me first to discuss new features. You can find my contact details under [my GitHub profile](https://github.com/anthonylangsworth).
 2. Create a pull request early, communicating to others what you are working on and allowing collaboration.
