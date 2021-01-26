@@ -16,3 +16,10 @@ from edmfs.tracker import _get_dummy_logger
 )
 def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSystem) -> None:
     assert resolve_star_system_via_edsm(_get_dummy_logger(), system_address).name == expected_name
+
+import functools
+
+def test_partial():
+    logger = _get_dummy_logger()
+    partial_func = functools.partial(resolve_star_system_via_edsm, logger)
+    assert partial_func(5070074488225)
