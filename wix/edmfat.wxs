@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product Id="*" Name="Elite: Dangerous Minor Faction Activity Tracker (EDMFAT)" Language="1033" 
-            Version="0.10.0" Manufacturer="Anthony Langsworth" 
+            Version="0.11.0" Manufacturer="Anthony Langsworth" 
             UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935">
         <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
         <Upgrade Id="530be369-3c3f-4eae-abf3-46fe6e7c0935">
-            <UpgradeVersion Minimum="0.10.0" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
-            <UpgradeVersion Minimum="0.0.0" Maximum="0.10.0" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>	  
+            <UpgradeVersion Minimum="0.11.0" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
+            <UpgradeVersion Minimum="0.0.0" Maximum="0.11.0" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>
         </Upgrade>
         <Condition Message="A newer version of this software is already installed.">NOT NEWERVERSIONDETECTED</Condition>
         <Property Id="ALLUSERS" Value="2" Secure="yes" />
@@ -58,6 +58,12 @@
                             Type="string" Value="Installed" KeyPath="yes" />
                         <RemoveFile Id="RemoveEventSummariesFile" Name="event_summaries.py" On="uninstall" />
                     </Component>
+                    <Component Id="resolvers.py" Guid="3699dcee-5e2a-4115-a3da-9ce54bfd6311">
+                        <File Id="resolvers.py" Source="..\edmfs\resolvers.py"/>
+                        <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\resolvers.py"
+                            Type="string" Value="Installed" KeyPath="yes" />
+                        <RemoveFile Id="RemoveResolversFile" Name="resolvers.py" On="uninstall" />
+                    </Component>
                     <Component Id="state.py" Guid="e69edfff-97bc-4df5-9386-aeee7189cc1a">
                         <File Id="state.py" Source="..\edmfs\state.py"/>
                         <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfs\state.py" 
@@ -82,6 +88,7 @@
             <ComponentRef Id="event_formatters.py" />
             <ComponentRef Id="event_processors.py" />
             <ComponentRef Id="event_summaries.py" />
+            <ComponentRef Id="resolvers.py" />
             <ComponentRef Id="state.py" />
             <ComponentRef Id="tracker.py" />
         </Feature>
