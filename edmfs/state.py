@@ -1,4 +1,5 @@
-from typing import Dict
+from typing import Dict, Callable
+
 
 class StarSystem:
     def __init__(self, name:str, address:int, minor_factions:iter):
@@ -62,6 +63,7 @@ class Station:
     def __repr__(self) -> str:
         return f"Station('{self._name}', {self._system_address}, '{self._controlling_minor_faction}')"
 
+
 class Mission:
     def __init__(self, id:int, minor_faction:str, influence:str, system_address:int):
         self._id = id
@@ -97,13 +99,21 @@ class Mission:
     def __repr__(self) -> str:
         return f"Mission({self._id}, '{self._minor_faction}', '{self._influence}', {self._system_address})"
 
+
 class GalaxyState:
-    def __init__(self, star_systems:Dict[int, StarSystem] = None):
+    def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None):
         self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Workaround for {} being shared in edge cases
+        self._star_system_resolver = star_system_resolver if star_system_resolver else lambda x: None
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
         return self._systems
+
+    def get_system(self, system_address:int) -> StarSystem:
+        star_system = self._systems.get(system_address, None)
+        if not star_system:
+            star_system = self._star_system_resolver(system_address)
+        return star_system
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
@@ -113,6 +123,7 @@ class GalaxyState:
 
     def __hash__(self) -> int:
         return hash(self._systems)
+
 
 class PilotState:
     def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
