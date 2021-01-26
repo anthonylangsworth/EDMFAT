@@ -53,7 +53,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Click to select or deselect any minor faction (row). Multiple selection is allowed. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
-    MISSION_WARNING = "Some missions may not be recorded correctly due to limitations with Elite: Dangerous."
+    MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
     MISSIONS_CHALLENGES_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
 
     # known_minor_factions = {"EDA Kunti League", "Kunti Dragons", "LTT 2337 Empire Party", "HR 1597 & Co", "The Fuel Rats Mischief", "The Scovereign Justice League", "Hutton Orbital Truckers", "The Dark Wheel", "Edge Fraternity", "Colonia Citizens Network", "Mobius Colonial Republic Navy", "Tenjin Pioneers Colonia", "Knights of Colonial Karma", "Ed's 38"}
