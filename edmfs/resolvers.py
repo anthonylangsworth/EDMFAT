@@ -8,7 +8,7 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
     URL = "https://www.edsm.net/api-system-v1/factions"
     star_system = None
     try:
-        response = requests.get(URL, params={ "systemId64": system_address }, timeout=10)
+        response = requests.get(URL, params={ "systemId64": system_address }, timeout=30)
         if response.status_code == 200:
             output = response.json()
             minor_factions = [faction["name"] for faction in output["factions"]]
