@@ -8,11 +8,17 @@ from .event_processors import EventProcessor, _default_event_processors, NoLastD
 from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
+def _get_dummy_logger():
+    logger = logging.getLogger("dummy")
+    logger.addHandler(logging.NullHandler())
+    return logger
+
+
 class Tracker:
     def __init__(self, minor_factions:iter, logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
             event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_factions = set(minor_factions)
-        self._logger = logger if logger else logging.getLogger("dummy").addHandler(logging.NullHandler())
+        self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState(star_system_resolver)
         self.clear_activity()

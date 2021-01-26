@@ -14,7 +14,7 @@ Guidelines:
     3. `event_processors.py` contains code that acts upon journal entries (sometimes called events). Event processors either (1) save changes in the state of the pilot (e.g. accepting a mission, docking at a station) or galaxy (e.g. jumping to a new system) or (2) record minor faction activity. One event processor handles one journal entry type or related types.
     4. `event_summaries.py` contains minor faction influence relevant occurrences created by event processors then rendered human-readable by event formatters. These are anaemic (contain no business logic). These should store the minimum information needed.
     5. `event_formatters.py` contains code to make event summaries human-readable. Any localization code should go here. One event formatter usually handles one event summary type.
-    6. `state.py` contains code to store details about the **Elite: Dangerous** universe like missions and stations. Once again, these are anaemic.
+    6. `state.py` contains code to store details about the **Elite: Dangerous** universe like missions and stations. Once again, these are anaemic (excepting resolving star systems).
 2. I will deny pull requests that only reformat code. Yes, not all the code is [PEP 8](https://www.python.org/dev/peps/pep-0008/) formatted. I will fix it eventually.
 
 ## Development Principles

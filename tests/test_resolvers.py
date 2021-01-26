@@ -1,7 +1,9 @@
 import pytest
+import logging
 
 from edmfs.resolvers import resolve_star_system_via_edsm
 from edmfs.state import StarSystem
+from edmfs.tracker import _get_dummy_logger
 
 @pytest.mark.skip(reason="Potentially long-running or external test")
 @pytest.mark.parametrize(
@@ -13,4 +15,4 @@ from edmfs.state import StarSystem
     ]
 )
 def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSystem) -> None:
-    assert resolve_star_system_via_edsm(system_address).name == expected_name
+    assert resolve_star_system_via_edsm(_get_dummy_logger(), system_address).name == expected_name
