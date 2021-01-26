@@ -28,7 +28,7 @@ logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file_
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    this.tracker = edmfs.Tracker([], logger)
+    this.tracker = edmfs.Tracker([], logger, edmfs.resolvers.resolve_star_system_via_edsm)
     saved_minor_factions = load_config()
     set_minor_factions(saved_minor_factions if saved_minor_factions != None else DEFAULT_MINOR_FACTIONS)
     clear_activity()

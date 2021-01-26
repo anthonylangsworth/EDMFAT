@@ -1,19 +1,20 @@
-from typing import Dict, Any, Set
+from typing import Dict, Any, Set, Callable
 from abc import ABC, abstractmethod
 from itertools import groupby
 import logging
 
-from .state import Station, PilotState, GalaxyState
+from .state import Station, PilotState, GalaxyState, StarSystem
 from .event_processors import EventProcessor, _default_event_processors, NoLastDockedStationError, UnknownStarSystemError
 from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
 class Tracker:
-    def __init__(self, minor_factions:iter, logger:logging.Logger = None, event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
+    def __init__(self, minor_factions:iter, logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
+            event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
         self._minor_factions = set(minor_factions)
-        self._logger = logger if logger else logging
+        self._logger = logger if logger else logging.getLogger("dummy").addHandler(logging.NullHandler())
         self._pilot_state = PilotState()
-        self._galaxy_state = GalaxyState()
+        self._galaxy_state = GalaxyState(star_system_resolver)
         self.clear_activity()
         self._event_processors = event_processors if event_processors else _default_event_processors
         self._event_formatters = event_formatters if event_formatters else _default_event_formatters

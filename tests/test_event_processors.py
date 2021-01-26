@@ -28,7 +28,7 @@ def test_supports_minor_faction(event_minor_faction: str, supported_minor_factio
     (
         (
             PilotState(Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))),
-            GalaxyState({98367212:StarSystem("Afli", 98367212, [])}),
+            GalaxyState(None, {98367212:StarSystem("Afli", 98367212, [])}),
             StarSystem("Afli", 98367212, []),
             Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))
         ),
@@ -41,7 +41,7 @@ def test_get_location(pilot_state: PilotState, galaxy_state: GalaxyState, expect
 
 def test_get_location_no_system():
     pilot_state = PilotState(Station("Pu City", 654789, set(["Afli Patron's Principles", "Afli Imperial Society"])))
-    galaxy_state = GalaxyState({200:StarSystem("Afli", 200, [])})
+    galaxy_state = GalaxyState(None, {200:StarSystem("Afli", 200, [])})
     try:
         _get_location(pilot_state, galaxy_state)
         assert False
@@ -50,7 +50,7 @@ def test_get_location_no_system():
 
 def test_get_location_no_station():
     pilot_state = PilotState()
-    galaxy_state = GalaxyState({654789:StarSystem("Afli", 654789, [])})
+    galaxy_state = GalaxyState(None, {654789:StarSystem("Afli", 654789, [])})
     try:
         _get_location(pilot_state, galaxy_state)
         assert False
