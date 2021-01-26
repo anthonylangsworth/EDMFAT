@@ -1,5 +1,6 @@
 import pytest
 import logging
+import functools
 
 from edmfs.resolvers import resolve_star_system_via_edsm
 from edmfs.state import StarSystem
@@ -16,8 +17,6 @@ from edmfs.tracker import _get_dummy_logger
 )
 def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSystem) -> None:
     assert resolve_star_system_via_edsm(_get_dummy_logger(), system_address).name == expected_name
-
-import functools
 
 def test_partial():
     logger = _get_dummy_logger()
