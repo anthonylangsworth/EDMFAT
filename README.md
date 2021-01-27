@@ -6,7 +6,7 @@ Elite: Dangerous Minor Faction Activity Tracker (EDMFAT) is an EDMC plug-in that
 
 EDMFAT is aimed at **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. Without the plug-in, players had to manually keep records. This is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones. EDMFAT can also educate new players, recording activity that supports or undermines minor factions. 
 
-Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), the long term goal is to generalize EDMFAT into something useful for the broader **Elite: Dangerous** community.
+EDMFAT was initially developed to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), hence the EDA Kunti League being the default minor faction.
 
 Fly safe, commanders, from CMDR Akton!
 
@@ -36,14 +36,16 @@ To remove or uninstall:
 6. (Optional) Instead of pressing the `Copy` button, press the `Copy + Reset` button to copy your activity to the Windows clipboard and clear any activity. This can be useful if you want to report activity part way through a session, such as before the daily tick.
 7. Paste it into your squadron's Discord channel or wherever you report activity.
 
-Please read the [FAQ](doc/faq.md) for more details.
+Read the [FAQ](doc/faq.md) for more details.
+
+See [LICENSE](LICENSE) for the license.
 
 # Limitations
 
 1. Mission influence accuracy is limited by **Elite: Dangerous** as described under [missions](doc/missions.md).
 2. EDMFAT is not state-aware to keep it simple. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
 3. EDMFAT does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
-4. EDMFAT is not localized. It is English only.
+4. EDMFAT is not localized. It is English only. Assistance is appreciated!
 5. EDMFAT does not support console players. Sorry. This is a limitation of EDMC.
 
 # Contributing and Development
@@ -52,4 +54,3 @@ Bugs reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for 
 
 See [Contributing](doc/contributing.md) if you want to help with development.
 
-See [LICENSE](LICENSE) for the license.
