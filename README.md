@@ -4,9 +4,9 @@ Elite: Dangerous Minor Faction Activity Tracker (EDMFAT) is an EDMC plug-in that
 
 ![Sample EDMFAT Screenshot](doc/EDMFAT.png)
 
-EDMFAT is aimed at **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. Without the plug-in, players had to manually keep records. This is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones. EDMFAT can also educate new players, highlighting actions that can support or undermine minor factions. 
+EDMFAT is aimed at **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. Without the plug-in, players had to manually keep records. This is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones. EDMFAT can also educate new players, recording activity that supports or undermines minor factions. 
 
-Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), the long term goal is to generalize this plug-in into something useful for the broader **Elite: Dangerous** community.
+Originally intended to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), the long term goal is to generalize EDMFAT into something useful for the broader **Elite: Dangerous** community.
 
 Fly safe, commanders, from CMDR Akton!
 
@@ -41,10 +41,10 @@ Please read the [FAQ](doc/faq.md) for more details.
 # Limitations
 
 1. Mission influence accuracy is limited by **Elite: Dangerous** as described under [missions](doc/missions.md).
-2. The plug-in is not state-aware to keep it simple. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
-3. The plug-in does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
-4. The plug-in is not localized. It is English only.
-5. The plug-in does not support console players. Sorry. This is a limitation of EDMC.
+2. EDMFAT is not state-aware to keep it simple. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
+3. EDMFAT does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
+4. EDMFAT is not localized. It is English only.
+5. EDMFAT does not support console players. Sorry. This is a limitation of EDMC.
 
 # Contributing and Development
 
