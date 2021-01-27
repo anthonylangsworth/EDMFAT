@@ -42,7 +42,7 @@ See [LICENSE](LICENSE) for the license.
 
 # Limitations
 
-1. Mission influence accuracy is limited by **Elite: Dangerous** as described under [missions](doc/missions.md).
+1. **Elite: Dangerous** limits EDMFAT mission influence accuracy, as described under [missions](doc/missions.md).
 2. EDMFAT cannot track conflict zone wins and losses because **Elite: Dangerous** does not report them.
 3. EDMFAT is not state-aware to keep it simple. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
 4. EDMFAT does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
