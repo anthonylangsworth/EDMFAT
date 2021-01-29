@@ -27,18 +27,18 @@ To change the minor faction(s):
 3. Select or deselect the desired minor faction(s) by clicking rows in the table. 
 
 The plug-in learns about new minor factions as you travel to new systems. If the minor faction you want to support or undermine a faction not in the list:
-1. Press `OK` to close the dialog.
+1. Press `OK` to close the dialog. Keep EDMC running.
 2. In **Elite: Dangerous**, travel to a system where the minor faction is present.
-3. Follow the steps above to reopen the settings dialog and select the desired minor faction(s). 
+3. Follow the steps above to reopen the settings dialog then select the desired minor faction(s). 
 
 This plug-in saves the selected minor factions. If you exit EDMC and start it later, you do not need to reselect minor faction(s) unless you want to change them. This plug-in does not save the list of minor factions in the settings dialog.
 
 ### 4. Will this plug-in work with the Odyssey expansion?
 
-I do not know. However, I plan to test the plug-in and add any new, relevant Odyssey features when it is released.
+I do not know. However, I plan to test EDMFAT and add any new, relevant Odyssey features when it is released.
 
 The plug-in intentionally excludes any events from beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any Odyssey alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
 
 ### 5. I accidentally did a mission that hurt my minor faction. Help!
 
-Don't Panic! This commonly happens when you do not check a mission's target faction. Treat it as a learning experience. 
+Don't Panic! This commonly happens when you do not check a mission's target faction. Treat it as a learning experience. You can always edit it out when copying your activity into your squadron Discord (or however you report your activity).
