@@ -544,6 +544,7 @@ def test_mission_completed_single(minor_factions:str, star_systems:list, station
     for star_system in star_systems:
         galaxy_state.systems[star_system.address] = star_system
     expected_pilot_state = copy.deepcopy(pilot_state)
+    del expected_pilot_state.missions[mission.id]
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     mission_completed_event_processor = MissionCompletedEventProcessor()
