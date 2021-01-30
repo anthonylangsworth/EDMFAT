@@ -4,9 +4,11 @@ from abc import ABC, abstractmethod
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
 from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
+
 class NoLastDockedStationError(Exception):
     """No last docked station in PilotState. Should not happen in game."""
     pass
+
 
 class UnknownStarSystemError(Exception):
     """Star system not found in GalaxyState. Should not happen in game."""
@@ -17,6 +19,7 @@ class UnknownStarSystemError(Exception):
     def system(self) -> int:
         return self._system
 
+
 class UnknownMissionError(Exception):
     """Mission not found in PilotState. Should not happen in game."""
     def __init__(self, id: int):
@@ -25,6 +28,7 @@ class UnknownMissionError(Exception):
     @property
     def id(self) -> int:
         return self._id
+
 
 def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False) -> Optional[bool]:
     # Technically, there are four states but a bool is sufficient for this plug-in. The states are:
@@ -174,9 +178,6 @@ class MissionCompletedEventProcessor(EventProcessor):
 
                 # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
-                # The source or destination system may be unknown (1) for shared wing missions and (2) when EDMC is started after mission acceptance.
-                # Adding a resolver to galaxy_state hopefully remediates that.
-
                 # Add the source system if missing and the mission is known
                 if mission:
                     source_system = galaxy_state.get_system(mission.system_address)
@@ -206,7 +207,6 @@ class MissionCompletedEventProcessor(EventProcessor):
 
 
 # Module non-public
-# TODO: move this to an IoC setup
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
     "FSDJump": LocationEventProcessor(),
