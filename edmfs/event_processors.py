@@ -54,23 +54,15 @@ def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
 
     return (star_system, station)
 
-class EventProcessor(ABC):
-    @property
-    @abstractmethod
-    def eventName(self) -> str:
-        #TODO: Make this a list, in case one event processor handles multiple event types
-        pass
 
+class EventProcessor(ABC):
     @abstractmethod
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         pass
 
+
 # Also used for FSDJump. They have the same schema.
 class LocationEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "Location"
-
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         if "Factions" in event.keys():
             galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
@@ -80,21 +72,15 @@ class LocationEventProcessor(EventProcessor):
 
         return []
 
-class DockedEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "Docked"
 
+class DockedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
         pilot_state.last_docked_station = station
         return []
 
-class RedeemVoucherEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "RedeemVoucher"
 
+class RedeemVoucherEventProcessor(EventProcessor):
     def _process_bounty(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
         result = []
         for x in event["Factions"]:
@@ -127,12 +113,9 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
         return result
 
+
 # Also used for MultiSellExplorationData. They have the same schema.
 class SellExplorationDataEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "SellExplorationData"
-
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
         result = []        
@@ -142,11 +125,8 @@ class SellExplorationDataEventProcessor(EventProcessor):
                 result.append(SellExplorationDataEventSummary(star_system.name, minor_faction, supports, event["TotalEarnings"]))
         return result
 
-class MarketSellEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "MarketSell"
 
+class MarketSellEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
 
@@ -160,21 +140,15 @@ class MarketSellEventProcessor(EventProcessor):
 
         return result
 
+
 class MissionAcceptedEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "MissionAccepted"
-        
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, _ = _get_location(pilot_state, galaxy_state)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], star_system.address)
         return []
 
+
 class MissionCompletedEventProcessor(EventProcessor):
-    @property
-    def eventName(self) -> str:
-        return "MissionCompleted"
-        
     def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
@@ -228,7 +202,8 @@ class MissionCompletedEventProcessor(EventProcessor):
                 # Technically, we should remove the mission as it is now completed.
 
         return result
-    
+
+
 # Module non-public
 # TODO: move this to an IoC setup
 _default_event_processors:Dict[str, EventProcessor] = {

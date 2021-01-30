@@ -57,10 +57,6 @@ def test_get_location_no_station():
     except NoLastDockedStationError:
         pass    
 
-def test_location_init():
-    location_event_procesor:LocationEventProcessor = LocationEventProcessor()
-    assert location_event_procesor.eventName == "Location"
-
 @pytest.mark.parametrize(
     "location_event, expected_station, expected_system",
     [
@@ -139,10 +135,6 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
         assert not location_event_processor.process(location_event, MINOR_FACTION, pilot_state, galaxy_state)
     assert pilot_state.last_docked_station == expected_station
 
-def test_redeem_voucher_init():
-    redeem_voucher_event_procesor:RedeemVoucherEventProcessor = RedeemVoucherEventProcessor()
-    assert redeem_voucher_event_procesor.eventName == "RedeemVoucher"
-    
 @pytest.mark.parametrize(
     "minor_factions, star_system, last_docked_station, redeem_voucher_event, expected_results",
     [     
@@ -291,10 +283,6 @@ def test_redeem_voucher_single(minor_factions:Set[str], star_system:StarSystem, 
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
 
-def test_docked_init():
-    docked_event_processor = DockedEventProcessor()
-    assert docked_event_processor.eventName == "Docked"
-
 @pytest.mark.parametrize(
     "docked_event, expected_station",
     [     
@@ -314,10 +302,6 @@ def test_docked_single(docked_event:Dict[str, Any], expected_station:Station):
     galaxy_state:GalaxyState = GalaxyState()
     assert not docked_event_processor.process(docked_event, MINOR_FACTION, pilot_state, galaxy_state)
     assert pilot_state.last_docked_station == expected_station
-
-def test_sell_exploration_data_init():
-    sell_exploration_event_processor = SellExplorationDataEventProcessor()
-    assert sell_exploration_event_processor.eventName == "SellExplorationData"
 
 @pytest.mark.parametrize(
    "minor_factions, star_system, last_docked_station, sell_exploration_data_event, expected_results",
@@ -357,10 +341,6 @@ def test_sell_exploration_data_single(minor_factions:str, star_system:StarSystem
     assert result == expected_results
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
-
-def test_market_sell_init():
-    market_sell_event_processor = MarketSellEventProcessor()
-    assert market_sell_event_processor.eventName == "MarketSell"
 
 @pytest.mark.parametrize(
    "minor_factions, star_system, last_docked_station, market_sell_event, expected_results",
