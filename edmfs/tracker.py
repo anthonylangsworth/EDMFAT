@@ -55,7 +55,7 @@ class Tracker:
         activity_updated = False # Consider an Observer pattern or similar
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
-            self._activity = self._update_activity(self._event_summaries).rstrip("\n")
+            self._activity = self._update_activity(self._event_summaries)
             self._logger.info(f"{ event } is minor-faction relevant")
             for event_summary in self._event_summaries:
                 self._logger.info(f"Created { event_summary }")
@@ -84,5 +84,5 @@ class Tracker:
                 if event_formatter:
                     result += event_formatter.process(system_event_summaries_by_system_and_type)
             result += "\n"
-        return result
+        return result.rstrip("\n")
         

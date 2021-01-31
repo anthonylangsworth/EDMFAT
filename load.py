@@ -3,15 +3,14 @@ import os
 from typing import Optional, List, Tuple, Dict, Any, Union
 import logging
 import functools
+import itertools
 
 import tkinter as tk
-import itertools
 import myNotebook
 from ttkHyperlinkLabel import HyperlinkLabel
-
 from config import config, appname
+
 import edmfs
-import edmfs.resolvers
 
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Activity Tracker"
@@ -20,20 +19,21 @@ this.activity_summary = tk.StringVar()
 this.current_station = ""
 this.version = (0,11,0)
 
+# Setup logging
+logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
+
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 DEFAULT_MINOR_FACTIONS = {"EDA Kunti League"}
 NO_ACTIVITY = "(No activity)"
 NO_MINOR_FACTIONS = "(Select minor faction(s) in the Settings dialog)"
-
-# Setup logging
-logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
+SETTINGS_FILE = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
+STAR_SYSTEM_RESOLVER_METHOD = functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, logger)
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    this.tracker = edmfs.Tracker([], logger, functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, logger))
-    saved_minor_factions = load_config()
-    set_minor_factions(saved_minor_factions if saved_minor_factions != None else DEFAULT_MINOR_FACTIONS)
-    clear_activity()
+    load_config()
+    update_activity()
+    update_minor_factions()
     return this.plugin_name
 
 # Called by EDMC to show plug-in details on EDMC main window
@@ -98,15 +98,16 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     return frame
 
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
-    minor_factions = [this.minor_faction_list.get(index) for index in this.minor_faction_list.curselection()]
-    set_minor_factions(minor_factions)
-    config.set(CONFIG_MINOR_FACTION, minor_factions)
+    this.tracker.minor_factions = [this.minor_faction_list.get(index) for index in this.minor_faction_list.curselection()]
+    update_minor_factions()
+    save_config()
 
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
     if not is_beta:
         if this.tracker.on_event(entry):
             this.activity_summary.set(this.tracker.activity)
+            save_config()
 
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
 def copy_activity_to_clipboard() -> None:
@@ -120,22 +121,42 @@ def copy_activity_to_clipboard() -> None:
 def copy_activity_to_clipboard_and_reset() -> None:
     copy_activity_to_clipboard()
     this.tracker.clear_activity()
-    clear_activity()
+    update_activity()
 
-def set_minor_factions(minor_factions: List[str]) -> None:
-    if len(minor_factions) > 0:
-        this.minor_factions.set(", ".join(minor_factions))
+def save_config() -> None:
+    with open(SETTINGS_FILE, mode="w") as settings_file:
+        settings_file.write(edmfs.TrackerFileRepository().serialize(this.tracker))
+    config.delete(CONFIG_MINOR_FACTION)
+    logger.info(f"Settings saved to {SETTINGS_FILE}")
+
+def update_activity() -> None:
+    if len(this.tracker.activity) > 0:
+        this.activity_summary.set(this.tracker.activity)
+    else:
+        this.activity_summary.set(NO_ACTIVITY)
+
+def update_minor_factions() -> None:
+    if len(this.tracker.minor_factions) > 0:
+        this.minor_factions.set(", ".join(this.tracker.minor_factions))
     else:
         this.minor_factions.set(NO_MINOR_FACTIONS)
-    this.tracker.minor_factions = minor_factions
 
-def clear_activity() -> None:
-    this.activity_summary.set(NO_ACTIVITY)
+def load_settings_from_file() -> edmfs.Tracker:
+    tracker = None
+    try:
+        with open(SETTINGS_FILE, "r") as settings_file:
+            tracker = edmfs.TrackerFileRepository().deserialize(settings_file.read(), logger, STAR_SYSTEM_RESOLVER_METHOD)
+        logger.info(f"Loaded settings from {SETTINGS_FILE}")
+    except FileNotFoundError:
+        logger.info(f"Setings file {SETTINGS_FILE} not found")
+        pass
+    except:
+        logger.exception(f"Error loading settings from {SETTINGS_FILE}")
+        tracker = None
+    return tracker
 
-def load_config() -> List[str]:
-    # Settings at HKEY_CURRENT_USER\SOFTWARE\Marginal\EDMarketConnector\WinSparkle
+def load_settings_from_config() -> edmfs.Tracker:
     saved_minor_factions = config.get(CONFIG_MINOR_FACTION)
-    logger.info(f"Loading saved minor factions: '{ saved_minor_factions }'")
     if isinstance(saved_minor_factions, List) and len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
         # Windows config saves list with a single empty string instead of an empty list when empty
         saved_minor_factions = {}
@@ -144,4 +165,12 @@ def load_config() -> List[str]:
             saved_minor_factions = set([saved_minor_factions])
         else:
             saved_minor_factions = {}
-    return saved_minor_factions
+    elif saved_minor_factions == None:
+        saved_minor_factions = DEFAULT_MINOR_FACTIONS
+        logger.info(f"Defaulting to minor faction(s): { ','.join(saved_minor_factions) }")
+    return edmfs.Tracker(saved_minor_factions, logger, STAR_SYSTEM_RESOLVER_METHOD)
+
+def load_config() -> List[str]:
+    this.tracker = load_settings_from_file()
+    if not this.tracker:
+        this.tracker = load_settings_from_config()

@@ -120,7 +120,9 @@ class TrackerFileRepository:
     def _deserialize_tracker_v1(self, deserialized_tracker:dict, logger:logging.Logger, resolver:Callable) -> Tracker:
         tracker = Tracker(deserialized_tracker["minor_factions"], logger, resolver)
         tracker.pilot_state.missions.update([(mission["id"], self._deserialize_mission_v1(mission)) for mission in deserialized_tracker["pilot_state"]["missions"]])
+        # Consider moving these into tracker
         tracker._event_summaries.extend([self._deserialize_event_summary_v1(event_summary) for event_summary in deserialized_tracker["event_summaries"]])
+        tracker._activity = tracker._update_activity(tracker._event_summaries)
         return tracker
 
     _deserializers = {
