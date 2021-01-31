@@ -121,6 +121,7 @@ def copy_activity_to_clipboard() -> None:
 def copy_activity_to_clipboard_and_reset() -> None:
     copy_activity_to_clipboard()
     this.tracker.clear_activity()
+    save_config()
     update_activity()
 
 def save_config() -> None:
