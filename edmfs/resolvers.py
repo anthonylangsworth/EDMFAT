@@ -1,5 +1,6 @@
 import requests
 import logging
+# from collections.abc import MutableMapping
 
 from .state import StarSystem
 from .event_processors import UnknownStarSystemError
@@ -20,21 +21,33 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
 
 
 # TODO: Consider subclassing dict to may the resolving more Pythonic
-# class ResolvingDict(dict):
-#     def __init__(self, logger:logging.Logger, resolver:callable):
+# class ResolvingDict(MutableMapping):
+#     def __init__(self, resolver:callable, inner:MutableMapping = None):
 #         self._resolver = resolver
+#         self._dict = inner if inner else dict()
 
 #     @property
 #     def resolver(self) -> callable:
 #         return self._resolver
 
 #     def __getitem__(self, key):
-#         if key in super().keys():
-#             result = super().__getitem__(key) 
+#         if key in self._dict:
+#             result = self._dict[key]
 #         else:
 #             result = self._resolver(key)
 #             if result:
-#                 super().__setitem__(self, key, result)            
+#                 self._dict[key] = result
 #         return result
+
+#     def __setitem__(self, key, value):
+#         self._dict[key] = value
     
+#     def __delitem__(self, key):
+#         del self._dict[key]
+
+#     def __iter__(self):
+#         return self._dict.__iter__()
+
+#     def __len__(self):
+#         return len(self._dict)
 
