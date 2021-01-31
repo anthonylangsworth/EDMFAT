@@ -69,6 +69,7 @@ def _serialize_mission_v1(mission:Mission) -> Dict:
 
 def _serialize_tracker_v1(tracker:Tracker) -> Dict:
     result = {
+        "minor_factions": list(tracker.minor_factions),
         "pilot_state": {
             "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions.values()]
         },
@@ -81,3 +82,16 @@ def serialize_tracker(tracker:Tracker) -> str:
         "version": 1,
         "tracker": _serialize_tracker_v1(tracker)
     }, indent=4)
+
+
+
+def _deserialize_tracker_v1(json:dict) -> Tracker:
+    pass
+
+_deserializers = {
+    1: _deserialize_tracker_v1
+}
+
+def deserialize_tracker(serialized_tracker:str) -> Tracker:
+    deserialized_tracker = json.loads(serialized_tracker)
+    return _deserializers[deserialized_tracker["version"]](deserialized_tracker["tracker"])
