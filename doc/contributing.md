@@ -42,4 +42,4 @@ A rough backlog:
 ## References
 
 1. EDMC Plug-in details: https://github.com/EDCD/EDMarketConnector/blob/main/PLUGINS.md
-2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v27/Journal-Manual_v27.pdf
+2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v28/Journal_Manual_v28.pdf
