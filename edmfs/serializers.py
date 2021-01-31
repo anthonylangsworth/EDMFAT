@@ -69,13 +69,10 @@ def _serialize_mission_v1(mission:Mission) -> Dict:
 
 def _serialize_tracker_v1(tracker:Tracker) -> Dict:
     result = {
-        "version": 1,
-        "tracker": {
-            "pilot_state": {
-                "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions.values()]
-            },
-            "event_summaries": [_serialize_event_summary_v1(event_summary) for event_summary in tracker._event_summaries]
-        }
+        "pilot_state": {
+            "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions.values()]
+        },
+        "event_summaries": [_serialize_event_summary_v1(event_summary) for event_summary in tracker._event_summaries]
     }
     return result
 
