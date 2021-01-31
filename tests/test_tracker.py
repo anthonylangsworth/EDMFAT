@@ -4,6 +4,7 @@ import json
 import itertools
 import logging
 import io
+from typing import List
 
 from edmfs.state import PilotState, GalaxyState, Station
 from edmfs.tracker import Tracker
@@ -223,8 +224,7 @@ def test_tracker_init():
                 "\n"
                 "San Davokje - PRO EDA Kunti League\n1 INF++++ mission(s)"
             )
-        )
-,
+        ),
         (
             {
                 "EDA Kunti League"
@@ -236,20 +236,19 @@ def test_tracker_init():
             )
         )
     ])
-def test_journal_file(minor_factions:str, journal_file_name:str, expected_activity:str):
-    with open("tests/journal_files/" + journal_file_name) as journal_file:
-        events = [json.loads(line) for line in journal_file.readlines()]
-
+def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     with io.StringIO() as stream:
         logger.addHandler(logging.StreamHandler(stream))
 
         tracker = Tracker(minor_factions, logger)
-        for event in events:
-            tracker.on_event(event)
+        with open("tests/journal_files/" + journal_file_name) as journal_file:
+            for line in journal_file.readlines():
+                tracker.on_event(json.loads(line))
+
         assert tracker.activity == expected_activity, f"{print(tracker.activity)}\ndoes not match:\n{print(expected_activity)}"
-        print(stream.getvalue())
+        #print(stream.getvalue())
 
 @pytest.mark.parametrize(
     "journal_file_name",
