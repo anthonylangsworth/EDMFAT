@@ -38,7 +38,7 @@ def plugin_start3(plugin_dir: str) -> str:
 
 # Called by EDMC to show plug-in details on EDMC main window
 def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
-    frame:tk.Frame = tk.Frame(parent)
+    frame = tk.Frame(parent)
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
     tk.Label(frame, textvariable=this.minor_factions, wraplength=300, justify=tk.CENTER, anchor=tk.W).grid(row=0, column=0, columnspan=2)
@@ -97,6 +97,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     
     return frame
 
+# Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
     this.tracker.minor_factions = [this.minor_faction_list.get(index) for index in this.minor_faction_list.curselection()]
     update_minor_factions()
@@ -124,12 +125,6 @@ def copy_activity_to_clipboard_and_reset() -> None:
     save_config()
     update_activity()
 
-def save_config() -> None:
-    with open(SETTINGS_FILE, mode="w") as settings_file:
-        settings_file.write(edmfs.TrackerFileRepository().serialize(this.tracker))
-    config.delete(CONFIG_MINOR_FACTION)
-    logger.info(f"Settings saved to {SETTINGS_FILE}")
-
 def update_activity() -> None:
     if len(this.tracker.activity) > 0:
         this.activity_summary.set(this.tracker.activity)
@@ -147,13 +142,12 @@ def load_settings_from_file() -> edmfs.Tracker:
     try:
         with open(SETTINGS_FILE, "r") as settings_file:
             tracker = edmfs.TrackerFileRepository().deserialize(settings_file.read(), logger, STAR_SYSTEM_RESOLVER_METHOD)
-        logger.info(f"Loaded settings from {SETTINGS_FILE}")
+        logger.info(f"Loaded settings from \"{SETTINGS_FILE}\"")
     except FileNotFoundError:
-        logger.info(f"Setings file {SETTINGS_FILE} not found")
+        logger.info(f"Setings file \"{SETTINGS_FILE}\" not found. This is expected on the first run.")
         pass
     except:
-        logger.exception(f"Error loading settings from {SETTINGS_FILE}")
-        tracker = None
+        logger.exception(f"Error loading settings from \"{SETTINGS_FILE}\"")
     return tracker
 
 def load_settings_from_config() -> edmfs.Tracker:
@@ -175,3 +169,10 @@ def load_config() -> List[str]:
     this.tracker = load_settings_from_file()
     if not this.tracker:
         this.tracker = load_settings_from_config()
+
+def save_config() -> None:
+    with open(SETTINGS_FILE, mode="w") as settings_file:
+        settings_file.write(edmfs.TrackerFileRepository().serialize(this.tracker))
+    config.delete(CONFIG_MINOR_FACTION)
+    logger.info(f"Settings saved to \"{SETTINGS_FILE}\"")
+
