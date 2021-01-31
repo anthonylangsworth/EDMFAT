@@ -17,3 +17,24 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
     except requests.exceptions.RequestException as e:
         logger.exception(f"Error resolving { system_address } from EDSM: { e }")        
     return star_system
+
+
+# TODO: Consider subclassing dict to may the resolving more Pythonic
+# class ResolvingDict(dict):
+#     def __init__(self, logger:logging.Logger, resolver:callable):
+#         self._resolver = resolver
+
+#     @property
+#     def resolver(self) -> callable:
+#         return self._resolver
+
+#     def __getitem__(self, key):
+#         if key in super().keys():
+#             result = super().__getitem__(key) 
+#         else:
+#             result = self._resolver(key)
+#             if result:
+#                 super().__setitem__(self, key, result)            
+#         return result
+    
+
