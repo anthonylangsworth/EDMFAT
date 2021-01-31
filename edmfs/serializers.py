@@ -42,7 +42,7 @@ def _serialize_mission_completed_event_summary(mission_completed_event_summary:M
     return {
         **_serialize_event_summary(mission_completed_event_summary),
         **{
-            "influence": mission_completed_event_summary.count
+            "influence": mission_completed_event_summary.influence
         }
     }    
 
@@ -55,8 +55,8 @@ _event_summary_serializers = {
 
 def _serialize_event_summary_v1(event_summary:EventSummary) -> Dict:
     return {
-        "type": type(event_summary),
-        "event_summary": _event_summary_serializers[type(event_summary)]
+        "type": type(event_summary).__name__,
+        "event_summary": _event_summary_serializers[type(event_summary).__name__](event_summary)
     }
 
 def _serialize_mission_v1(mission:Mission) -> Dict:
@@ -72,7 +72,7 @@ def _serialize_tracker_v1(tracker:Tracker) -> Dict:
         "version": 1,
         "tracker": {
             "pilot_state": {
-                "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions]
+                "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions.values()]
             },
             "event_summaries": [_serialize_event_summary_v1(event_summary) for event_summary in tracker._event_summaries]
         }
