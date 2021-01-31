@@ -3,7 +3,7 @@ import json
 from typing import List
 
 from edmfs.tracker import Tracker,_get_dummy_logger
-from edmfs.serializers import serialize_tracker
+from edmfs.serializers import TrackerFileRepository
 
 @pytest.mark.parametrize(
     "minor_factions, journal_file_name",
@@ -30,4 +30,10 @@ def test_serialize_tracker(minor_factions:str, journal_file_name:str):
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))
-    serialize_tracker(tracker)
+    repository = TrackerFileRepository()
+    serialized_tracker = repository.serialize(tracker)
+    new_tracker = repository.deserialize(serialized_tracker, None, None)
+
+    assert tracker.minor_factions == new_tracker.minor_factions
+    assert tracker.pilot_state.missions == new_tracker.pilot_state.missions
+    assert tracker._event_summaries == new_tracker._event_summaries
