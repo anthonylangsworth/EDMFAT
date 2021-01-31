@@ -5,52 +5,61 @@ from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplor
 from .state import Mission
 from .tracker import Tracker
 
-def serialize_event_summary(event_summary:EventSummary) -> Dict:
+def _serialize_event_summary(event_summary:EventSummary) -> Dict:
     return {
-        "minor_faction": redeem_voucher_event_summary.minor_faction,
-        "supports": redeem_voucher_event_summary.supports,
-        "system_name": redeem_voucher_event_summary.system_name,
+        "minor_faction": event_summary.minor_faction,
+        "supports": event_summary.supports,
+        "system_name": event_summary.system_name,
     }
 
-def serialize_redeem_voucher_event_summary(redeem_voucher_event_summary:RedeemVoucherEventSummary) -> Dict:
+def _serialize_redeem_voucher_event_summary(redeem_voucher_event_summary:RedeemVoucherEventSummary) -> Dict:
     return {
-        **serialize_event_summary(redeem_voucher_event_summary),
+        **_serialize_event_summary(redeem_voucher_event_summary),
         **{
             "voucher_type": redeem_voucher_event_summary.voucher_type,
         }
     }
 
-def serialize_sell_exploration_data_event_summary(sell_exploration_data_event_summary:SellExplorationDataEventSummary) -> Dict:
+def _serialize_sell_exploration_data_event_summary(sell_exploration_data_event_summary:SellExplorationDataEventSummary) -> Dict:
     return {
-        **serialize_event_summary(redeem_voucher_event_summary),
+        **_serialize_event_summary(sell_exploration_data_event_summary),
         **{
             "amount": sell_exploration_data_event_summary.amount
         }
     }    
 
-def serialize_market_sell_event_summary(market_sell_event_summary:SellExplorationDataEventSummary) -> Dict:
+def _serialize_market_sell_event_summary(market_sell_event_summary:MarketSellEventSummary) -> Dict:
     return {
-        **serialize_event_summary(redeem_voucher_event_summary),
+        **_serialize_event_summary(market_sell_event_summary),
         **{
-            "amount": sell_exploration_data_event_summary.amount
+            "count": market_sell_event_summary.count,
+            "sell_price_per_unit": market_sell_event_summary.sell_price_per_unit,
+            "average_buy_price_per_unit": market_sell_event_summary.average_buy_price_per_unit
         }
     }    
 
-
-def serialize_event_summary_v1(event_summary:EventSummary) -> Dict:
-    event_summary_serializers = {
-        "RedeemVoucherEventSummary": serialize_redeem_voucher_event_summary,
-        "SellExplorationDataEventSummary": serialize_sell_exploration_data_event_summary,
-        "MarketSellEventSummary": None,
-        "MissionCompletedEventSummary": None
-    }
-
+def _serialize_mission_completed_event_summary(mission_completed_event_summary:MissionCompletedEventSummary) -> Dict:
     return {
-        "type": type(event_summary)
-        "event_summary": 
+        **_serialize_event_summary(mission_completed_event_summary),
+        **{
+            "influence": mission_completed_event_summary.count
+        }
+    }    
+
+_event_summary_serializers = {
+    "RedeemVoucherEventSummary": _serialize_redeem_voucher_event_summary,
+    "SellExplorationDataEventSummary": _serialize_sell_exploration_data_event_summary,
+    "MarketSellEventSummary": _serialize_market_sell_event_summary,
+    "MissionCompletedEventSummary": _serialize_mission_completed_event_summary
+}
+
+def _serialize_event_summary_v1(event_summary:EventSummary) -> Dict:
+    return {
+        "type": type(event_summary),
+        "event_summary": _event_summary_serializers[type(event_summary)]
     }
 
-def serialize_mission_v1(mission:Mission) -> Dict:
+def _serialize_mission_v1(mission:Mission) -> Dict:
     return {
         "id": mission.id,
         "minor_faction": mission.minor_faction,
@@ -58,14 +67,14 @@ def serialize_mission_v1(mission:Mission) -> Dict:
         "system_address": mission.system_address
     }
 
-def serialize_tracker_v1(tracker:Tracker) -> Dict:
+def _serialize_tracker_v1(tracker:Tracker) -> Dict:
     result = {
         "version": 1,
         "tracker": {
             "pilot_state": {
-                "missions": [serialize_mission_v1(mission) for mission in tracker._pilot_state.missions]
+                "missions": [_serialize_mission_v1(mission) for mission in tracker._pilot_state.missions]
             },
-            "event_summaries": [event_summary for event_summary in tracker._event_summaries]
+            "event_summaries": [_serialize_event_summary_v1(event_summary) for event_summary in tracker._event_summaries]
         }
     }
     return result
@@ -73,5 +82,5 @@ def serialize_tracker_v1(tracker:Tracker) -> Dict:
 def serialize_tracker(tracker:Tracker) -> str:
     return json.dumps({
         "version": 1,
-        "tracker": serialize_tracker_v1(tracker)
+        "tracker": _serialize_tracker_v1(tracker)
     }, indent=4)
