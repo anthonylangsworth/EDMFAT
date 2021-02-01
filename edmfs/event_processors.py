@@ -30,21 +30,23 @@ class UnknownMissionError(Exception):
         return self._id
 
 
-def _supports_minor_faction(minor_faction: str, supported_minor_faction:str, system_minor_factions:iter, supports_value:bool = True, undermines_value:bool = False) -> Optional[bool]:
-    # Technically, there are four states but a bool is sufficient for this plug-in. The states are:
-    # 1. Direct support: Increases the influence of that minor faction, such as completing a mission for that faction.
-    # 2. Direct undermine: Decrease the influence of that minor faction, such as an assassination mission against a ship for that faction.
-    # 3. Indirect support: Decrease the influence of another minor faction in that system.
-    # 4. Indirect undermine: Increase the influence of another minor faction in that system.
-    if not supported_minor_faction in system_minor_factions:
-        supports = None
-    elif minor_faction == supported_minor_faction:
-        supports = supports_value
-    elif minor_faction in system_minor_factions:
-        supports = undermines_value   
-    else:
-        supports = None
-    return supports 
+def _get_event_minor_faction_impact(impacted_minor_faction: str, system_minor_factions:iter, inverted:bool = False) -> tuple:
+    """
+    Return a tuple containing the minor factions this event supported ("pro") and undermined ("anti").
+
+    Technically, there are four states but a pro/anti split is sufficient for this plug-in. The states are:
+    1. Direct support: Increases the influence of that minor faction, such as completing a mission for that faction.
+    2. Direct undermine: Decrease the influence of that minor faction, such as an assassination mission against a ship for that faction.
+    3. Indirect support: Decrease the influence of another minor faction in that system.
+    4. Indirect undermine: Increase the influence of another minor faction in that system.
+    """
+    pro = [minor_faction for minor_faction in system_minor_factions if (minor_faction == impacted_minor_faction)]
+    anti = [minor_faction for minor_faction in system_minor_factions if (minor_faction != impacted_minor_faction)] 
+    return (
+        pro if not inverted else anti,
+        anti if not inverted else pro
+    ) 
+
 
 def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
     if not pilot_state.last_docked_station:
@@ -61,13 +63,13 @@ def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
 
 class EventProcessor(ABC):
     @abstractmethod
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         pass
 
 
 # Also used for FSDJump. They have the same schema.
 class LocationEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         if "Factions" in event.keys():
             galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
 
@@ -78,127 +80,102 @@ class LocationEventProcessor(EventProcessor):
 
 
 class DockedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
         pilot_state.last_docked_station = station
         return []
 
 
 class RedeemVoucherEventProcessor(EventProcessor):
-    def _process_bounty(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
+    def _process_bounty(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> list:
         result = []
         for x in event["Factions"]:
-            supports = _supports_minor_faction(x["Faction"], minor_faction, system_minor_factions)
-
-            if supports != None:
-                result.append(RedeemVoucherEventSummary(system_name, minor_faction, supports, event["Type"], x["Amount"]))
+            pro, anti = _get_event_minor_faction_impact(x["Faction"], system_minor_factions)
+            result.append(RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], x["Amount"]))
         return result
 
-    def _process_combat_bond(self, event:Dict[str, Any], system_name:str, minor_faction:str, system_minor_factions:list) -> list:
-        supports = _supports_minor_faction(event["Faction"], minor_faction, system_minor_factions)
+    def _process_combat_bond(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> list:
+        pro, anti = _get_event_minor_faction_impact(event["Faction"], system_minor_factions)
+        return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], event["Amount"])]
 
-        result = []
-        if supports != None:
-            result.append(RedeemVoucherEventSummary(system_name, minor_faction, supports, event["Type"], event["Amount"]))
-        return result
-
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, _ = _get_location(pilot_state, galaxy_state)
 
-        # Carriers use a faction of "", excluding it from the logic below
-
         result = []
-        for minor_faction in minor_factions:    
-            if minor_faction in star_system.minor_factions and event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
-                if event["Type"] == "bounty":
-                    result.extend(self._process_bounty(event, star_system.name, minor_faction, star_system.minor_factions))
-                elif event["Type"] == "CombatBond": 
-                    result.extend(self._process_combat_bond(event, star_system.name, minor_faction, star_system.minor_factions))
+        if event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
+            if event["Type"] == "bounty":
+                result.extend(self._process_bounty(event, star_system.name, star_system.minor_factions))
+            elif event["Type"] == "CombatBond": 
+                result.extend(self._process_combat_bond(event, star_system.name, star_system.minor_factions))
 
         return result
 
 
 # Also used for MultiSellExplorationData. They have the same schema.
 class SellExplorationDataEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
-        result = []        
-        for minor_faction in minor_factions:    
-            supports = _supports_minor_faction(minor_faction, station.controlling_minor_faction, star_system.minor_factions)
-            if supports != None:
-                result.append(SellExplorationDataEventSummary(star_system.name, minor_faction, supports, event["TotalEarnings"]))
-        return result
+        pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions)
+        return[SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
 
 
 class MarketSellEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
-
-        result = []        
-        for minor_faction in minor_factions:    
-            supports = _supports_minor_faction(minor_faction, station.controlling_minor_faction, star_system.minor_factions, not event.get("BlackMarket", False), event.get("BlackMarket", False))
-            if supports != None:
-                if event["SellPrice"] <  event["AvgPricePaid"]:
-                    supports = not supports
-                result.append(MarketSellEventSummary(star_system.name, minor_faction, supports, event["Count"], event["SellPrice"], event["AvgPricePaid"]))
-
-        return result
+        pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions, event["SellPrice"] <  event["AvgPricePaid"])
+        return[MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
 
 
 class MissionAcceptedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, _ = _get_location(pilot_state, galaxy_state)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], star_system.address)
         return []
 
 
 class MissionCompletedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], minor_factions:Set[str], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
 
         result = []
-        for minor_faction in minor_factions:    
-            if not mission or mission.influence != "None":
-                # Use the highest influence to mirror the game UI. 
-                max_influence = mission.influence if mission else "+"
-                for faction_effect in [x for x in event["FactionEffects"]]:
-                    for influence_effect in faction_effect["Influence"]:
-                        max_influence = max(influence_effect["Influence"], max_influence)
+        if not mission or mission.influence != "None":
+            # Use the highest influence to mirror the game UI. 
+            max_influence = mission.influence if mission else "+"
+            for faction_effect in [x for x in event["FactionEffects"]]:
+                for influence_effect in faction_effect["Influence"]:
+                    max_influence = max(influence_effect["Influence"], max_influence)
 
-                # Try the Influence entries
-                for faction_effect in event["FactionEffects"]:
-                    for influence_effect in faction_effect["Influence"]:
-                        star_system = galaxy_state.get_system(influence_effect["SystemAddress"])
-                        if not star_system:
-                            raise UnknownStarSystemError(influence_effect["SystemAddress"])
-                        supports = _supports_minor_faction(faction_effect["Faction"], minor_faction, star_system.minor_factions, influence_effect["Trend"] == "UpGood", influence_effect["Trend"] != "UpGood")
-                        if supports != None:
-                            result.append(MissionCompletedEventSummary(star_system.name, minor_faction, supports, max_influence))
+            # Try the Influence entries
+            for faction_effect in event["FactionEffects"]:
+                for influence_effect in faction_effect["Influence"]:
+                    star_system = galaxy_state.get_system(influence_effect["SystemAddress"])
+                    if not star_system:
+                        raise UnknownStarSystemError(influence_effect["SystemAddress"])
+                    pro, anti = _get_event_minor_faction_impact(faction_effect["Faction"], star_system.minor_factions)
+                    result.append(MissionCompletedEventSummary(star_system.name, pro, anti, max_influence))
 
-                # This logic may have issues with the source and destination system are the same but have different source and target factions differ
+            # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
-                # Add the source system if missing and the mission is known
-                if mission:
-                    source_system = galaxy_state.get_system(mission.system_address)
-                    if not source_system:
-                        raise UnknownStarSystemError(mission.system_address) # TODO: Call the EDSM or similar API to determine this
-                    if not any([x for x in result if x.system_name == source_system.name]):
-                        supports = _supports_minor_faction(event["Faction"], minor_faction, source_system.minor_factions)
-                        if supports != None:
-                            result.append(MissionCompletedEventSummary(source_system.name, minor_faction, supports, max_influence))
+            # Add the source system if missing and the mission is known
+            if mission:
+                source_system = galaxy_state.get_system(mission.system_address)
+                if not source_system:
+                    raise UnknownStarSystemError(mission.system_address) # TODO: Call the EDSM or similar API to determine this
+                if not any([x for x in result if x.system_name == source_system.name]):
+                    pro, anti = _get_event_minor_faction_impact(event["Faction"], source_system.minor_factions)
+                    result.append(MissionCompletedEventSummary(source_system.name, pro, anti, max_influence))
 
-                # Add the target system if required and missing
-                if event.get("TargetFaction", None):
-                    destination_system_name = event.get("NewDestinationSystem", None) if event.get("NewDestinationSystem", None) != None else event.get("DestinationSystem", None)
-                    if destination_system_name:
-                        destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
-                        if not destination_system:
-                            raise UnknownStarSystemError(destination_system_name) # TODO: Call the EDSM or similar API to determine this
-                        if not any([x for x in result if x.system_name == destination_system_name]):
-                            supports = _supports_minor_faction(event["TargetFaction"], minor_faction, destination_system.minor_factions)
-                            if supports != None:
-                                result.append(MissionCompletedEventSummary(destination_system.name, minor_faction, supports, max_influence))                            
+            # Add the target system if required and missing
+            if event.get("TargetFaction", None):
+                destination_system_name = event.get("NewDestinationSystem", None) if event.get("NewDestinationSystem", None) != None else event.get("DestinationSystem", None)
+                if destination_system_name:
+                    destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
+                    if not destination_system:
+                        raise UnknownStarSystemError(destination_system_name) # TODO: Call the EDSM or similar API to determine this
+                    if not any([x for x in result if x.system_name == destination_system_name]):
+                        pro, anti = _get_event_minor_faction_impact(event["TargetFaction"], destination_system_name.minor_factions)
+                        result.append(MissionCompletedEventSummary(destination_system.name, pro, anti, max_influence))                            
 
         if mission:
             del pilot_state.missions[mission.id]
