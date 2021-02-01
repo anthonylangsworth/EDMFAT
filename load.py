@@ -161,7 +161,7 @@ def load_settings_from_config() -> edmfs.Tracker:
             saved_minor_factions = {}
     elif saved_minor_factions == None:
         saved_minor_factions = DEFAULT_MINOR_FACTIONS
-        logger.info(f"Defaulting to minor faction(s): { ','.join(saved_minor_factions) }")
+        logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
     return edmfs.Tracker(saved_minor_factions, logger, STAR_SYSTEM_RESOLVER_METHOD)
 
 def load_settings() -> List[str]:
