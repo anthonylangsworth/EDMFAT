@@ -30,7 +30,7 @@ class UnknownMissionError(Exception):
         return self._id
 
 
-def _get_event_minor_faction_impact(impacted_minor_faction: str, system_minor_factions:iter, inverted:bool = False) -> tuple:
+def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:iter, inverted:bool = False) -> tuple:
     """
     Return a tuple containing the minor factions this event supported ("pro") and undermined ("anti").
 
@@ -40,8 +40,8 @@ def _get_event_minor_faction_impact(impacted_minor_faction: str, system_minor_fa
     3. Indirect support: Decrease the influence of another minor faction in that system.
     4. Indirect undermine: Increase the influence of another minor faction in that system.
     """
-    pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == impacted_minor_faction)}
-    anti = {minor_faction for minor_faction in system_minor_factions if (minor_faction != impacted_minor_faction)} 
+    pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == event_minor_faction)}
+    anti = {minor_faction for minor_faction in system_minor_factions if (minor_faction != event_minor_faction)} 
     return (
         pro if not inverted else anti,
         anti if not inverted else pro
@@ -115,14 +115,14 @@ class RedeemVoucherEventProcessor(EventProcessor):
 class SellExplorationDataEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
-        pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions)
+        pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
         return[SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
 
 
 class MarketSellEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
-        pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions, event["SellPrice"] <  event["AvgPricePaid"])
+        pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, event["SellPrice"] < event["AvgPricePaid"])
         return[MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
 
 
@@ -161,20 +161,20 @@ class MissionCompletedEventProcessor(EventProcessor):
             if mission:
                 source_system = galaxy_state.get_system(mission.system_address)
                 if not source_system:
-                    raise UnknownStarSystemError(mission.system_address) # TODO: Call the EDSM or similar API to determine this
+                    raise UnknownStarSystemError(mission.system_address)
                 if not any([x for x in result if x.system_name == source_system.name]):
                     pro, anti = _get_event_minor_faction_impact(event["Faction"], source_system.minor_factions)
                     result.append(MissionCompletedEventSummary(source_system.name, pro, anti, max_influence))
 
             # Add the target system if required and missing
-            if event.get("TargetFaction", None):
-                destination_system_name = event.get("NewDestinationSystem", None) if event.get("NewDestinationSystem", None) != None else event.get("DestinationSystem", None)
+            if "TargetFaction" in event:
+                destination_system_name = event.get("NewDestinationSystem", None) if "NewDestinationSystem" in event != None else event.get("DestinationSystem", None)
                 if destination_system_name:
                     destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
                     if not destination_system:
-                        raise UnknownStarSystemError(destination_system_name) # TODO: Call the EDSM or similar API to determine this
+                        raise UnknownStarSystemError(destination_system_name)
                     if not any([x for x in result if x.system_name == destination_system_name]):
-                        pro, anti = _get_event_minor_faction_impact(event["TargetFaction"], destination_system_name.minor_factions)
+                        pro, anti = _get_event_minor_faction_impact(event["TargetFaction"], destination_system.minor_factions)
                         result.append(MissionCompletedEventSummary(destination_system.name, pro, anti, max_influence))                            
 
         if mission:

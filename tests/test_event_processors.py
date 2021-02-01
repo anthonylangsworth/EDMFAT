@@ -9,14 +9,14 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
 @pytest.mark.parametrize(
     "event_minor_faction, system_minor_factions, expected_result",
     (
-        ("a", "a, b", ({"a"}, {"b"})),
-        ("b", "a, b", ({"b"}, {"a"})),
-        ("c", "a, b", ({}, {"a", "b"})),
+        ("a", {"a", "b"}, ({"a"}, {"b"})),
+        ("b", {"a", "b"}, ({"b"}, {"a"})),
+        ("c", {"a", "b"}, (set(), {"a", "b"})),
 
         # Should not happen but included for predictability
-        ("a", "", ({}, {})),
-        ("a", "c", ({}, {"c"})),
-        ("a", "c, d", ({}, {"c", "d"}))
+        ("a", set(), (set(), set())),
+        ("a", {"c"}, (set(), {"c"})),
+        ("a", {"c", "d"}, (set(), {"c", "d"}))
     )
 )
 def test_get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:iter, expected_result:tuple):
@@ -145,7 +145,7 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Findja Empire Assembly")), 
             Station("Station", 1000, "The Fuel Rats Mischief"), 
             {"timestamp":"2020-05-09T03:42:20Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":25490, "Factions":[ { "Faction":"Findja Empire Assembly", "Amount":25490 } ] }, 
-            [RedeemVoucherEventSummary("Fuelum", {"The Fuel Rats Mischief"}, {"Findja Empire Assembly"}, "bounty", 25490)]
+            [RedeemVoucherEventSummary("Fuelum", {"Findja Empire Assembly"}, {"The Fuel Rats Mischief"}, "bounty", 25490)]
         ),
         (
             StarSystem("Findja", 1000, ("The Fuel Rats Mischief",)), 
@@ -182,7 +182,7 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
             StarSystem("", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")), 
             Station("", 1000, "The Fuel Rats Mischief"), 
             {"timestamp":"2020-10-31T14:56:09Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1177365, "Faction":"CPD-59 314 Imperial Society" }, 
-            [RedeemVoucherEventSummary("", {"CPD-59 314 Imperial Society"}, {"The Fuel Rats Mischief"}, "CombatBond", 1622105)]
+            [RedeemVoucherEventSummary("", {"CPD-59 314 Imperial Society"}, {"The Fuel Rats Mischief"}, "CombatBond", 1177365)]
         ),
         (
             StarSystem("", 1000, ("The Fuel Rats Mischief",)), 
@@ -310,32 +310,32 @@ def test_sell_exploration_data_single(star_system:StarSystem, last_docked_statio
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
-            { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
-            [ MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 756, 59759, 4568)]
+            {"timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568},
+            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 756, 59759, 4568)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Afli Blue Society"), 
-            { "timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568 },
-            [ MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Afli Blue Society"}, 756, 59759, 4568)]
+            {"timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568},
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 756, 59759, 4568)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
-            { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
-            [ MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0)]
+            {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
+            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Afli Blue Society"), 
-            { "timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True },
-            [ MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0)]
+            {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
-            { "timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080 },
-            [ MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 64, 80, 1080)]
+            {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080},
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 64, 80, 1080)]
         )     
     )
 )
@@ -412,7 +412,7 @@ def test_mission_accepted_single(star_system:StarSystem, station:Station, missio
             { "timestamp":"2020-12-31T13:52:56Z", "event":"MissionCompleted", "Faction":"LHS 1832 Labour", "Name":"Mission_Delivery_Democracy_name", "MissionID":685926706, "Commodity":"$Copper_Name;", "Commodity_Localised":"Copper", "Count":18, "TargetFaction":"Trumuye Incorporated", "DestinationSystem":"Trumuye", "DestinationStation":"Yakovlev Port", "Reward":1000, "FactionEffects":[ { "Faction":"Trumuye Incorporated", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":11667412755873, "Trend":"UpGood", "Influence":"+++++" } ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"LHS 1832 Labour", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":2871051298217, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
             [
                 MissionCompletedEventSummary("Trumuye", {"Trumuye Incorporated"}, {"Antai Energy Group", "Trumuye Emperor's Grace", "League of Trumuye League", "United Trumuye Progressive Party", "EDA Kunti League"}, "+++++"),
-                MissionCompletedEventSummary("Luchu", {"LHS 1832 Labour"}, {"Luchu Purple Hand Gang", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited"}, "+++++")
+                MissionCompletedEventSummary("Luchu", {"LHS 1832 Labour"}, {"Luchu Purple Hand Gang", "Noblemen of Luchu", "Movement for Luchu for Equality", "Luchu Major Industries", "Herci Bridge Limited", "EDA Kunti League"}, "+++++")
             ]
         ),
         (

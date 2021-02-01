@@ -9,12 +9,12 @@ class EventSummary():
         return self._system_name
 
     @property
-    def pro(self) -> set:
-        return self._pro
+    def pro(self) -> tuple:
+        return tuple(self._pro)
 
     @property
-    def anti(self) -> set:
-        return self._anti
+    def anti(self) -> tuple:
+        return tuple(self._anti)
 
     def __eq__(self, other):
         if not isinstance(other, EventSummary):

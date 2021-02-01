@@ -8,16 +8,16 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
     [
         (
             [
-                RedeemVoucherEventSummary("HR 1597", "HR 1597 & Co", True, "bounty", 100),
-                RedeemVoucherEventSummary("HR 1597", "HR 1597 & Co", True, "bounty", 2000)
+                RedeemVoucherEventSummary("HR 1597", {"HR 1597 & Co"}, {}, "bounty", 100),
+                RedeemVoucherEventSummary("HR 1597", {"HR 1597 & Co"}, {}, "bounty", 2000)
             ],
             "2,100 CR of Bounty Vouchers\n"
         ),
         (
             [
-                RedeemVoucherEventSummary("HR 1597", "HR 1597 & Co", True, "bounty", 100),
+                RedeemVoucherEventSummary("HR 1597", {"HR 1597 & Co"}, {}, "bounty", 100),
                 #RedeemVoucherEventSummary("HR 1597", True, "scannable", 200),
-                RedeemVoucherEventSummary("HR 1597", "HR 1597 & Co", True, "CombatBond", 300)
+                RedeemVoucherEventSummary("HR 1597", {"HR 1597 & Co"}, {}, "CombatBond", 300)
             ],
             ("100 CR of Bounty Vouchers\n"
              #"200 CR of Cartography Data\n"
@@ -34,8 +34,8 @@ def test_redeem_voucher(event_summaries: list, expected_activity: str):
     [
         (
             [
-                SellExplorationDataEventSummary("Shambogi", "Antai Energy Company", True, 100),
-                SellExplorationDataEventSummary("Shambogi", "Antai Energy Company", True, 2000)
+                SellExplorationDataEventSummary("Shambogi", {"Antai Energy Company"}, {}, 100),
+                SellExplorationDataEventSummary("Shambogi", {"Antai Energy Company"}, {}, 2000)
             ],
             "2,100 CR of Cartography Data\n"
         )
@@ -50,8 +50,8 @@ def test_sell_exploration_data(event_summaries: list, expected_activity: str):
     [
         (
             [
-                MarketSellEventSummary("Shambogi", "Shambogi Crimson Rats", True, 1000, 100, 50),
-                MarketSellEventSummary("Shambogi", "Shambogi Crimson Rats", True, 1000, 200, 100)
+                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50),
+                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 200, 100)
             ],
             "2,000 T trade at 75 CR average profit per T\n"
         )
@@ -66,16 +66,16 @@ def test_market_sell(event_summaries: list, expected_activity: str):
     [
         (
             [
-                MissionCompletedEventSummary("Shambogi", "Shambogi Crimson Rats", True, "+")
+                MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+")
             ],
             "1 INF+ mission(s)\n"
         ),        
         (
             [
-                MissionCompletedEventSummary("Shambogi", "Shambogi Crimson Rats", True, "+"),
-                MissionCompletedEventSummary("Shambogi", "Shambogi Crimson Rats", True, "+"),
-                MissionCompletedEventSummary("Shambogi", "Shambogi Crimson Rats", True, "++"),
-                MissionCompletedEventSummary("Shambogi", "Shambogi Crimson Rats", True, "+++")
+                MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+"),
+                MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+"),
+                MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "++"),
+                MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+++")
             ],
             ("2 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
