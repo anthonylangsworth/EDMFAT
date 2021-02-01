@@ -18,16 +18,15 @@ this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
 this.version = (0,11,0)
-
-# Setup logging
-logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
+this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
+this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
+this.star_system_resolver = functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, this.logger)
+this.serializer = edmfs.TrackerFileRepository()
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
 DEFAULT_MINOR_FACTIONS = {"EDA Kunti League"}
 NO_ACTIVITY = "(No activity)"
 NO_MINOR_FACTIONS = "(Select minor faction(s) in the Settings dialog)"
-SETTINGS_FILE = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
-STAR_SYSTEM_RESOLVER_METHOD = functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, logger)
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
@@ -55,7 +54,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
-    MISSIONS_CHALLENGES_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
+    MISSION_WARNING_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
 
     # known_minor_factions = {"EDA Kunti League", "Kunti Dragons", "LTT 2337 Empire Party", "HR 1597 & Co", "The Fuel Rats Mischief", "The Scovereign Justice League", "Hutton Orbital Truckers", "The Dark Wheel", "Edge Fraternity", "Colonia Citizens Network", "Mobius Colonial Republic Navy", "Tenjin Pioneers Colonia", "Knights of Colonial Karma", "Ed's 38"}
     known_minor_factions = set(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values()))
@@ -91,7 +90,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     this.minor_faction_list.config(yscrollcommand=scrollbar.set)
 
     HyperlinkLabel(
-        frame, text=MISSION_WARNING, background=myNotebook.Label().cget("background"), url=MISSIONS_CHALLENGES_URL, underline=True
+        frame, text=MISSION_WARNING, background=myNotebook.Label().cget("background"), url=MISSION_WARNING_URL, underline=True
     ).grid(row=7, column=0, columnspan=8, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
@@ -139,14 +138,14 @@ def update_minor_factions() -> None:
 def load_settings_from_file() -> edmfs.Tracker:
     tracker = None
     try:
-        with open(SETTINGS_FILE, "r") as settings_file:
-            tracker = edmfs.TrackerFileRepository().deserialize(settings_file.read(), logger, STAR_SYSTEM_RESOLVER_METHOD)
-        logger.info(f"Loaded settings from \"{SETTINGS_FILE}\"")
+        with open(this.settings_file, "r") as settings_file:
+            tracker = this.serializer.deserialize(settings_file.read(), this.logger, this.star_system_resolver)
+        this.logger.info(f"Loaded settings from \"{this.settings_file}\"")
     except FileNotFoundError:
-        logger.info(f"Setings file \"{SETTINGS_FILE}\" not found. This is expected on the first run.")
+        this.logger.info(f"Setings file \"{this.settings_file}\" not found. This is expected on the first run.")
         pass
     except:
-        logger.exception(f"Error loading settings from \"{SETTINGS_FILE}\"")
+        this.logger.exception(f"Error loading settings from \"{this.settings_file}\"")
     return tracker
 
 def load_settings_from_config() -> edmfs.Tracker:
@@ -161,8 +160,8 @@ def load_settings_from_config() -> edmfs.Tracker:
             saved_minor_factions = {}
     elif saved_minor_factions == None:
         saved_minor_factions = DEFAULT_MINOR_FACTIONS
-        logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
-    return edmfs.Tracker(saved_minor_factions, logger, STAR_SYSTEM_RESOLVER_METHOD)
+        this.logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
+    return edmfs.Tracker(saved_minor_factions, this.logger, this.star_system_resolver)
 
 def load_settings() -> List[str]:
     this.tracker = load_settings_from_file()
@@ -170,8 +169,8 @@ def load_settings() -> List[str]:
         this.tracker = load_settings_from_config()
 
 def save_config() -> None:
-    with open(SETTINGS_FILE, mode="w") as settings_file:
-        settings_file.write(edmfs.TrackerFileRepository().serialize(this.tracker))
+    with open(this.settings_file, mode="w") as settings_file:
+        settings_file.write(this.serializer.serialize(this.tracker))
     config.delete(CONFIG_MINOR_FACTION)
-    logger.info(f"Settings saved to \"{SETTINGS_FILE}\"")
+    this.logger.info(f"Settings saved to \"{this.settings_file}\"")
 
