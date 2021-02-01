@@ -31,7 +31,7 @@ STAR_SYSTEM_RESOLVER_METHOD = functools.partial(edmfs.resolvers.resolve_star_sys
 
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
-    load_config()
+    load_settings()
     update_activity()
     update_minor_factions()
     return this.plugin_name
@@ -164,7 +164,7 @@ def load_settings_from_config() -> edmfs.Tracker:
         logger.info(f"Defaulting to minor faction(s): { ','.join(saved_minor_factions) }")
     return edmfs.Tracker(saved_minor_factions, logger, STAR_SYSTEM_RESOLVER_METHOD)
 
-def load_config() -> List[str]:
+def load_settings() -> List[str]:
     this.tracker = load_settings_from_file()
     if not this.tracker:
         this.tracker = load_settings_from_config()
