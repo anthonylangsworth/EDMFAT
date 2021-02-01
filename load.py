@@ -132,7 +132,7 @@ def update_activity() -> None:
 
 def update_minor_factions() -> None:
     if len(this.tracker.minor_factions) > 0:
-        this.minor_factions.set(", ".join(this.tracker.minor_factions))
+        this.minor_factions.set(", ".join(sorted(this.tracker.minor_factions)))
     else:
         this.minor_factions.set(NO_MINOR_FACTIONS)
 
