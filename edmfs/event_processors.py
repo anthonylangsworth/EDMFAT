@@ -40,8 +40,8 @@ def _get_event_minor_faction_impact(impacted_minor_faction: str, system_minor_fa
     3. Indirect support: Decrease the influence of another minor faction in that system.
     4. Indirect undermine: Increase the influence of another minor faction in that system.
     """
-    pro = [minor_faction for minor_faction in system_minor_factions if (minor_faction == impacted_minor_faction)]
-    anti = [minor_faction for minor_faction in system_minor_factions if (minor_faction != impacted_minor_faction)] 
+    pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == impacted_minor_faction)}
+    anti = {minor_faction for minor_faction in system_minor_factions if (minor_faction != impacted_minor_faction)} 
     return (
         pro if not inverted else anti,
         anti if not inverted else pro
