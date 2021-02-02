@@ -336,6 +336,12 @@ def test_sell_exploration_data_single(star_system:StarSystem, last_docked_statio
             Station("Pu City", 1000, "Soverign Justice League"), 
             {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080},
             [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 64, 80, 1080)]
+        ),
+        (
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Soverign Justice League"), 
+            {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":1, "SellPrice":80, "TotalSale":80, "AvgPricePaid":80},
+            []
         )     
     )
 )

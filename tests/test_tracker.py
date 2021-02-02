@@ -10,9 +10,9 @@ from edmfs.state import PilotState, GalaxyState, Station
 from edmfs.tracker import Tracker
     
 def test_tracker_init():
-    MINOR_FACTIONS = ["EDA Kunti League"]
+    MINOR_FACTIONS = ("EDA Kunti League",)
     tracker = Tracker(MINOR_FACTIONS)
-    assert(tracker.minor_factions == set(MINOR_FACTIONS))
+    assert(tracker.minor_factions == MINOR_FACTIONS)
     assert(tracker.pilot_state == PilotState())
     assert(tracker.galaxy_state == GalaxyState())
     assert(tracker.activity == "")

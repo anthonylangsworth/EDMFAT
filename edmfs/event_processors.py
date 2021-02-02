@@ -122,8 +122,13 @@ class SellExplorationDataEventProcessor(EventProcessor):
 class MarketSellEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
         star_system, station = _get_location(pilot_state, galaxy_state)
-        pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, event["SellPrice"] < event["AvgPricePaid"])
-        return[MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
+        result = []
+        if event["SellPrice"] != event["AvgPricePaid"]:
+            sold_at_loss = event["SellPrice"] < event["AvgPricePaid"]
+            sold_at_blackmarket = "BlackMarket" in event
+            pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, sold_at_loss and not sold_at_blackmarket)
+            result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
+        return result
 
 
 class MissionAcceptedEventProcessor(EventProcessor):
