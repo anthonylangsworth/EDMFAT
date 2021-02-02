@@ -249,8 +249,8 @@ def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_
 
         # Sanity checks
         assert len([event_summary for event_summary in tracker._event_summaries if not set(event_summary.pro).isdisjoint(set(event_summary.anti))]) == 0 # No overlaps
-        # assert len([event_summary for event_summary in result if len(event_summary.pro) == 0]) == 0  # No empty pro (can happen if system is not found)
-        # assert len([event_summary for event_summary in result if len(event_summary.anti) == 0]) == 0  # No empty anti (can happen if system is not found)
+        # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.pro) == 0]) == 0  # No empty pro (can happen if system is not found)
+        # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.anti) == 0]) == 0  # No empty anti (can happen if system is not found)
 
         # tracker._update_activity()
         assert tracker.activity == expected_activity
