@@ -35,10 +35,10 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
     Return a tuple containing the minor factions this event supported ("pro") and undermined ("anti").
 
     Technically, there are four states but a pro/anti split is sufficient for this plug-in. The states are:
-    1. Direct support: Increases the influence of that minor faction, such as completing a mission for that faction.
-    2. Direct undermine: Decrease the influence of that minor faction, such as an assassination mission against a ship for that faction.
-    3. Indirect support: Decrease the influence of another minor faction in that system.
-    4. Indirect undermine: Increase the influence of another minor faction in that system.
+    1. Direct support: Increases the influence of that minor faction, such as completing a mission for that faction. Considered "pro".
+    2. Direct undermine: Decrease the influence of that minor faction, such as an assassination mission against a ship for that faction. Considered "anti".
+    3. Indirect support: Decrease the influence of another minor faction in that system. Considered "pro".
+    4. Indirect undermine: Increase the influence of another minor faction in that system. Considered "anti".
     """
     if event_minor_faction in system_minor_factions:
         pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == event_minor_faction)}
