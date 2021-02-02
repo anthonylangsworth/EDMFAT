@@ -17,7 +17,7 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
-this.version = (0,11,0)
+this.version = (0,12,0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
 this.star_system_resolver = functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, this.logger)
@@ -99,6 +99,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
     this.tracker.minor_factions = [this.minor_faction_list.get(index) for index in this.minor_faction_list.curselection()]
     update_minor_factions()
+    update_activity()
+    this.logger.info(f"Minor factions changed to {this.tracker.minor_factions}")
     save_config()
 
 # Called by EDMC when a new entry is written to a journal file
