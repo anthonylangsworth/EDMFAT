@@ -31,9 +31,9 @@ To remove or uninstall:
 2. (Optional) Go to the "File" -> "Settings" menu, navigate to the "Minor Faction Activity Tracker" tab and select the minor faction(s) you want to support or undermine from the list. If they do not appear in the list, travel to a system where the faction is present then reopen the Settings dialog. EDMFAT saves the selected minor factions when EDMC shuts down and so only needs to be done once. EDMFAT does not save the list of minor factions.
 3. Play **Elite: Dangerous**, supporting or undermining your minor faction(s). 
 4. Minor faction-relevant activity will be captured and appear in the EDMC window. EDMFAT tracks completing [missions](doc/missions.md), selling bounty vouchers, selling combat bonds, trade (positive, negative and black market) and selling cartography data. EDMFAT does not track failed missions or clean ship kills, which may be added in the future. EDMFAT cannot track conflict zone wins and losses due to limitations with **Elite: Dangerous**. 
-5. (Optional) Change the minor faction(s) to support or undermine as per step 2. This can be done at any time. Previous activity is retained.
+5. (Optional) Change the minor faction(s) to support or undermine as per step 2. This can be done at any time. The plug-in recalculates any previous activity.
 6. When done, press the `Copy` button to copy your activity to the Windows clipboard.
-6. (Optional) Instead of pressing the `Copy` button, press the `Copy + Reset` button to copy your activity to the Windows clipboard and clear any activity. This can be useful if you want to report activity part way through a session, such as before the daily tick.
+6. (Optional) Instead of pressing the `Copy` button, press the `Copy + Reset` button to copy your activity to the Windows clipboard and clear any activity. Do this at the end of a session.
 7. Paste it into your squadron's Discord channel or wherever you report activity.
 
 Read the [FAQ](doc/faq.md) for more details.
@@ -46,7 +46,7 @@ See [LICENSE](LICENSE) for the license.
 2. EDMFAT cannot track conflict zone wins and losses because **Elite: Dangerous** does not report them.
 3. EDMFAT is not state-aware to keep it simple. For example, the influence of a minor faction in a "War" state is fixed until the war completes. However, this plug-in will still track missions and other activity as normal.
 4. EDMFAT does not store different minor factions for different commanders. This is intentional because many use multiple accounts for minor faction work to bypass daily caps.
-5. EDMFAT is not localized. It is English only. Assistance is appreciated!
+5. EDMFAT is not localized. It is English only. Localization assistance is appreciated!
 6. EDMFAT does not support console players. Sorry. This is a limitation of EDMC.
 
 # Contributing and Development
