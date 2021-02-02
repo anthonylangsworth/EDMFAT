@@ -77,7 +77,7 @@ class Tracker:
 
     def _update_activity(self) -> None:
         activity = []
-        for minor_faction in self._minor_factions:
+        for minor_faction in sorted(self._minor_factions):
             filtered_event_summaries = filter(lambda x: minor_faction in x.pro or minor_faction in x.anti, self._event_summaries)
             sorted_event_summaries = sorted(sorted(sorted(filtered_event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: minor_faction in x.pro), key=lambda x: x.system_name)
             for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, minor_faction in x.pro)):

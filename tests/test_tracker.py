@@ -252,7 +252,7 @@ def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_
         # assert len([event_summary for event_summary in result if len(event_summary.pro) == 0]) == 0  # No empty pro (can happen if system is not found)
         # assert len([event_summary for event_summary in result if len(event_summary.anti) == 0]) == 0  # No empty anti (can happen if system is not found)
 
-        #tracker._update_activity()
+        # tracker._update_activity()
         assert tracker.activity == expected_activity
         #print(stream.getvalue())
 
