@@ -247,7 +247,9 @@ def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_
             for line in journal_file.readlines():
                 tracker.on_event(json.loads(line))
 
-        assert tracker.activity == expected_activity, f"{print(tracker.activity)}\ndoes not match:\n{print(expected_activity)}"
+        assert len([event_summary for event_summary in tracker._event_summaries if not set(event_summary.pro).isdisjoint(set(event_summary.anti))]) == 0
+        tracker._update_activity()
+        assert tracker.activity == expected_activity
         #print(stream.getvalue())
 
 @pytest.mark.parametrize(

@@ -1,4 +1,4 @@
-from typing import Dict, Any, Set, Callable
+from typing import Dict, Any, Set, Callable, Tuple, Iterable
 from abc import ABC, abstractmethod
 from itertools import groupby
 import logging
@@ -15,8 +15,8 @@ def _get_dummy_logger():
 
 
 class Tracker:
-    def __init__(self, minor_factions:iter, logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
-            event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:iter = None):
+    def __init__(self, minor_factions:Iterable, logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
+            event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:Iterable = None):
         self._minor_factions = set(minor_factions)
         self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
@@ -27,12 +27,13 @@ class Tracker:
         self._event_summary_order = tuple(event_summary_order if event_summary_order else _default_event_summary_order)
     
     @property
-    def minor_factions(self) -> Set[str]:
-        return self._minor_factions
+    def minor_factions(self) -> Tuple[str]:
+        return tuple(self._minor_factions)
     
     @minor_factions.setter
-    def minor_factions(self, value:iter) -> None:
+    def minor_factions(self, value:Iterable) -> None:
         self._minor_factions = set(value)
+        self._update_activity()
 
     @property
     def pilot_state(self) -> PilotState:
@@ -55,8 +56,8 @@ class Tracker:
         activity_updated = False # Consider an Observer pattern or similar
         if new_event_summaries:
             self._event_summaries.extend(new_event_summaries)
-            self._activity = self._update_activity(self._event_summaries)
-            self._logger.info(f"{ event } is minor-faction relevant")
+            self._update_activity()
+            self._logger.info(f"Minor faction relevant: { event }")
             for event_summary in self._event_summaries:
                 self._logger.info(f"Created { event_summary }")
             activity_updated = True
@@ -67,22 +68,24 @@ class Tracker:
         result = []
         if event_processor != None:
             try:
-                result.extend(event_processor.process(event, self.minor_factions, self.pilot_state, self.galaxy_state))
+                result.extend(event_processor.process(event, self.pilot_state, self.galaxy_state))
             except NoLastDockedStationError:
                 self._logger.exception(f"Last docked station required for {str(event)}")
             except UnknownStarSystemError as unknown_star_system_error:
                 self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
         return result
-    
-    def _update_activity(self, event_summaries:list) -> str:
-        result = ""
-        sorted_event_summaries = sorted(sorted(sorted(sorted(event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: x.supports), key=lambda x: x.system_name), key=lambda x: x.minor_faction)
-        for (system_name, minor_faction, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, x.minor_faction, x.supports)):
-            result += f"{system_name} - {'PRO' if supports else 'ANTI'} {minor_faction}\n"
-            for type_name, system_event_summaries_by_system_and_type in groupby(event_summaries_by_system, key=lambda x: type(x).__name__):
-                event_formatter = self._event_formatters.get(type_name, None)
-                if event_formatter:
-                    result += event_formatter.process(system_event_summaries_by_system_and_type)
-            result += "\n"
-        return result.rstrip("\n")
+
+    def _update_activity(self) -> None:
+        activity = []
+        for minor_faction in self._minor_factions:
+            filtered_event_summaries = filter(lambda x: minor_faction in x.pro or minor_faction in x.anti, self._event_summaries)
+            sorted_event_summaries = sorted(sorted(sorted(filtered_event_summaries, key= lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: minor_faction in x.pro), key=lambda x: x.system_name)
+            for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, minor_faction in x.pro)):
+                activity.append(f"{system_name} - {'PRO' if supports else 'ANTI'} {minor_faction}")
+                for type_name, system_event_summaries_by_system_and_type in groupby(event_summaries_by_system, key=lambda x: type(x).__name__):
+                    event_formatter = self._event_formatters.get(type_name, None)
+                    if event_formatter:
+                        activity.extend(event_formatter.process(system_event_summaries_by_system_and_type))
+                activity.append("")
+        self._activity = "\n".join(activity).rstrip("\n")
         
