@@ -152,7 +152,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     star_system = galaxy_state.get_system(influence_effect["SystemAddress"])
                     if not star_system:
                         raise UnknownStarSystemError(influence_effect["SystemAddress"])
-                    pro, anti = _get_event_minor_faction_impact(faction_effect["Faction"], star_system.minor_factions)
+                    pro, anti = _get_event_minor_faction_impact(faction_effect["Faction"], star_system.minor_factions, influence_effect["Trend"] != "UpGood")
                     result.append(MissionCompletedEventSummary(star_system.name, pro, anti, max_influence))
 
             # This logic may have issues with the source and destination system are the same but have different source and target factions differ

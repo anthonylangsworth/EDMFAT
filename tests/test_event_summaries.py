@@ -2,7 +2,7 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
 
 def test_redeem_voucher_event_summary_init():
     SYSTEM_NAME = "HR 1597"
-    PRO = ("HR 1597 & Co")
+    PRO = ("HR 1597 & Co",)
     ANTI = ()
     VOUCHER_TYPE = "bounty"
     AMOUNT = 512546
@@ -15,7 +15,7 @@ def test_redeem_voucher_event_summary_init():
 
 def test_sell_exploration_data_event_summary_init():
     SYSTEM_NAME = "Shambogi"
-    PRO = ("Anti Energy Company")
+    PRO = ("Anti Energy Company",)
     ANTI = ()
     AMOUNT = 512546
     sell_exploration_data_event_summary:SellExplorationDataEventSummary = SellExplorationDataEventSummary(SYSTEM_NAME, PRO, ANTI, AMOUNT)
@@ -26,8 +26,8 @@ def test_sell_exploration_data_event_summary_init():
 
 def test_market_sell_event_summary_init():
     SYSTEM_NAME = "Alpha Centauri"
-    PRO = ("Hutton Orbital Truckers")
-    ANTI = ("The Dark Wheel")
+    PRO = ("Hutton Orbital Truckers",)
+    ANTI = ("The Dark Wheel",)
     COUNT = 100
     SELL_PRICE_PER_UNIT = 10
     AVERAGE_BUY_PRICE_PER_UNIT = 5
@@ -41,7 +41,7 @@ def test_market_sell_event_summary_init():
 
 def test_mission_completed_event_summary_init():
     SYSTEM_NAME = "Sol"
-    PRO = ("Mother Gaia")
+    PRO = ("Mother Gaia",)
     ANTI = ()
     INFLUENCE = "++"
     mission_completed_event_summary = MissionCompletedEventSummary(SYSTEM_NAME, PRO, ANTI, INFLUENCE)
