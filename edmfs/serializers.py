@@ -9,8 +9,8 @@ from .tracker import Tracker
 class TrackerFileRepository:
     def _serialize_event_summary(self, event_summary:EventSummary) -> Dict:
         return {
-            "minor_faction": event_summary.minor_faction,
-            "supports": event_summary.supports,
+            "pro": list(event_summary.pro),
+            "anti": list(event_summary.anti),
             "system_name": event_summary.system_name,
         }
 
@@ -87,21 +87,21 @@ class TrackerFileRepository:
         }, indent=4)
 
     def _deserialize_redeem_voucher_event_summary(self, deserialized_event_summary) -> EventSummary:
-        return RedeemVoucherEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["minor_faction"], 
-            deserialized_event_summary["supports"], deserialized_event_summary["voucher_type"], deserialized_event_summary["amount"])
+        return RedeemVoucherEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"], deserialized_event_summary["voucher_type"], deserialized_event_summary["amount"])
 
     def _deserialize_sell_exploration_data_event_summary(self, deserialized_event_summary) -> EventSummary:
-        return SellExplorationDataEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["minor_faction"], 
-            deserialized_event_summary["supports"], deserialized_event_summary["amount"])
+        return SellExplorationDataEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"], deserialized_event_summary["amount"])
 
     def _deserialize_market_sell_event_summary(self, deserialized_event_summary) -> EventSummary:
-        return MarketSellEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["minor_faction"], 
-            deserialized_event_summary["supports"], deserialized_event_summary["count"], deserialized_event_summary["sell_price_per_unit"],
+        return MarketSellEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"], deserialized_event_summary["count"], deserialized_event_summary["sell_price_per_unit"],
             deserialized_event_summary["average_buy_price_per_unit"])
 
     def _deserialize_mission_completed_event_summary(self, deserialized_event_summary) -> EventSummary:
-        return MissionCompletedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["minor_faction"], 
-            deserialized_event_summary["supports"], deserialized_event_summary["influence"])
+        return MissionCompletedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"], deserialized_event_summary["influence"])
 
     def _deserialize_event_summary_v1(self, deserialied_event_summary) -> EventSummary:
         return self._event_summary_deserializers[deserialied_event_summary["type"]](self, deserialied_event_summary["event_summary"])
@@ -122,7 +122,7 @@ class TrackerFileRepository:
         tracker.pilot_state.missions.update([(mission["id"], self._deserialize_mission_v1(mission)) for mission in deserialized_tracker["pilot_state"]["missions"]])
         # Consider moving these into tracker
         tracker._event_summaries.extend([self._deserialize_event_summary_v1(event_summary) for event_summary in deserialized_tracker["event_summaries"]])
-        tracker._activity = tracker._update_activity(tracker._event_summaries)
+        tracker._update_activity()
         return tracker
 
     _deserializers = {
