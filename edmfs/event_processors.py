@@ -126,7 +126,8 @@ class MarketSellEventProcessor(EventProcessor):
         if event["SellPrice"] != event["AvgPricePaid"]:
             sold_at_loss = event["SellPrice"] < event["AvgPricePaid"]
             sold_at_blackmarket = "BlackMarket" in event
-            pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, sold_at_loss and not sold_at_blackmarket)
+            pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, 
+                (sold_at_loss and not sold_at_blackmarket) or (not sold_at_loss and sold_at_blackmarket))
             result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
         return result
 

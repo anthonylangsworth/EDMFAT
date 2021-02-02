@@ -323,13 +323,13 @@ def test_sell_exploration_data_single(star_system:StarSystem, last_docked_statio
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Soverign Justice League"), 
             {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
-            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0)]
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
             Station("Pu City", 1000, "Afli Blue Society"), 
             {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
-            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0)]
+            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
@@ -342,7 +342,13 @@ def test_sell_exploration_data_single(star_system:StarSystem, last_docked_statio
             Station("Pu City", 1000, "Soverign Justice League"), 
             {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":1, "SellPrice":80, "TotalSale":80, "AvgPricePaid":80},
             []
-        )     
+        ),
+        (
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")), 
+            Station("Pu City", 1000, "Afli Blue Society"), 
+            {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":10000, "IllegalGoods":True, "BlackMarket":True},
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 10000)]
+        )   
     )
 )
 def test_market_sell_single(star_system:StarSystem, last_docked_station:Station, market_sell_event:Dict[str, Any], expected_results:list):
