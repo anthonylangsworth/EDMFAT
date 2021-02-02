@@ -276,3 +276,42 @@ def test_tracker_clear_activity(journal_file_name):
     tracker.clear_activity()
     assert(tracker.activity == "")
     assert(tracker._event_summaries == [])
+
+@pytest.mark.parametrize(
+    "journal_file_name, minor_factions_and_expected_activty",
+    [
+        (
+            "Journal.210125173739.01.log",
+            [
+                (
+                    {"EDA Kunti League"},
+                    (
+                        "San Davokje - ANTI EDA Kunti League\n"
+                        "80 T trade at 3,477 CR average profit per T\n"
+                        "\n"
+                        "San Davokje - PRO EDA Kunti League\n"
+                        "1 INF++++ mission(s)"
+                    )
+                ),
+                (
+                    {"San Davokje Empire Party"},
+                    (
+                        "San Davokje - ANTI San Davokje Empire Party\n"
+                        "1 INF++++ mission(s)\n"
+                        "\n"
+                        "San Davokje - PRO San Davokje Empire Party\n"
+                        "80 T trade at 3,477 CR average profit per T"
+                    )
+                )
+            ]
+        )
+    ]
+)
+def test_tracker_change_minor_factions(journal_file_name:str, minor_factions_and_expected_activty:List):
+    tracker = Tracker([])
+    with open("tests/journal_files/" + journal_file_name) as journal_file:
+        for line in journal_file.readlines():
+            tracker.on_event(json.loads(line))
+    for minor_factions, expected_activity in minor_factions_and_expected_activty:
+        tracker.minor_factions = minor_factions
+        assert tracker.activity == expected_activity
