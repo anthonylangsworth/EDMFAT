@@ -11,12 +11,12 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
     (
         ("a", {"a", "b"}, ({"a"}, {"b"})),
         ("b", {"a", "b"}, ({"b"}, {"a"})),
-        ("c", {"a", "b"}, (set(), set())),
+        ("c", {"a", "b"}, (set("c"), set())),
 
         # Should not happen but included for predictability
-        ("a", set(), (set(), set())),
-        ("a", {"c"}, (set(), set())),
-        ("a", {"c", "d"}, (set(), set()))
+        ("a", set(), (set("a"), set())),
+        ("a", {"c"}, (set("a"), set())),
+        ("a", {"c", "d"}, (set("a"), set()))
     )
 )
 def test_get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:iter, expected_result:tuple):

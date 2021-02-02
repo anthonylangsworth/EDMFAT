@@ -44,8 +44,8 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
         pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == event_minor_faction)}
         anti = {minor_faction for minor_faction in system_minor_factions if (minor_faction != event_minor_faction)} 
     else:
-        pro = set()
-        anti = set()
+        pro = set(event_minor_faction) if not inverted else set()
+        anti = set() if not inverted else set(event_minor_faction)
     return (
         pro if not inverted else anti,
         anti if not inverted else pro
