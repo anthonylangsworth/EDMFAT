@@ -1,5 +1,7 @@
+from typing import Iterable
+
 class EventSummary():
-    def __init__(self, system_name:str, pro: iter, anti: iter):
+    def __init__(self, system_name:str, pro: Iterable, anti: Iterable):
         self._system_name = system_name
         self._pro = set(pro)
         self._anti = set(anti)
