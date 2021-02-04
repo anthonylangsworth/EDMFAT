@@ -32,7 +32,7 @@
                     <RemoveFile Id="RemoveLoadPy" Name="load.py" On="uninstall" />
                     <RemoveFolder Id="RemoveEMFATPycacheFolder" Directory="EDMFATPyCacheFolder" On="uninstall" />
                     <RemoveFile Id="RemoveEMFATPycacheFiles" Directory="EDMFATPyCacheFolder"  Name="*" On="uninstall" />
-                    <RemoveFile Id="RemoveSettingsFile" Name="settings.json" On="uninstall" />
+                    <!-- RemoveFile Id="RemoveSettingsFile" Name="settings.json" On="uninstall" / --> <!-- Leave settings file in place for upgrades -->
                 </Component>
                 <Directory Id="EDMFATPyCacheFolder" Name="__pycache__" />
                 <Directory Id="edmfsFolder" Name="edmfs">
