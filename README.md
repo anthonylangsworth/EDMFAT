@@ -4,7 +4,9 @@ Elite: Dangerous Minor Faction Activity Tracker (EDMFAT) is an EDMC plug-in that
 
 ![Sample EDMFAT Screenshot](doc/EDMFAT.png)
 
-EDMFAT is aimed at **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. Without the plug-in, players had to manually keep records. This is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones. EDMFAT can also educate new players, recording activity that supports or undermines minor factions. 
+EDMFAT is aimed at players in **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. It aims to:
+1. Reduce manual record keeping. Manually tracking tasks is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones.
+2. Educate players by highlighting activity that supports or undermines minor factions. 
 
 EDMFAT was initially developed to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), hence EDA Kunti League being the default minor faction.
 
@@ -16,9 +18,10 @@ Requirements:
 1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
 
 To install or upgrade:
-1. Download the latest MSI file under [Releases](https://github.com/anthonylangsworth/EDMFAT/releases) at the top right. You may get a warning saying it is potentially harmful. Please ignore these warnings.
-2. Run the MSI. This installs the plug-in, upgrading if an earlier version is present. Running the MSI does not require local administrative privileges.
-3. Restart EDMC if it was already running.
+1. If upgrading, `Copy` any activity you want to report, just in case.
+2. Download the latest MSI file under [Releases](https://github.com/anthonylangsworth/EDMFAT/releases) at the top right. You may get a warning saying it is potentially harmful. Please ignore these warnings.
+3. Run the MSI. This installs the plug-in, upgrading if an earlier version is present. Running the MSI does not require local administrative privileges.
+4. Restart EDMC if it was already running.
 
 To remove or uninstall:
 1. Stop EDMC if it is running.
