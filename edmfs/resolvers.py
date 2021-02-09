@@ -1,6 +1,6 @@
 import requests
 import logging
-# from collections.abc import MutableMapping
+from collections.abc import MutableMapping
 
 from .state import StarSystem
 from .event_processors import UnknownStarSystemError
@@ -20,7 +20,6 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
     return star_system
 
 
-# TODO: Consider subclassing dict to may the resolving more Pythonic
 # class ResolvingDict(MutableMapping):
 #     def __init__(self, resolver:callable, inner:MutableMapping = None):
 #         self._resolver = resolver
