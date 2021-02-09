@@ -23,7 +23,8 @@ from edmfs.state import StarSystem
         ({"EDA Kunti League"}, "LesPaul58_Journal.210117142551.01.log"),
         ({"EDA Kunti League"}, "Journal.210122183958.01.log"),
         ({"EDA Kunti League"}, "Journal.210125173739.01.log"),
-        ({"EDA Kunti League"}, "Journal.210125115425.01.log")
+        ({"EDA Kunti League"}, "Journal.210125115425.01.log"),
+        ({"Yuri Grom"}, "Journal.210120211308.01.log")
     ]
 )
 def test_serialize_tracker(minor_factions:str, journal_file_name:str):

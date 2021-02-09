@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Dict, Callable
 
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 from .state import Mission
 from .tracker import Tracker
 
@@ -53,7 +53,9 @@ class TrackerFileRepository:
         "RedeemVoucherEventSummary": _serialize_redeem_voucher_event_summary,
         "SellExplorationDataEventSummary": _serialize_sell_exploration_data_event_summary,
         "MarketSellEventSummary": _serialize_market_sell_event_summary,
-        "MissionCompletedEventSummary": _serialize_mission_completed_event_summary
+        "MissionCompletedEventSummary": _serialize_mission_completed_event_summary,
+        "MissionFailedSummary": _serialize_event_summary,
+        "MurderEventSummary": _serialize_event_summary
     }
 
     def _serialize_event_summary_v1(self, event_summary:EventSummary) -> Dict:
@@ -103,6 +105,14 @@ class TrackerFileRepository:
         return MissionCompletedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
             deserialized_event_summary["anti"], deserialized_event_summary["influence"])
 
+    def _deserialize_mission_failed_event_summary(self, deserialized_event_summary) -> EventSummary:
+        return MissionFailedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"])
+
+    def _deserialize_murder_event_summary(self, deserialized_event_summary) -> EventSummary:
+        return MurderEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"])
+
     def _deserialize_event_summary_v1(self, deserialied_event_summary) -> EventSummary:
         return self._event_summary_deserializers[deserialied_event_summary["type"]](self, deserialied_event_summary["event_summary"])
 
@@ -110,7 +120,9 @@ class TrackerFileRepository:
         "RedeemVoucherEventSummary": _deserialize_redeem_voucher_event_summary,
         "SellExplorationDataEventSummary": _deserialize_sell_exploration_data_event_summary,
         "MarketSellEventSummary": _deserialize_market_sell_event_summary,
-        "MissionCompletedEventSummary": _deserialize_mission_completed_event_summary
+        "MissionCompletedEventSummary": _deserialize_mission_completed_event_summary,
+        "MissionFailedEventSummary": _deserialize_mission_failed_event_summary,
+        "MurderEventSummary": _deserialize_murder_event_summary
     }
 
     def _deserialize_mission_v1(self, deserialized_mission) -> Mission:

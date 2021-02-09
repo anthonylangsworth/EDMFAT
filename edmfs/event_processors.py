@@ -44,8 +44,8 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
         pro = {minor_faction for minor_faction in system_minor_factions if (minor_faction == event_minor_faction)}
         anti = {minor_faction for minor_faction in system_minor_factions if (minor_faction != event_minor_faction)} 
     else:
-        pro = set(event_minor_faction) if not inverted else set()
-        anti = set() if not inverted else set(event_minor_faction)
+        pro = set([event_minor_faction])
+        anti = set()
     return (
         pro if not inverted else anti,
         anti if not inverted else pro
@@ -197,7 +197,7 @@ class MissionFailedEventProcessor(EventProcessor):
             if not star_system:
                 raise UnknownStarSystemError(mission.system_address)
             pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions, True)
-            result.append(MissionFailedEventSummary(star_system, pro, anti))
+            result.append(MissionFailedEventSummary(star_system.name, pro, anti))
             del pilot_state.missions[mission.id]
         return result
 
@@ -210,7 +210,7 @@ class CommitCrimeEventProcessor(EventProcessor):
             if not star_system:
                 raise UnknownStarSystemError(pilot_state.system_address)
             pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions, True)
-            result.append(MurderEventSummary(star_system, pro, anti))
+            result.append(MurderEventSummary(star_system.name, pro, anti))
         return result
 
 

@@ -234,6 +234,14 @@ def test_tracker_init():
                 "HR 1597 - PRO EDA Kunti League\n"
                 "5 T trade at 3,734 CR average profit per T"
             )
+        ),
+        (
+            {
+                "Yuri Grom"
+            },
+            "Journal.210120211308.01.log",
+            ("Eta-1 Pictoris - ANTI Yuri Grom\n"
+            "26 clean ship kill(s)")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
