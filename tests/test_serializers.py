@@ -47,5 +47,8 @@ def test_serialize_tracker(minor_factions:str, journal_file_name:str):
     assert len(new_tracker.galaxy_state.systems) == 0
     assert tracker.activity == new_tracker.activity
 
+    assert new_tracker.pilot_state.system_address == None
+    assert new_tracker.pilot_state.last_docked_station == None
+
     assert new_tracker._logger == logger
     assert new_tracker.galaxy_state._star_system_resolver == resolver
