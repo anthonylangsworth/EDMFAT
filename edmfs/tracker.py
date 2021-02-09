@@ -15,8 +15,8 @@ def _get_dummy_logger():
 
 
 class Tracker:
-    def __init__(self, minor_factions:Iterable, logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
-            event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:Iterable = None):
+    def __init__(self, minor_factions:Iterable[str], logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
+            event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:Iterable[str] = None):
         self._minor_factions = set(minor_factions)
         self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
