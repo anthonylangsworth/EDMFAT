@@ -110,6 +110,10 @@ def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Opti
             this.activity_summary.set(this.tracker.activity)
             save_config()
 
+# Called by EDMC on shutdown
+def plugin_stop() -> None:
+    save_config()
+
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
 def copy_activity_to_clipboard() -> None:
     root = tk.Tk()

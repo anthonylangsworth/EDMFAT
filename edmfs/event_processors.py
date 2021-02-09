@@ -1,8 +1,8 @@
-from typing import Optional, Dict, Union, Any, Set
+from typing import Optional, Dict, Union, Any, Set, List
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
+from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
 
 
 class NoLastDockedStationError(Exception):
@@ -194,17 +194,24 @@ class MissionCompletedEventProcessor(EventProcessor):
 
 
 class MissionAbandonedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List:
         if event["MissionID"] in pilot_state.missions:
             del pilot_state.missions[event["MissionID"]]
         return []
 
 
 class MissionFailedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        if event["MissionID"] in pilot_state.missions:
-            del pilot_state.missions[event["MissionID"]]
-        return [] # TODO: Add mission failed summary
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[MissionFailedEventSummary]:
+        result = []
+        mission = pilot_state.missions.get(event["MissionID"], None)
+        if mission:
+            star_system = galaxy_state.get_system(mission.system_address)
+            if not star_system:
+                raise UnknownStarSystemError(mission.system_address)
+            pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions)
+            result.append(MissionFailedEventSummary(star_system, pro, anti))
+            del pilot_state.missions[mission.id]
+        return result
 
 
 # Module non-public

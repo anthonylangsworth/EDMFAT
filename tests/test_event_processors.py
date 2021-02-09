@@ -4,7 +4,7 @@ import pytest
 
 from edmfs.event_processors import _get_event_minor_faction_impact, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
+from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
 
 @pytest.mark.parametrize(
     "event_minor_faction, system_minor_factions, expected_result",
@@ -19,7 +19,7 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
         ("a", {"c", "d"}, (set("a"), set()))
     )
 )
-def test_get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:iter, expected_result:tuple):
+def test_get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:Iterable, expected_result:tuple):
     assert _get_event_minor_faction_impact(event_minor_faction, system_minor_factions) == expected_result
 
 @pytest.mark.parametrize(
@@ -533,5 +533,72 @@ def test_mission_abandoned(missions:Iterable[Mission], mission_abandoned_event:s
     expected_galaxy_state = copy.deepcopy(galaxy_state)
     result = MissionAbandonedEventProcessor().process(mission_abandoned_event, pilot_state, galaxy_state)
     assert result == []
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+@pytest.mark.parametrize(
+   "missions, star_systems, mission_abandoned_event, expected_results, expected_missions",
+    (
+        (
+            [],
+            [],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionFailed", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [],
+            []
+        ),
+        (
+            [
+                Mission(579156136, "Pilots' Federation Administration", "None", 5791537031962098456136)
+            ],
+            [
+                StarSystem("Gebel", 5791537031962098456136, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionFailed", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+                MissionFailedEventSummary("Gebel", "Pilots' Federation Local Branch", ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour"])
+            ],
+            [
+            ]
+        ),
+        (
+            [
+                Mission(579156136, "Pilots' Federation Administration", "None", 5791537031962098456136),
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217),
+            ],
+            [
+                StarSystem("Gebel", 5791537031962098456136, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionFailed", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+                MissionFailedEventSummary("Gebel", "Pilots' Federation Local Branch", ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour"])
+            ],
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217)
+            ]
+        ),
+        (
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217),
+            ],
+            [],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionFailed", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [],
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217)
+            ]
+        )
+    )
+)
+def test_mission_failed(missions:Iterable[Mission], star_systems:Iterable[StarSystem], mission_abandoned_event:str, expected_results:Iterable[EventSummary],  expected_missions:Iterable[Mission]):
+    pilot_state = PilotState()
+    pilot_state.missions.update((mission.id, mission) for mission in missions)
+    galaxy_state = GalaxyState()
+    galaxy_state.systems.update((star_system.address, star_system) for star_system in star_systems)
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_pilot_state.missions.clear()
+    expected_pilot_state.missions.update((mission.id, mission) for mission in expected_missions)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    result = MissionFailedEventProcessor().process(mission_abandoned_event, pilot_state, galaxy_state)
+    assert result == expected_results
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state

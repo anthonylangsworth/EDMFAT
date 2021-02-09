@@ -1,5 +1,6 @@
 from typing import Iterable
 
+
 class EventSummary():
     def __init__(self, system_name:str, pro: Iterable, anti: Iterable):
         self._system_name = system_name
@@ -26,6 +27,7 @@ class EventSummary():
             and self._pro == other._pro
             and self._anti == other._anti)
 
+
 class RedeemVoucherEventSummary(EventSummary):
     def __init__(self, system_name:str, pro: iter, anti: iter, voucher_type:str, amount:int):
         super(RedeemVoucherEventSummary, self).__init__(system_name, pro, anti)
@@ -51,6 +53,7 @@ class RedeemVoucherEventSummary(EventSummary):
     def __repr__(self) -> str:
         return f"RedeemVoucherEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._voucher_type}', {self._amount})" 
 
+
 class SellExplorationDataEventSummary(EventSummary):
     def __init__(self, system_name:str, pro: iter, anti: iter, amount:int):
         super(SellExplorationDataEventSummary, self).__init__(system_name, pro, anti)
@@ -69,6 +72,7 @@ class SellExplorationDataEventSummary(EventSummary):
 
     def __repr__(self) -> str:
         return f"SellExplorationDataEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._amount})" 
+
 
 class MarketSellEventSummary(EventSummary):
     def __init__(self, system_name:str, pro: iter, anti: iter, count:int, sell_price_per_unit:int, average_buy_price_per_unit:int):
@@ -101,6 +105,7 @@ class MarketSellEventSummary(EventSummary):
     def __repr__(self) -> str:
         return f"MarketSellEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit})" 
 
+
 class MissionCompletedEventSummary(EventSummary):
     def __init__(self, system_name:str, pro: iter, anti: iter, influence:str):
         super(MissionCompletedEventSummary, self).__init__(system_name, pro, anti)
@@ -120,9 +125,22 @@ class MissionCompletedEventSummary(EventSummary):
     def __repr__(self) -> str:
         return f"MissionCompletedEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._influence}')" 
 
+
+class MissionFailedEventSummary(EventSummary):
+    def __init__(self, system_name:str, pro: iter, anti: iter):
+        super().__init__(system_name, pro, anti)
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, MissionFailedEventSummary)
+
+    def __repr__(self) -> str:
+        return f"MissionFailedEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
+
+
 _default_event_summary_order = (
     "MissionCompletedEventSummary",
     "RedeemVoucherEventSummary",
     "SellExplorationDataEventSummary",
-    "MarketSellEventSummary"
+    "MarketSellEventSummary",
+    "MissionFailedEventSummary"
 )
