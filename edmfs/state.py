@@ -127,9 +127,10 @@ class GalaxyState:
 
 
 class PilotState:
-    def __init__(self, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
+    def __init__(self, system_address:int = None, last_docked_station:Station = None, missions:Dict[int, Mission] = None):
+        self._system_address = system_address
         self._last_docked_station = last_docked_station
-        self._missions = missions if missions else {} # Workaround for {} being shared in edge cases
+        self._missions = missions if missions else dict() # Workaround for {} being shared in edge cases
 
     @property
     def last_docked_station(self) -> Station:
@@ -140,6 +141,14 @@ class PilotState:
         self._last_docked_station = value
 
     @property
+    def system_address(self) -> int:
+        return self._system_address
+
+    @system_address.setter
+    def system_address(self, value:int) -> None:
+        self._system_address = value        
+
+    @property
     def missions(self) -> Dict[int, Mission]:
         return self._missions
 
@@ -147,5 +156,6 @@ class PilotState:
         if not isinstance(other, PilotState):
             return NotImplemented
 
-        return self._last_docked_station == other._last_docked_station \
+        return self._system_address == other._system_address \
+            and self._last_docked_station == other._last_docked_station \
             and self._missions == other._missions

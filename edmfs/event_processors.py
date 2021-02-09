@@ -243,5 +243,5 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionCompleted": MissionCompletedEventProcessor(),
     "MissionAbandoned": MissionAbandonedEventProcessor(),
     "MissionFailed": MissionFailedEventProcessor(),
-    "CommitCrime": CommitCrimeEventProcessor()
+    # "CommitCrime": CommitCrimeEventProcessor()
 }

@@ -7,14 +7,23 @@ def test_StarSystem_init():
     ADDRESS = 89562036
     MINOR_FACTIONS = set(["EDA Kunti League", "Kunti Dragons"])
     star_system_state:StarSystem = StarSystem(SYSTEM_NAME, ADDRESS, MINOR_FACTIONS)
-    assert(star_system_state.name == SYSTEM_NAME)
-    assert(star_system_state.address == ADDRESS)
-    assert(star_system_state.minor_factions == MINOR_FACTIONS)
+    assert star_system_state.name == SYSTEM_NAME
+    assert star_system_state.address == ADDRESS
+    assert star_system_state.minor_factions == MINOR_FACTIONS
 
 def test_pilot_state_init():
-    pilot_state:PilotState = PilotState()
-    assert(pilot_state.last_docked_station == None)
-    assert(pilot_state.missions == {})
+    pilot_state = PilotState()
+    assert pilot_state.last_docked_station == None
+    assert pilot_state.missions == {}
+
+def test_pilot_state_init_args():
+    SYSTEM_ADDRESS = 98367212
+    STATION = Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))
+    MISSIONS = dict()
+    pilot_state = PilotState(SYSTEM_ADDRESS, STATION, MISSIONS)
+    assert pilot_state.system_address == SYSTEM_ADDRESS
+    assert pilot_state.last_docked_station == STATION
+    assert pilot_state.missions == MISSIONS
 
 def test_station_init():
     NAME = "Syromyatnikov Terminal"
