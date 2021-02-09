@@ -54,7 +54,7 @@ class TrackerFileRepository:
         "SellExplorationDataEventSummary": _serialize_sell_exploration_data_event_summary,
         "MarketSellEventSummary": _serialize_market_sell_event_summary,
         "MissionCompletedEventSummary": _serialize_mission_completed_event_summary,
-        "MissionFailedSummary": _serialize_event_summary,
+        "MissionFailedEventSummary": _serialize_event_summary,
         "MurderEventSummary": _serialize_event_summary
     }
 

@@ -242,6 +242,19 @@ def test_tracker_init():
             "Journal.210120211308.01.log",
             ("Eta-1 Pictoris - ANTI Yuri Grom\n"
             "26 clean ship kill(s)")
+        ),
+        (
+            {"Atfero Blue General & Co"},
+            "Journal.200509115806.01.log",
+            ("Atfero - ANTI Atfero Blue General & Co\n"
+            "2 INF+ mission(s)\n"
+            "3 INF++ mission(s)\n"
+            "77 T trade at 1,048 CR average profit per T\n"
+            "1 failed mission(s)\n"
+            "\n"
+            "Atfero - PRO Atfero Blue General & Co\n"
+            "4 INF+ mission(s)\n"
+            "1 INF++ mission(s)")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
