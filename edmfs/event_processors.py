@@ -214,6 +214,22 @@ class MissionFailedEventProcessor(EventProcessor):
         return result
 
 
+# class CommitCrimeEventProcessor(EventProcessor):
+#     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[MissionFailedEventSummary]:
+#         result = []
+#         if event["CrimeType"] == "murder":
+#             star_system, _ = _get_location(pilot_state, galaxy_state)
+#             if not star_system:
+#                 raise UnknownStarSystemError(mission.system_address)
+#             pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions, True)
+#             result.append(MissionFailedEventSummary(star_system, pro, anti))
+#             del pilot_state.missions[mission.id]
+#         return result
+
+# { "timestamp":"2020-09-28T15:35:22Z", "event":"CommitCrime", "CrimeType":"murder", "Faction":"CPD-59 314 Imperial Society", "Victim":"Nick Coates", "Bounty":5000 }
+# { "timestamp":"2020-09-28T15:39:38Z", "event":"CommitCrime", "CrimeType":"murder", "Faction":"CPD-59 314 Imperial Society", "Victim":"Philip A Orr", "Bounty":120500 }
+
+
 # Module non-public
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
@@ -226,5 +242,6 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionAccepted": MissionAcceptedEventProcessor(),
     "MissionCompleted": MissionCompletedEventProcessor(),
     "MissionAbandoned": MissionAbandonedEventProcessor(),
-    "MissionFailed": MissionFailedEventProcessor()
+    "MissionFailed": MissionFailedEventProcessor(),
+    "CommitCrime": CommitCrimeEventProcessor()
 }
