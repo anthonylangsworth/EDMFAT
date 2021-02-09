@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any, Set, List, Iterable
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
 
@@ -23,40 +23,6 @@ def test_get_event_minor_faction_impact(event_minor_faction: str, system_minor_f
     assert _get_event_minor_faction_impact(event_minor_faction, system_minor_factions) == expected_result
 
 @pytest.mark.parametrize(
-    "pilot_state, galaxy_state, expected_star_system, expected_station",
-    (
-        (
-            PilotState(98367212, Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))),
-            GalaxyState(None, {98367212:StarSystem("Afli", 98367212, [])}),
-            StarSystem("Afli", 98367212, []),
-            Station("Pu City", 98367212, set(["Afli Patron's Principles", "Afli Imperial Society"]))
-        ),
-    )
-)
-def test_get_location(pilot_state: PilotState, galaxy_state: GalaxyState, expected_star_system:StarSystem, expected_station:Station):
-    star_system, station = _get_location(pilot_state, galaxy_state)
-    assert star_system == expected_star_system
-    assert station == expected_station
-
-def test_get_location_no_system():
-    pilot_state = PilotState(654789, Station("Pu City", 654789, set(["Afli Patron's Principles", "Afli Imperial Society"])))
-    galaxy_state = GalaxyState(None, {200:StarSystem("Afli", 200, [])})
-    try:
-        _get_location(pilot_state, galaxy_state)
-        assert False
-    except UnknownStarSystemError:
-        pass
-
-def test_get_location_no_station():
-    pilot_state = PilotState()
-    galaxy_state = GalaxyState(None, {654789:StarSystem("Afli", 654789, [])})
-    try:
-        _get_location(pilot_state, galaxy_state)
-        assert False
-    except NoLastDockedStationError:
-        pass    
-
-@pytest.mark.parametrize(
     "location_event, expected_station, expected_system",
     [
         (
@@ -67,7 +33,7 @@ def test_get_location_no_station():
         (
             { "timestamp":"2020-12-30T02:28:17Z", "event":"Location", "Docked":False, "StarSystem":"HIP 58121", "SystemAddress":285388835187, "StarPos":[118.18750,-10.21875,61.90625], "SystemAllegiance":"", "SystemEconomy":"$economy_None;", "SystemEconomy_Localised":"None", "SystemSecondEconomy":"$economy_None;", "SystemSecondEconomy_Localised":"None", "SystemGovernment":"$government_None;", "SystemGovernment_Localised":"None", "SystemSecurity":"$GAlAXY_MAP_INFO_state_anarchy;", "SystemSecurity_Localised":"Anarchy", "Population":0, "Body":"HIP 58121 A 4", "BodyID":16, "BodyType":"Planet" }, 
             None,
-            None # No factions on a fleet carrier
+            None, # StarSystem("HIP 58121", 285388835187, []) # No factions for a fleet carrier, therefore ignore
         ),
         (
             { "timestamp":"2020-12-07T10:05:58Z", "event":"Location", "Docked":True, "StationName":"Sabine Installation", "StationType":"CraterOutpost", "MarketID":3516792064, "StationFaction":{ "Name":"CD-51 2650 Guardians", "FactionState":"Drought" }, "StationGovernment":"$government_Patronage;", "StationGovernment_Localised":"Patronage", "StationAllegiance":"Empire", "StationServices":[ "dock", "autodock", "commodities", "contacts", "exploration", "missions", "outfitting", "crewlounge", "rearm", "refuel", "repair", "tuning", "engineer", "missionsgenerated", "facilitator", "flightcontroller", "stationoperations", "powerplay", "searchrescue", "stationMenu", "shop" ], "StationEconomy":"$economy_Colony;", "StationEconomy_Localised":"Colony", "StationEconomies":[ { "Name":"$economy_Colony;", "Name_Localised":"Colony", "Proportion":1.000000 } ], "StarSystem":"Arun", "SystemAddress":4482100335314, "StarPos":[105.25000,-46.62500,-10.40625], "SystemAllegiance":"Independent", "SystemEconomy":"$economy_Colony;", "SystemEconomy_Localised":"Colony", "SystemSecondEconomy":"$economy_Extraction;", "SystemSecondEconomy_Localised":"Extraction", "SystemGovernment":"$government_PrisonColony;", "SystemGovernment_Localised":"Prison colony", "SystemSecurity":"$SYSTEM_SECURITY_low;", "SystemSecurity_Localised":"Low Security", "Population":2542, "Body":"Arun B 4 a", "BodyID":43, "BodyType":"Planet", "Factions":[ { "Name":"Progressive Party of LTT 2684", "FactionState":"None", "Government":"Democracy", "Influence":0.044599, "Allegiance":"Federation", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "MyReputation":6.600000, "RecoveringStates":[ { "State":"PirateAttack", "Trend":0 } ] }, { "Name":"Arun Organisation", "FactionState":"None", "Government":"Corporate", "Influence":0.042616, "Allegiance":"Empire", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "MyReputation":0.000000 }, { "Name":"Antai Energy Group", "FactionState":"Retreat", "Government":"Corporate", "Influence":0.154609, "Allegiance":"Federation", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "MyReputation":45.869999, "ActiveStates":[ { "State":"Retreat" } ] }, { "Name":"Arun Gold Partnership", "FactionState":"Lockdown", "Government":"Anarchy", "Influence":0.009911, "Allegiance":"Independent", "Happiness":"$Faction_HappinessBand3;", "Happiness_Localised":"Discontented", "MyReputation":0.000000, "ActiveStates":[ { "State":"Lockdown" }, { "State":"Bust" }, { "State":"Drought" } ] }, { "Name":"CD-51 2650 Guardians", "FactionState":"Drought", "Government":"Patronage", "Influence":0.188305, "Allegiance":"Empire", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "MyReputation":15.000000, "ActiveStates":[ { "State":"Drought" } ] }, { "Name":"Friends of Arun", "FactionState":"None", "Government":"Cooperative", "Influence":0.038652, "Allegiance":"Independent", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "MyReputation":0.000000 }, { "Name":"EDA Kunti League", "FactionState":"Boom", "Government":"PrisonColony", "Influence":0.521308, "Allegiance":"Independent", "Happiness":"$Faction_HappinessBand2;", "Happiness_Localised":"Happy", "SquadronFaction":True, "MyReputation":100.000000, "ActiveStates":[ { "State":"Boom" }, { "State":"CivilLiberty" }, { "State":"PublicHoliday" } ] } ], "SystemFaction":{ "Name":"EDA Kunti League", "FactionState":"Boom" } }, 
@@ -90,6 +56,7 @@ def test_location_single(location_event:Dict[str, Any], expected_station:Station
     expected_pilot_state = PilotState()
     if expected_station:
         expected_pilot_state.last_docked_station = expected_station
+    expected_pilot_state.system_address = location_event["SystemAddress"]
     assert pilot_state == expected_pilot_state
 
     expected_galaxy_state = GalaxyState()
@@ -243,6 +210,7 @@ def test_location_sequence(location_events:tuple, expected_station:Station):
 def test_redeem_voucher_single(star_system:StarSystem, last_docked_station:Station, redeem_voucher_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
     pilot_state.last_docked_station = last_docked_station
+    pilot_state.system_address = last_docked_station.system_address
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
     expected_pilot_state = copy.deepcopy(pilot_state)
@@ -269,8 +237,8 @@ def test_redeem_voucher_single(star_system:StarSystem, last_docked_station:Stati
     ])
 def test_docked_single(docked_event:Dict[str, Any], expected_station:Station):
     docked_event_processor = DockedEventProcessor()
-    pilot_state:PilotState = PilotState()
-    galaxy_state:GalaxyState = GalaxyState()
+    pilot_state = PilotState()
+    galaxy_state = GalaxyState()
     assert not docked_event_processor.process(docked_event, pilot_state, galaxy_state)
     assert pilot_state.last_docked_station == expected_station
 
@@ -292,6 +260,7 @@ def test_docked_single(docked_event:Dict[str, Any], expected_station:Station):
     ])
 def test_sell_exploration_data_single(star_system:StarSystem, last_docked_station:Station, sell_exploration_data_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
@@ -353,6 +322,7 @@ def test_sell_exploration_data_single(star_system:StarSystem, last_docked_statio
 )
 def test_market_sell_single(star_system:StarSystem, last_docked_station:Station, market_sell_event:Dict[str, Any], expected_results:list):
     pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
@@ -384,6 +354,7 @@ def test_market_sell_single(star_system:StarSystem, last_docked_station:Station,
 )
 def test_mission_accepted_single(star_system:StarSystem, station:Station, mission:Mission, mission_accepted_event:Dict[str, Any]):
     pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = station
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system

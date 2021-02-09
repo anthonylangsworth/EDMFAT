@@ -2,7 +2,7 @@ from typing import Optional, Dict, Union, Any, Set, List
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
 
 
 class NoLastDockedStationError(Exception):
@@ -52,58 +52,44 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
     ) 
 
 
-def _get_location(pilot_state: PilotState, galaxy_state:GalaxyState) -> tuple:
-    if not pilot_state.last_docked_station:
-        raise NoLastDockedStationError()
-
-    if not galaxy_state.get_system(pilot_state.last_docked_station.system_address):
-        raise UnknownStarSystemError(pilot_state.last_docked_station.system_address)
-
-    star_system = galaxy_state.get_system(pilot_state.last_docked_station.system_address)
-    station = pilot_state.last_docked_station
-
-    return (star_system, station)
-
-
 class EventProcessor(ABC):
     @abstractmethod
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         pass
 
 
 # Also used for FSDJump. They have the same schema.
 class LocationEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        if "Factions" in event.keys():
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        pilot_state.system_address = event["SystemAddress"]       
+        if "Factions" in event:
             galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
-
         if event.get("Docked", False):
             pilot_state.last_docked_station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
-
         return []
 
 
 class DockedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
         pilot_state.last_docked_station = station
         return []
 
 
 class RedeemVoucherEventProcessor(EventProcessor):
-    def _process_bounty(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> list:
+    def _process_bounty(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
         result = []
         for x in event["Factions"]:
             pro, anti = _get_event_minor_faction_impact(x["Faction"], system_minor_factions)
             result.append(RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], x["Amount"]))
         return result
 
-    def _process_combat_bond(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> list:
+    def _process_combat_bond(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
         pro, anti = _get_event_minor_faction_impact(event["Faction"], system_minor_factions)
         return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], event["Amount"])]
 
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, _ = _get_location(pilot_state, galaxy_state)
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        star_system = galaxy_state.get_system(pilot_state.system_address)
 
         result = []
         if event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
@@ -117,15 +103,17 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
 # Also used for MultiSellExplorationData. They have the same schema.
 class SellExplorationDataEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, station = _get_location(pilot_state, galaxy_state)
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        star_system = galaxy_state.get_system(pilot_state.system_address)
+        station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
         return[SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
 
 
 class MarketSellEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, station = _get_location(pilot_state, galaxy_state)
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        star_system = galaxy_state.get_system(pilot_state.system_address)
+        station = pilot_state.last_docked_station
         result = []
         if event["SellPrice"] != event["AvgPricePaid"]:
             sold_at_loss = event["SellPrice"] < event["AvgPricePaid"]
@@ -137,14 +125,14 @@ class MarketSellEventProcessor(EventProcessor):
 
 
 class MissionAcceptedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
-        star_system, _ = _get_location(pilot_state, galaxy_state)
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        star_system = galaxy_state.get_system(pilot_state.system_address)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], star_system.address)
         return []
 
 
 class MissionCompletedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
 
@@ -194,7 +182,7 @@ class MissionCompletedEventProcessor(EventProcessor):
 
 
 class MissionAbandonedEventProcessor(EventProcessor):
-    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List:
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         if event["MissionID"] in pilot_state.missions:
             del pilot_state.missions[event["MissionID"]]
         return []

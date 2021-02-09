@@ -122,8 +122,8 @@ class GalaxyState:
 
         return self._systems == other._systems
 
-    def __hash__(self) -> int:
-        return hash(self._systems)
+    def __repr__(self) -> str:
+        return f"GalaxyState({self._star_system_resolver}, {self._systems})"
 
 
 class PilotState:
@@ -159,3 +159,6 @@ class PilotState:
         return self._system_address == other._system_address \
             and self._last_docked_station == other._last_docked_station \
             and self._missions == other._missions
+
+    def __repr__(self) -> str:
+        return f"PilotState({self._system_address}, {self._last_docked_station}, {self._missions})"
