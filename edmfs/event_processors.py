@@ -208,7 +208,7 @@ class MissionFailedEventProcessor(EventProcessor):
             star_system = galaxy_state.get_system(mission.system_address)
             if not star_system:
                 raise UnknownStarSystemError(mission.system_address)
-            pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions)
+            pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions, True)
             result.append(MissionFailedEventSummary(star_system, pro, anti))
             del pilot_state.missions[mission.id]
         return result

@@ -1,7 +1,8 @@
 import pytest
+from typing import List
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
 
 @pytest.mark.parametrize(
     "event_summaries, expected_activity",
@@ -25,7 +26,7 @@ from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationData
         )
     ]
 )
-def test_redeem_voucher(event_summaries: list, expected_activity: str):
+def test_redeem_voucher(event_summaries: List[RedeemVoucherEventSummary], expected_activity: str):
     redeem_voucher_event_formatter = RedeemVoucherEventFormatter()
     assert(redeem_voucher_event_formatter.process(event_summaries) == expected_activity)
 
@@ -41,7 +42,7 @@ def test_redeem_voucher(event_summaries: list, expected_activity: str):
         )
     ]
 )
-def test_sell_exploration_data(event_summaries: list, expected_activity: str):
+def test_sell_exploration_data(event_summaries: List[SellExplorationDataEventSummary], expected_activity: str):
     sell_exploration_data_event_formatter = SellExplorationDataEventFormatter()
     assert(sell_exploration_data_event_formatter.process(event_summaries) == expected_activity)
 
@@ -57,7 +58,7 @@ def test_sell_exploration_data(event_summaries: list, expected_activity: str):
         )
     ]
 )
-def test_market_sell(event_summaries: list, expected_activity: str):
+def test_market_sell(event_summaries: List[MarketSellEventFormatter], expected_activity: str):
     market_sell_event_formatter = MarketSellEventFormatter()
     assert(market_sell_event_formatter.process(event_summaries) == expected_activity)
 
@@ -85,6 +86,31 @@ def test_market_sell(event_summaries: list, expected_activity: str):
         )
     ]
 )
-def test_mission_completed(event_summaries: list, expected_activity: str):
+def test_mission_completed(event_summaries: List[MissionCompletedEventSummary], expected_activity: str):
     mission_completed_event_formatter = MissionCompletedEventFormatter()
+    assert(mission_completed_event_formatter.process(event_summaries) == expected_activity)
+
+
+@pytest.mark.parametrize(
+    "event_summaries, expected_activity",
+    [
+        (
+            [
+                MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {})
+            ],
+            ["1 failed mission(s)"]
+        ),        
+        (
+            [
+                MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+                MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+                MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+                MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {})
+            ],
+            ["4 failed mission(s)"]
+        )
+    ]
+)
+def test_mission_failed(event_summaries: List[MissionFailedEventSummary], expected_activity: str):
+    mission_completed_event_formatter = MissionFailedEventFormatter()
     assert(mission_completed_event_formatter.process(event_summaries) == expected_activity)
