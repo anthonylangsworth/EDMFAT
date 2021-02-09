@@ -28,7 +28,7 @@ from edmfs.state import StarSystem
     ]
 )
 def test_serialize_tracker(minor_factions:str, journal_file_name:str):
-    tracker = Tracker(sorted(minor_factions))
+    tracker = Tracker(minor_factions)
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))

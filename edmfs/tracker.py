@@ -28,7 +28,8 @@ class Tracker:
     
     @property
     def minor_factions(self) -> Tuple[str]:
-        return tuple(self._minor_factions)
+        # Create Tuple to force read-only. Sort to ensure determinism.
+        return tuple(sorted(self._minor_factions))
     
     @minor_factions.setter
     def minor_factions(self, value:Iterable) -> None:
