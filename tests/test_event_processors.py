@@ -1,8 +1,8 @@
 import copy
-from typing import Dict, Any, Set
+from typing import Dict, Any, Set, List, Iterable
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, _get_location, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
 
@@ -467,7 +467,7 @@ def test_mission_accepted_single(star_system:StarSystem, station:Station, missio
         # 1. Mission with the same faction and system, e.g. trade
     )
 )
-def test_mission_completed_single(star_systems:list, station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:list):
+def test_mission_completed_single(star_systems:List[StarSystem], station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:List[MissionCompletedEventSummary]):
     pilot_state = PilotState()
     pilot_state.last_docked_station = station
     pilot_state.missions[mission.id] = mission
@@ -481,5 +481,57 @@ def test_mission_completed_single(star_systems:list, station:Station, mission:Mi
     mission_completed_event_processor = MissionCompletedEventProcessor()
     result = mission_completed_event_processor.process(mission_completed_event, pilot_state, galaxy_state)
     assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+@pytest.mark.parametrize(
+   "missions, mission_abandoned_event, expected_missions",
+    (
+        (
+            [
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionAbandoned", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+            ]
+        ),
+        (
+            [
+                Mission(579156136, "Pilots' Federation Administration", "None", 5370319620984)
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionAbandoned", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+            ]
+        ),
+        (
+            [
+                Mission(579156136, "Pilots' Federation Administration", "None", 5370319620984),
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217),
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionAbandoned", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217)
+            ]
+        ),
+        (
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217),
+            ],
+            {"timestamp":"2020-05-17T04:08:53Z", "event":"MissionAbandoned", "Name":"MISSION_Scan_name", "MissionID":579156136 },
+            [
+                Mission(685926706, "LHS 1832 Labour", "+++", 2871051298217)
+            ]
+        )
+    )
+)
+def test_mission_abandoned(missions:Iterable[Mission], mission_abandoned_event:str, expected_missions:Iterable[Mission]):
+    pilot_state = PilotState()
+    pilot_state.missions.update((mission.id, mission) for mission in missions)
+    galaxy_state = GalaxyState()
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_pilot_state.missions.clear()
+    expected_pilot_state.missions.update((mission.id, mission) for mission in expected_missions)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    result = MissionAbandonedEventProcessor().process(mission_abandoned_event, pilot_state, galaxy_state)
+    assert result == []
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state

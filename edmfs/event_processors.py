@@ -193,6 +193,20 @@ class MissionCompletedEventProcessor(EventProcessor):
         return result
 
 
+class MissionAbandonedEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        if event["MissionID"] in pilot_state.missions:
+            del pilot_state.missions[event["MissionID"]]
+        return []
+
+
+class MissionFailedEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> list:
+        if event["MissionID"] in pilot_state.missions:
+            del pilot_state.missions[event["MissionID"]]
+        return [] # TODO: Add mission failed summary
+
+
 # Module non-public
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
@@ -203,5 +217,7 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MultiSellExplorationData": SellExplorationDataEventProcessor(),
     "MarketSell": MarketSellEventProcessor(),
     "MissionAccepted": MissionAcceptedEventProcessor(),
-    "MissionCompleted": MissionCompletedEventProcessor()
+    "MissionCompleted": MissionCompletedEventProcessor(),
+    "MissionAbandoned": MissionAbandonedEventProcessor(),
+    "MissionFailed": MissionFailedEventProcessor()
 }

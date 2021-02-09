@@ -140,7 +140,7 @@ class PilotState:
         self._last_docked_station = value
 
     @property
-    def missions(self) -> list:
+    def missions(self) -> Dict[int, Mission]:
         return self._missions
 
     def __eq__(self, other) -> bool:
