@@ -2,7 +2,7 @@ from typing import Optional, Dict, Union, Any, Set, List
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 
 
 class NoLastDockedStationError(Exception):
@@ -202,20 +202,16 @@ class MissionFailedEventProcessor(EventProcessor):
         return result
 
 
-# class CommitCrimeEventProcessor(EventProcessor):
-#     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[MissionFailedEventSummary]:
-#         result = []
-#         if event["CrimeType"] == "murder":
-#             star_system, _ = _get_location(pilot_state, galaxy_state)
-#             if not star_system:
-#                 raise UnknownStarSystemError(mission.system_address)
-#             pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions, True)
-#             result.append(MissionFailedEventSummary(star_system, pro, anti))
-#             del pilot_state.missions[mission.id]
-#         return result
-
-# { "timestamp":"2020-09-28T15:35:22Z", "event":"CommitCrime", "CrimeType":"murder", "Faction":"CPD-59 314 Imperial Society", "Victim":"Nick Coates", "Bounty":5000 }
-# { "timestamp":"2020-09-28T15:39:38Z", "event":"CommitCrime", "CrimeType":"murder", "Faction":"CPD-59 314 Imperial Society", "Victim":"Philip A Orr", "Bounty":120500 }
+class CommitCrimeEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[MurderEventSummary]:
+        result = []
+        if event["CrimeType"] == "murder":
+            star_system = galaxy_state.get_system(pilot_state.system_address)
+            if not star_system:
+                raise UnknownStarSystemError(pilot_state.system_address)
+            pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions, True)
+            result.append(MurderEventSummary(star_system, pro, anti))
+        return result
 
 
 # Module non-public
@@ -231,5 +227,5 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionCompleted": MissionCompletedEventProcessor(),
     "MissionAbandoned": MissionAbandonedEventProcessor(),
     "MissionFailed": MissionFailedEventProcessor(),
-    # "CommitCrime": CommitCrimeEventProcessor()
+    "CommitCrime": CommitCrimeEventProcessor()
 }

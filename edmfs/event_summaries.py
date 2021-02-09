@@ -137,10 +137,22 @@ class MissionFailedEventSummary(EventSummary):
         return f"MissionFailedEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
 
 
+class MurderEventSummary(EventSummary):
+    def __init__(self, system_name:str, pro: iter, anti: iter):
+        super().__init__(system_name, pro, anti)
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, MurderEventSummary)
+
+    def __repr__(self) -> str:
+        return f"MurderEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
+
+
 _default_event_summary_order = (
     "MissionCompletedEventSummary",
     "RedeemVoucherEventSummary",
     "SellExplorationDataEventSummary",
     "MarketSellEventSummary",
-    "MissionFailedEventSummary"
+    "MissionFailedEventSummary",
+    "MurderEventSummary"
 )

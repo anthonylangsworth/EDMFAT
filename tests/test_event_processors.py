@@ -2,9 +2,9 @@ import copy
 from typing import Dict, Any, Set, List, Iterable
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
-from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
+from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 
 @pytest.mark.parametrize(
     "event_minor_faction, system_minor_factions, expected_result",
@@ -570,6 +570,30 @@ def test_mission_failed(missions:Iterable[Mission], star_systems:Iterable[StarSy
     expected_pilot_state.missions.update((mission.id, mission) for mission in expected_missions)
     expected_galaxy_state = copy.deepcopy(galaxy_state)
     result = MissionFailedEventProcessor().process(mission_abandoned_event, pilot_state, galaxy_state)
+    assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+@pytest.mark.parametrize(
+    "star_system, murder_event, expected_results",
+    (
+        (
+            StarSystem("Gebel", 5791537031962098456136, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"]),
+            { "timestamp":"2020-09-28T15:35:22Z", "event":"CommitCrime", "CrimeType":"murder", "Faction":"Pilots' Federation Local Branch", "Victim":"Nick Coates", "Bounty":5000 },
+            [
+                MurderEventSummary("Gebel", "Pilots' Federation Local Branch", ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour"])
+            ]
+        ),
+    )
+)
+def test_murder(star_system:StarSystem, murder_event:str, expected_results:Iterable[MurderEventSummary]):
+    pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    result = CommitCrimeEventProcessor().process(murder_event, pilot_state, galaxy_state)
     assert result == expected_results
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state

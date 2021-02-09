@@ -1,8 +1,8 @@
 import pytest
 from typing import List
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 
 @pytest.mark.parametrize(
     "event_summaries, expected_activity",
@@ -90,7 +90,6 @@ def test_mission_completed(event_summaries: List[MissionCompletedEventSummary], 
     mission_completed_event_formatter = MissionCompletedEventFormatter()
     assert(mission_completed_event_formatter.process(event_summaries) == expected_activity)
 
-
 @pytest.mark.parametrize(
     "event_summaries, expected_activity",
     [
@@ -112,5 +111,26 @@ def test_mission_completed(event_summaries: List[MissionCompletedEventSummary], 
     ]
 )
 def test_mission_failed(event_summaries: List[MissionFailedEventSummary], expected_activity: str):
-    mission_completed_event_formatter = MissionFailedEventFormatter()
-    assert(mission_completed_event_formatter.process(event_summaries) == expected_activity)
+    assert(MissionFailedEventFormatter().process(event_summaries) == expected_activity)
+
+@pytest.mark.parametrize(
+    "event_summaries, expected_activity",
+    [
+        (
+            [
+                MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {})
+            ],
+            ["1 clean ship kill(s)"]
+        ),        
+        (
+            [
+                MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+                MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+                MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
+            ],
+            ["3 clean ship kill(s)"]
+        )
+    ]
+)
+def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activity: str):
+    assert(MurderEventFormatter().process(event_summaries) == expected_activity)    

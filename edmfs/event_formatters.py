@@ -58,11 +58,16 @@ class MissionFailedEventFormatter(EventFormatter):
         return [f"{len(list(event_summaries))} failed mission(s)"]
     
 
-# TODO: Move to an IoC setup
+class MurderEventFormatter(EventFormatter):
+    def process(self, event_summaries:Iterable[EventSummary]) -> List[str]:
+        return [f"{len(list(event_summaries))} clean ship kill(s)"]
+    
+
 _default_event_formatters:Dict[str, EventFormatter] = {
     "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
     "SellExplorationDataEventSummary" : SellExplorationDataEventFormatter(),
     "MarketSellEventSummary": MarketSellEventFormatter(),
     "MissionCompletedEventSummary": MissionCompletedEventFormatter(),
-    "MissionFailedEventSummary": MissionFailedEventFormatter()
+    "MissionFailedEventSummary": MissionFailedEventFormatter(),
+    "MurderEventSummary": MurderEventFormatter()
 }
