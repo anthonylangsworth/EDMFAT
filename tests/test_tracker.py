@@ -245,24 +245,19 @@ def test_tracker_init():
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    with io.StringIO() as stream:
-        logger.addHandler(logging.StreamHandler(stream))
+    tracker = Tracker(minor_factions)
+    with open("tests/journal_files/" + journal_file_name) as journal_file:
+        for line in journal_file.readlines():
+            tracker.on_event(json.loads(line))
 
-        tracker = Tracker(minor_factions, logger)
-        with open("tests/journal_files/" + journal_file_name) as journal_file:
-            for line in journal_file.readlines():
-                tracker.on_event(json.loads(line))
+    # Sanity checks
+    assert len([event_summary for event_summary in tracker._event_summaries if not set(event_summary.pro).isdisjoint(set(event_summary.anti))]) == 0 # No overlaps
+    # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.pro) == 0]) == 0  # No empty pro (can happen if system is not found)
+    # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.anti) == 0]) == 0  # No empty anti (can happen if system is not found)
 
-        # Sanity checks
-        assert len([event_summary for event_summary in tracker._event_summaries if not set(event_summary.pro).isdisjoint(set(event_summary.anti))]) == 0 # No overlaps
-        # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.pro) == 0]) == 0  # No empty pro (can happen if system is not found)
-        # assert len([event_summary for event_summary in tracker._event_summaries if len(event_summary.anti) == 0]) == 0  # No empty anti (can happen if system is not found)
-
-        # tracker._update_activity()
-        assert tracker.activity == expected_activity
-        #print(stream.getvalue())
+    # tracker._update_activity()
+    assert tracker.activity == expected_activity
+    #print(stream.getvalue())
 
 @pytest.mark.parametrize(
     "journal_file_name",

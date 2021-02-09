@@ -1,14 +1,14 @@
-import pytest
+import cProfile
 import json
-from typing import List
+import pytest
+import logging
 
 from edmfs.tracker import Tracker,_get_dummy_logger
 from edmfs.serializers import TrackerFileRepository
 from edmfs.state import StarSystem
 
-@pytest.mark.parametrize(
-    "minor_factions, journal_file_name",
-    [
+def serialize():
+    data = [
         ({"HR 1597 & Co"}, "Journal.201019220908.01.log"),
         ({"EDA Kunti League"}, "Journal.200913212207.01.log"), 
         ({"EDA Kunti League"}, "Journal.201018213100.01.log"), 
@@ -26,25 +26,17 @@ from edmfs.state import StarSystem
         ({"EDA Kunti League"}, "Journal.210125115425.01.log"),
         ({"Yuri Grom"}, "Journal.210120211308.01.log")
     ]
-)
-def test_serialize_tracker(minor_factions:str, journal_file_name:str):
-    tracker = Tracker(sorted(minor_factions))
-    with open("tests/journal_files/" + journal_file_name) as journal_file:
-        for line in journal_file.readlines():
-            tracker.on_event(json.loads(line))
+    for minor_factions, journal_file_name in data:
+        tracker = Tracker(minor_factions)
+        with open("tests/journal_files/" + journal_file_name) as journal_file:
+            for line in journal_file.readlines():
+                tracker.on_event(json.loads(line))
 
-    logger = _get_dummy_logger()
-    resolver = lambda x: StarSystem("a", 122, [])
+        logger = _get_dummy_logger()
+        resolver = lambda x: StarSystem("a", 122, [])
 
-    repository = TrackerFileRepository()
-    serialized_tracker = repository.serialize(tracker)
-    new_tracker = repository.deserialize(serialized_tracker, logger, resolver)
+        repository = TrackerFileRepository()
+        serialized_tracker = repository.serialize(tracker)
+        repository.deserialize(serialized_tracker, logger, resolver)    
 
-    assert tracker.minor_factions == new_tracker.minor_factions
-    assert tracker.pilot_state.missions == new_tracker.pilot_state.missions
-    assert tracker._event_summaries == new_tracker._event_summaries
-    assert len(new_tracker.galaxy_state.systems) == 0
-    assert tracker.activity == new_tracker.activity
-
-    assert new_tracker._logger == logger
-    assert new_tracker.galaxy_state._star_system_resolver == resolver
+cProfile.runctx('serialize()', {'serialize':serialize}, {})
