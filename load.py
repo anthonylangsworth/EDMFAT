@@ -130,7 +130,7 @@ def copy_activity_to_clipboard_and_reset() -> None:
     update_activity()
 
 def update_activity() -> None:
-    if len(this.tracker.activity) > 0:
+    if len(this.tracker.activity.strip()) > 0:
         this.activity_summary.set(this.tracker.activity)
     else:
         this.activity_summary.set(NO_ACTIVITY)
