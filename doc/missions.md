@@ -2,7 +2,9 @@
 
 Unfortunately, the mission influence results shown by this plug-in are sometimes incorrect. When the **Elite: Dangerous** game UI gives the player a choice of mission rewards, each choice contains a single influence value. However, the journal file and, therefore, EDMC events often give (1) different influence values for the source (giving) and optional target minor faction or (2) incorrect values. This inaccuracy is a known issue with **Elite: Dangerous**.
 
-This plug-in assumes the values shown in the in-game UI are correct. Therefore, this plug-in looks for the highest influence value of (1) the influence value given when the mission is accepted, (2) the source minor faction influence change or (3) the optional target minor faction influence change. Anecdotally, this matches the in-game UI influence value about ninety percent of the time. When it is incorrect, it is usually out by a single "+".
+This plug-in assumes the values shown in the in-game UI are correct. Therefore, this plug-in looks for the highest influence value of (1) the influence value given when the mission is accepted, (2) the source minor faction influence change on completion or (3) the optional target minor faction influence change on completion.
+
+Anecdotally, this matches the in-game UI influence value about ninety percent of the time. Some mission types, like Assassination, tend to consistently have a higher influence loss for the target minor faction than an influence gain for the source minor faction. Otherwise, when it is incorrect, it is usually out by a single "+". 
 
 Given this inaccuracy, are the plug-in's mission results trustworthy? It depends on how you use the results.
 
