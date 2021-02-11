@@ -73,6 +73,7 @@ class TrackerFileRepository:
         }
 
     def _serialize_tracker_v1(self, tracker:Tracker) -> Dict:
+        # Do not save the current system or last docked station from PilotState. Elite will set these when restarted.
         result = {
             "minor_factions": list(tracker.minor_factions),
             "pilot_state": {
