@@ -71,7 +71,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
 
-    this.minor_faction_list = tk.Listbox(frame, selectmode="multiple")
+    this.minor_faction_list = tk.Listbox(frame, selectmode="multiple", background="white")
     this.minor_faction_list.config(height=10, width=50)
     this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
     this.minor_faction_list.insert(tk.END, *sorted(known_minor_factions))
