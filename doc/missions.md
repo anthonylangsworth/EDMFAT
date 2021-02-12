@@ -1,8 +1,10 @@
 # Mission Challenges
 
+## Influence
+
 Unfortunately, the mission influence results shown by this plug-in are sometimes incorrect. When the **Elite: Dangerous** game UI gives the player a choice of mission rewards, each choice contains a single influence value. However, the journal file and, therefore, EDMC events often give (1) different influence values for the source (giving) and optional target minor faction or (2) incorrect values. This inaccuracy is a known issue with **Elite: Dangerous**.
 
-This plug-in assumes the values shown in the in-game UI are correct. Therefore, this plug-in looks for the highest influence value of (1) the influence value given when the mission is accepted, (2) the source minor faction influence change on completion or (3) the optional target minor faction influence change on completion.
+EDMFAT assumes the values shown in the in-game UI are correct. Therefore, this plug-in looks for the highest influence value of (1) the influence value given when the mission is accepted, (2) the source minor faction influence change on completion or (3) the optional target minor faction influence change on completion.
 
 Anecdotally, this matches the in-game UI influence value about ninety percent of the time. Some mission types, like Assassination, tend to consistently have a higher influence loss for the target minor faction than an influence gain for the source minor faction. Otherwise, when it is incorrect, it is usually out by a single "+". 
 
@@ -18,10 +20,16 @@ The in-game UI may not be literal or even correct. In-game influence values may 
 
 Therefore, the recommended use for the mission influence results (and the plug-in generally) is a guide. It helps squadron members or other players understand where you have focused your time. They can then assist, if more effort is needed, or work elsewhere, if not. Occasional extra or omitted influence "+"s will not affect that.
 
+## Wing Missions
+
+**Elite: Dangerous** treats wing missions as normal missions for the commander sharing the mission. However, the game does not write journal entries for commanders the mission is shared to. Therefore, EDMFAT cannot track wing missions for other wing members.
+
+## Support versus Undermine
+
 To keep things simple, this plug-in simplifies minor faction missions into increasing (PRO) or decreasing (ANTI) a minor faction's influence. More accurately, the four types of missions impact a minor faction's influence are:
 1.	Direct support: Increases the minor faction's influence, such as completing a mission for that faction. The plug-in calls this "PRO".
 2.	Direct undermine: Decrease the minor faction's influence, such as an assassination mission destroying a ship owned by that minor faction. The plug-in calls this "ANTI".
 3.	Indirect support: Decrease another minor faction's influence in that system. This effectively boosts the influence of all other minor factions in that system. It is a smaller influence increase than direct support. The plug-in calls this "PRO".
 4.	Indirect undermine: Increase another minor faction's influence in that system. This effectively decreases the influence of all other minor factions in that system. It is a smaller influence decrease than direct undermine. The plug-in calls this "ANTI".
 
-Have fun and fly safely from CMDR Akton!
+
