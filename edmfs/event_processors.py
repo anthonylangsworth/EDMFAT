@@ -218,6 +218,7 @@ class CommitCrimeEventProcessor(EventProcessor):
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
     "FSDJump": LocationEventProcessor(),
+    "CarrierJump": LocationEventProcessor(),
     "Docked": DockedEventProcessor(),
     "RedeemVoucher": RedeemVoucherEventProcessor(),
     "SellExplorationData": SellExplorationDataEventProcessor(),

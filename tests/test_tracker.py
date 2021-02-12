@@ -255,6 +255,18 @@ def test_tracker_init():
             "Atfero - PRO Atfero Blue General & Co\n"
             "4 INF+ mission(s)\n"
             "1 INF++ mission(s)")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210212124540.01.log",
+            ("Anek Wango - ANTI EDA Kunti League\n"
+            "1,168 T trade at -1,000 CR average profit per T\n"
+            "\n"
+            "Herci - PRO EDA Kunti League\n"
+            "2,930,517 CR of Combat Bonds\n"
+            "\n"
+            "Trumuye - ANTI EDA Kunti League\n"
+            "3,136 T trade at -1,000 CR average profit per T")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
