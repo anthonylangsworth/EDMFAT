@@ -15,7 +15,7 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
             minor_factions = [faction["name"] for faction in output["factions"]]
             star_system = StarSystem(output["name"], system_address, minor_factions) 
             logger.info(f"Resolved from EDSM: { star_system }")
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         logger.exception(f"Error resolving { system_address } from EDSM: { e }")        
     return star_system
 
