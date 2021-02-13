@@ -62,7 +62,7 @@ def test_galaxy_state_get_system(resolver, star_systems, system_address, expecte
     if expected_star_system:
         assert galaxy_state.systems[system_address] == expected_star_system
 
-def raise_error():
+def raise_error(x):
     raise Exception
 
 def test_galaxy_state_get_system_error():
