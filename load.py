@@ -51,7 +51,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX = 10
     PADY = 10
-    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Click to select or deselect any minor faction (row). Multiple selection is allowed. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
+    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Multiple selection is allowed. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
@@ -72,7 +72,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
 
-    this.minor_faction_list = tk.Listbox(frame, selectmode="multiple", background="white")
+    # Windows specific styles used
+    this.minor_faction_list = tk.Listbox(frame, selectmode="extended", foreground="SystemWindowText", background="SystemWindow")
     this.minor_faction_list.config(height=10, width=50)
     this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
     this.minor_faction_list.insert(tk.END, *sorted(known_minor_factions))
