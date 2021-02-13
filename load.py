@@ -56,6 +56,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     URL = "https://github.com/anthonylangsworth/EDMFAT"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
     MISSION_WARNING_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
+    BACKGROUND = myNotebook.Label().cget("background")
+    FOREGROUND = myNotebook.Label().cget("foreground")
 
     # known_minor_factions = {"EDA Kunti League", "Kunti Dragons", "LTT 2337 Empire Party", "HR 1597 & Co", "The Fuel Rats Mischief", "The Scovereign Justice League", "Hutton Orbital Truckers", "The Dark Wheel", "Edge Fraternity", "Colonia Citizens Network", "Mobius Colonial Republic Navy", "Tenjin Pioneers Colonia", "Knights of Colonial Karma", "Ed's 38"}
     known_minor_factions = set(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values()))
@@ -66,17 +68,17 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     frame.columnconfigure(1, weight=1) # Required for listbox scrollbar
 
     HyperlinkLabel(
-        frame, text=this.plugin_name, background=myNotebook.Label().cget("background"), url=URL, underline=True
+        frame, text=this.plugin_name, background=BACKGROUND, url=URL, underline=True
     ).grid(row=0, padx=PADX, pady=PADY, sticky=tk.W)
     myNotebook.Label(frame, text=VERSION).grid(row=0, column=3, padx=PADX, sticky=tk.E)
 
     myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
 
     # Windows specific styles used
-    this.minor_faction_list = tk.Listbox(frame, selectmode="extended", foreground="SystemWindowText", background="SystemWindow")
+    this.minor_faction_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
     this.minor_faction_list.config(height=10, width=50)
     this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
-    this.minor_faction_list.insert(tk.END, *sorted(known_minor_factions))
+    this.minor_faction_list.insert(tk.END, *known_minor_factions)
 
     first_minor_faction_visible = False
     for minor_faction in this.tracker.minor_factions:
@@ -92,7 +94,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     this.minor_faction_list.config(yscrollcommand=scrollbar.set)
 
     HyperlinkLabel(
-        frame, text=MISSION_WARNING, background=myNotebook.Label().cget("background"), url=MISSION_WARNING_URL, underline=True
+        frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
     ).grid(row=7, column=0, columnspan=8, padx=PADX, pady=PADY, sticky=tk.W)
     
     return frame
