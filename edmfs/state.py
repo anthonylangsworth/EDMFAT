@@ -114,10 +114,9 @@ class GalaxyState:
         if not star_system:
             try:
                 star_system = self._star_system_resolver(system_address)
+                self._systems[system_address] = star_system
             except:
                 star_system = None
-            else:
-                self._systems[system_address] = star_system
         return star_system
 
     def __eq__(self, other) -> bool:
