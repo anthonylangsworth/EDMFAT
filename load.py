@@ -11,6 +11,7 @@ from ttkHyperlinkLabel import HyperlinkLabel
 from config import config, appname
 
 import edmfs
+import web_services
 
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Activity Tracker"
@@ -20,7 +21,7 @@ this.current_station = ""
 this.version = (0,13,0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
-this.star_system_resolver = functools.partial(edmfs.resolvers.resolve_star_system_via_edsm, this.logger)
+this.star_system_resolver = functools.partial(web_services.resolve_star_system_via_edsm, this.logger)
 this.serializer = edmfs.TrackerFileRepository()
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"

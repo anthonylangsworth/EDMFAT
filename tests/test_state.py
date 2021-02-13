@@ -62,6 +62,13 @@ def test_galaxy_state_get_system(resolver, star_systems, system_address, expecte
     if expected_star_system:
         assert galaxy_state.systems[system_address] == expected_star_system
 
+def raise_error():
+    raise Exception
+
+def test_galaxy_state_get_system_error():
+    galaxy_state = GalaxyState(raise_error) 
+    assert galaxy_state.get_system(1) == None
+
 def test_mission_init():
     ID = 564728
     MINOR_FACTION = "The Dark Wheel"

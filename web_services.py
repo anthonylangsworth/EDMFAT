@@ -1,9 +1,8 @@
 import requests
 import logging
-from collections.abc import MutableMapping
+# from collections.abc import MutableMapping
 
-from .state import StarSystem
-from .event_processors import UnknownStarSystemError
+from edmfs.state import StarSystem
 
 def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> StarSystem:
     URL = "https://www.edsm.net/api-system-v1/factions"

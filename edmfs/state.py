@@ -112,8 +112,12 @@ class GalaxyState:
     def get_system(self, system_address:int) -> StarSystem:
         star_system = self._systems.get(system_address, None)
         if not star_system:
-            star_system = self._star_system_resolver(system_address)
-            self._systems[system_address] = star_system
+            try:
+                star_system = self._star_system_resolver(system_address)
+            except:
+                star_system = None
+            else:
+                self._systems[system_address] = star_system
         return star_system
 
     def __eq__(self, other) -> bool:
