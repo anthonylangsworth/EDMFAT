@@ -24,7 +24,7 @@ def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSy
         ("v1.0", (1, 0)),
         ("v1.1.2", (1, 1, 2)),
         ("v0.15", (0, 15)),
-        ("", tuple())
+        ("v9", (9,))
     ]
 )
 def test_split_tag(tag:str, expected_result:Tuple[int]):
