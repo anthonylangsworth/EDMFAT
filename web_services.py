@@ -1,6 +1,6 @@
 import requests
 import logging
-# from collections.abc import MutableMapping
+from typing import Tuple
 
 from edmfs.state import StarSystem
 
@@ -21,34 +21,22 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
         logger.exception(f"Error resolving { system_address } from EDSM: { e }")        
     return star_system
 
+# See https://docs.github.com/en/rest/reference/repos#get-the-latest-release
+def get_latest_release(logger: logging.Logger, current_version:Tuple[int], owner:str, repo:str):
+    URL = f"/repos/{owner}/{repo}/releases/latest"
+    try:
+        response = requests.get(URL, headers={"accept":"application/vnd.github.v3+json"}, timeout=30)
+        if response.status_code == 200:
+            output = response.json()
+            if "tag_name" in output and "url" in output:
+                # logger.info(f"Resolved from EDSM: { star_system }")
+                pass
+            else:
+                raise Exception(f"Response mising 'tag_name' or 'url': {output}")
+    except Exception as e:
+        logger.exception(f"Error: { e }")        
+    return []
 
-# class ResolvingDict(MutableMapping):
-#     def __init__(self, resolver:callable, inner:MutableMapping = None):
-#         self._resolver = resolver
-#         self._dict = inner if inner else dict()
-
-#     @property
-#     def resolver(self) -> callable:
-#         return self._resolver
-
-#     def __getitem__(self, key):
-#         if key in self._dict:
-#             result = self._dict[key]
-#         else:
-#             result = self._resolver(key)
-#             if result:
-#                 self._dict[key] = result
-#         return result
-
-#     def __setitem__(self, key, value):
-#         self._dict[key] = value
-    
-#     def __delitem__(self, key):
-#         del self._dict[key]
-
-#     def __iter__(self):
-#         return self._dict.__iter__()
-
-#     def __len__(self):
-#         return len(self._dict)
+def split_tag(tag:str) -> Tuple[int]:
+    return tuple(map(int, tag.lstrip("v").split(".")))
 

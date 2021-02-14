@@ -165,3 +165,34 @@ class PilotState:
 
     def __repr__(self) -> str:
         return f"PilotState({self._system_address}, {self._last_docked_station}, {self._missions})"
+
+
+# class ResolvingDict(MutableMapping):
+#     def __init__(self, resolver:callable, inner:MutableMapping = None):
+#         self._resolver = resolver
+#         self._dict = inner if inner else dict()
+
+#     @property
+#     def resolver(self) -> callable:
+#         return self._resolver
+
+#     def __getitem__(self, key):
+#         if key in self._dict:
+#             result = self._dict[key]
+#         else:
+#             result = self._resolver(key)
+#             if result:
+#                 self._dict[key] = result
+#         return result
+
+#     def __setitem__(self, key, value):
+#         self._dict[key] = value
+    
+#     def __delitem__(self, key):
+#         del self._dict[key]
+
+#     def __iter__(self):
+#         return self._dict.__iter__()
+
+#     def __len__(self):
+#         return len(self._dict)

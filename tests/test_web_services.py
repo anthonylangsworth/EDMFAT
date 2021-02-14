@@ -1,9 +1,9 @@
 import pytest
 import logging
 import functools
-from typing import Callable, Dict
+from typing import Callable, Dict, Tuple
 
-from web_services import resolve_star_system_via_edsm #, ResolvingDict
+from web_services import resolve_star_system_via_edsm, split_tag
 from edmfs.state import StarSystem
 from edmfs.tracker import _get_dummy_logger
 
@@ -18,17 +18,14 @@ from edmfs.tracker import _get_dummy_logger
 def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSystem) -> None:
     assert resolve_star_system_via_edsm(_get_dummy_logger(), system_address).name == expected_name
 
-# @pytest.mark.parametrize(
-#     "inner_dict, resolver, key, expected_value",
-#     [
-#         (5070074488225, "Kamchaa"),
-#         (11666338948537, "Oluf"),
-#         (16064117220777, "LHS 3836")
-#     ]
-# )
-# def test_resolving_dict_init(inner_dict:Dict, resolver:Callable, key, expected_value):
-#     resolving_dict = ResolvingDict(lambda x:None)
-#     assert len(resolving_dict) == 0
-#     # assert resolving_dict.
-#     # TODO: Test    
-
+@pytest.mark.parametrize(
+    "tag, expected_result",
+    [
+        ("v1.0", (1, 0)),
+        ("v1.1.2", (1, 1, 2)),
+        ("v0.15", (0, 15)),
+        ("", tuple())
+    ]
+)
+def test_split_tag(tag:str, expected_result:Tuple[int]):
+    assert split_tag(tag) == expected_result
