@@ -38,6 +38,11 @@ def plugin_start3(plugin_dir: str) -> str:
 
 # Called by EDMC to show plug-in details on EDMC main window
 def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
+    REPO_OWNER = "anthonylangsworth"
+    REPO = "EDMFAT"
+    NEW_RELEASE_AVAILABLE = "New EDMFAT release available"
+    BACKGROUND = tk.Label().cget("background")
+
     frame = tk.Frame(parent)
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
@@ -45,6 +50,16 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
     tk.Button(frame, text="Copy", command=copy_activity_to_clipboard).grid(row=1, column=0, sticky=tk.E, padx=10)
     tk.Button(frame, text="Copy + Reset", command=copy_activity_to_clipboard_and_reset).grid(row=1, column=1, sticky=tk.W, padx=10)
     tk.Label(frame, textvariable=this.activity_summary, anchor=tk.W, justify=tk.LEFT, pady=10).grid(row=2, column=0, columnspan=2, sticky=tk.W)
+
+    try:
+        latest_release_url = web_services.get_newer_release(this.logger, REPO_OWNER, REPO, this.version)
+        if latest_release_url:
+            HyperlinkLabel(
+                frame, text=NEW_RELEASE_AVAILABLE, background=BACKGROUND, url=latest_release_url, underline=True
+            ).grid(row=3, column=0, columnspan=8, sticky=tk.W)
+    except Exception as e:
+        this.logger.error(f"Error getting latest version from github: {e}")
+
     return frame
 
 # Called by EDMC to populate preferences dialog
