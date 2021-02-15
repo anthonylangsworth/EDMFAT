@@ -3,7 +3,7 @@ import logging
 import functools
 from typing import Callable, Dict, Tuple
 
-from web_services import resolve_star_system_via_edsm, split_tag, is_later_release_available
+from web_services import resolve_star_system_via_edsm, split_tag, get_newer_release
 from edmfs.state import StarSystem
 from edmfs.tracker import _get_dummy_logger
 
@@ -30,5 +30,6 @@ def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSy
 def test_split_tag(tag:str, expected_result:Tuple[int]):
     assert split_tag(tag) == expected_result
 
-def test_is_later_release_available():
-    assert is_later_release_available(_get_dummy_logger(), "anthonylangsworth", "EDMFAT", (0, 14))
+#@pytest.mark.skip(reason="Potentially long-running or external test")
+def test_get_newer_release():
+    assert get_newer_release(_get_dummy_logger(), "anthonylangsworth", "EDMFAT", (0, 14))

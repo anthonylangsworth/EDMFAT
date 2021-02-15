@@ -43,7 +43,10 @@ def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str
 def split_tag(tag:str) -> Tuple[int]:
     return tuple(map(int, tag.lstrip("v").split(".")))
 
-def is_later_release_available(logger: logging.Logger, owner:str, repo:str, current_version:Tuple,
+def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_version:Tuple,
         get_latest_release_callable:Callable[[logging.Logger, str, str], Tuple[str, str]] = get_latest_release) -> str:
+    """
+    Get the URL of the most recent release for the given open and repo if it is a later version than current_version. Otherwise, return None.
+    """
     tag_name, url = get_latest_release_callable(logger, owner, repo)
     return url if split_tag(tag_name) > current_version else None
