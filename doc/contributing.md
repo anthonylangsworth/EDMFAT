@@ -31,14 +31,6 @@ Development uses the following principles:
 
 See [releasing](releasing.md).
 
-## Backlog
-
-A rough backlog:
-1. Looking up system if not found, e.g. shared wing mission, missions accepted in a previous play sessionn Unfortunately, I cannot find a publicly accessible API that converts a system address to a system name (for use with the EDSM API) or, even better, the up-to-date list of minor factions.
-2. Tracking killing clean ships
-3. (low) Evangelizing the plug-in.
-4. (low) Reformat the py files to be PEP8 compliant.
-
 ## References
 
 1. EDMC Plug-in details: https://github.com/EDCD/EDMarketConnector/blob/main/PLUGINS.md
