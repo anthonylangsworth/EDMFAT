@@ -46,10 +46,7 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
     else:
         pro = set([event_minor_faction])
         anti = set()
-    return (
-        pro if not inverted else anti,
-        anti if not inverted else pro
-    ) 
+    return (pro, anti) if not inverted else (anti, pro)
 
 
 class EventProcessor(ABC):
