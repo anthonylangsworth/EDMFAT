@@ -90,6 +90,8 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = galaxy_state.get_system(pilot_state.system_address)
+        if not star_system:
+            raise UnknownStarSystemError(pilot_state.system_address)
 
         result = []
         if event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
@@ -105,6 +107,8 @@ class RedeemVoucherEventProcessor(EventProcessor):
 class SellExplorationDataEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = galaxy_state.get_system(pilot_state.system_address)
+        if not star_system:
+            raise UnknownStarSystemError(pilot_state.system_address)
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
         return[SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
@@ -113,6 +117,8 @@ class SellExplorationDataEventProcessor(EventProcessor):
 class MarketSellEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = galaxy_state.get_system(pilot_state.system_address)
+        if not star_system:
+            raise UnknownStarSystemError(pilot_state.system_address)
         station = pilot_state.last_docked_station
         result = []
         if event["SellPrice"] != event["AvgPricePaid"]:
@@ -127,6 +133,8 @@ class MarketSellEventProcessor(EventProcessor):
 class MissionAcceptedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = galaxy_state.get_system(pilot_state.system_address)
+        if not star_system:
+            raise UnknownStarSystemError(pilot_state.system_address)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], star_system.address)
         return []
 
