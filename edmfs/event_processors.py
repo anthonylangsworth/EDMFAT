@@ -16,7 +16,7 @@ class UnknownStarSystemError(Exception):
         self._system = system
 
     @property
-    def system(self) -> int:
+    def system(self) -> Union[int, str]:
         return self._system
 
 
