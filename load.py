@@ -149,7 +149,7 @@ def copy_activity_to_clipboard_and_reset() -> None:
     update_activity()
 
 def update_activity() -> None:
-    if len(this.tracker.activity.strip(" \n\t")) > 0:
+    if len(this.tracker.activity.strip(" \r\n\t")) > 0:
         this.activity_summary.set(this.tracker.activity)
     else:
         this.activity_summary.set(NO_ACTIVITY)
