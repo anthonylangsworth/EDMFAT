@@ -110,16 +110,6 @@ class GalaxyState:
     def systems(self) -> Dict[int, StarSystem]:
         return self._systems
 
-    # def get_system(self, system_address:int) -> StarSystem:
-    #     star_system = self._systems.get(system_address, None)
-    #     if not star_system:
-    #         try:
-    #             star_system = self._star_system_resolver(system_address)
-    #             self._systems[system_address] = star_system
-    #         except:
-    #             star_system = None
-    #     return star_system
-
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
             return NotImplemented
