@@ -1,4 +1,4 @@
-from typing import Dict, Callable, Any
+from typing import Dict, Callable, Any, Iterable
 from collections.abc import MutableMapping
 
 
@@ -169,7 +169,7 @@ class PilotState:
 
 
 class ResolvingDict(MutableMapping):
-    def __init__(self, resolver:Callable[[Any], Any], inner:MutableMapping = None):
+    def __init__(self, resolver:Callable[[Any], Any], inner:Dict[Any, Any] = None):
         self._resolver = resolver
         self._dict = inner if inner else dict()
 
@@ -177,7 +177,7 @@ class ResolvingDict(MutableMapping):
     def resolver(self) -> Callable[[Any], Any]:
         return self._resolver
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> Any:
         if not key in self._dict and self._resolver:
             self._dict.__setitem__(key, self._resolver(key))
         return self._dict.__getitem__(key)
@@ -188,7 +188,7 @@ class ResolvingDict(MutableMapping):
     def __delitem__(self, key):
         self._dict.__delitem__(key)
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
         return self._dict.__iter__()
 
     def __len__(self) -> int:
