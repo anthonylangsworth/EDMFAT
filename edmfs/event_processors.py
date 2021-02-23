@@ -215,7 +215,7 @@ class CommitCrimeEventProcessor(EventProcessor):
         return result
 
 
-# Module non-public
+# Map journal file event types to the EventProcessor that handles them
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
     "FSDJump": LocationEventProcessor(),
