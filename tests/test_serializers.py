@@ -5,7 +5,6 @@ from typing import List
 from edmfs.tracker import Tracker,_get_dummy_logger
 from edmfs.serializers import TrackerFileRepository
 from edmfs.state import StarSystem
-from edmfs.event_processors import UnknownStarSystemError
 
 @pytest.mark.parametrize(
     "minor_factions, journal_file_name",
