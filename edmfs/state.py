@@ -179,7 +179,7 @@ class ResolvingDict(MutableMapping):
 
     def __getitem__(self, key):
         if not key in self._dict and self._resolver:
-            self._dict[key] = self._resolver(key)
+            self._dict.__setitem__(key, self._resolver(key))
         return self._dict.__getitem__(key)
 
     def __setitem__(self, key, value):
