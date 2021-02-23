@@ -51,4 +51,4 @@ def test_serialize_tracker(minor_factions:str, journal_file_name:str):
     assert new_tracker.pilot_state.last_docked_station == None
 
     assert new_tracker._logger == logger
-    assert new_tracker.galaxy_state._star_system_resolver == resolver
+    assert new_tracker.galaxy_state.systems.resolver == resolver

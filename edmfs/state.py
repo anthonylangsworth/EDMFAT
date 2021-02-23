@@ -104,7 +104,6 @@ class Mission:
 class GalaxyState:
     def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None):
         self._systems = ResolvingDict(star_system_resolver, star_systems if star_systems else dict())
-        self._star_system_resolver = star_system_resolver if star_system_resolver else lambda x: None
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
@@ -117,7 +116,7 @@ class GalaxyState:
         return self._systems == other._systems
 
     def __repr__(self) -> str:
-        return f"GalaxyState({self._star_system_resolver}, {self._systems})"
+        return f"GalaxyState({self._systems})"
 
 
 class PilotState:
