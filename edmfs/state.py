@@ -1,4 +1,5 @@
-from typing import Dict, Callable
+from typing import Dict, Callable, Any
+from collections.abc import MutableMapping
 
 
 class StarSystem:
@@ -102,22 +103,22 @@ class Mission:
 
 class GalaxyState:
     def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None):
-        self._systems:Dict[int, StarSystem] = star_systems if star_systems else {} # Workaround for {} being shared in edge cases
+        self._systems = ResolvingDict(star_system_resolver, star_systems if star_systems else dict())
         self._star_system_resolver = star_system_resolver if star_system_resolver else lambda x: None
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
         return self._systems
 
-    def get_system(self, system_address:int) -> StarSystem:
-        star_system = self._systems.get(system_address, None)
-        if not star_system:
-            try:
-                star_system = self._star_system_resolver(system_address)
-                self._systems[system_address] = star_system
-            except:
-                star_system = None
-        return star_system
+    # def get_system(self, system_address:int) -> StarSystem:
+    #     star_system = self._systems.get(system_address, None)
+    #     if not star_system:
+    #         try:
+    #             star_system = self._star_system_resolver(system_address)
+    #             self._systems[system_address] = star_system
+    #         except:
+    #             star_system = None
+    #     return star_system
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
@@ -167,32 +168,28 @@ class PilotState:
         return f"PilotState({self._system_address}, {self._last_docked_station}, {self._missions})"
 
 
-# class ResolvingDict(MutableMapping):
-#     def __init__(self, resolver:callable, inner:MutableMapping = None):
-#         self._resolver = resolver
-#         self._dict = inner if inner else dict()
+class ResolvingDict(MutableMapping):
+    def __init__(self, resolver:Callable[[Any], Any], inner:MutableMapping = None):
+        self._resolver = resolver
+        self._dict = inner if inner else dict()
 
-#     @property
-#     def resolver(self) -> callable:
-#         return self._resolver
+    @property
+    def resolver(self) -> Callable[[Any], Any]:
+        return self._resolver
 
-#     def __getitem__(self, key):
-#         if key in self._dict:
-#             result = self._dict[key]
-#         else:
-#             result = self._resolver(key)
-#             if result:
-#                 self._dict[key] = result
-#         return result
+    def __getitem__(self, key):
+        if not key in self._dict and self._resolver:
+            self._dict[key] = self._resolver(key)
+        return self._dict.__getitem__(key)
 
-#     def __setitem__(self, key, value):
-#         self._dict[key] = value
+    def __setitem__(self, key, value):
+        self._dict.__setitem__(key, value)
     
-#     def __delitem__(self, key):
-#         del self._dict[key]
+    def __delitem__(self, key):
+        self._dict.__delitem__(key)
 
-#     def __iter__(self):
-#         return self._dict.__iter__()
+    def __iter__(self):
+        return self._dict.__iter__()
 
-#     def __len__(self):
-#         return len(self._dict)
+    def __len__(self) -> int:
+        return self._dict.__len__()

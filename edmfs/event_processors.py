@@ -30,16 +30,12 @@ class UnknownMissionError(Exception):
         return self._id
 
 
-def _get_star_system(galaxy_state:GalaxyState, system_address:int) -> StarSystem:
-    """
-    Get the StarSystem for the given system_address or raise an UnknownStarSystemError.
-    This method ensures consistent error handling.
-    """
-    star_system = galaxy_state.get_system(system_address)
-    if not star_system:
-        raise UnknownStarSystemError(system_address)
-    else:
-        return star_system
+def _get_system(galaxy_state:GalaxyState, system_address:int) -> StarSystem:
+    """Convert any KeyError into an UnknownStarSystemError"""
+    try:
+        return galaxy_state.systems[system_address]
+    except KeyError as e:
+        raise UnknownStarSystemError(system_address) from e
 
 
 def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_factions:iter, inverted:bool = False) -> Tuple[Set[str], Set[str]]:
@@ -98,7 +94,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
         return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], event["Amount"])]
 
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        star_system = _get_star_system(galaxy_state, pilot_state.system_address)
+        star_system = _get_system(galaxy_state, pilot_state.system_address)
 
         result = []
         if event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
@@ -113,7 +109,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
 # Also used for MultiSellExplorationData. They have the same schema.
 class SellExplorationDataEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        star_system = _get_star_system(galaxy_state, pilot_state.system_address)
+        star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
         return[SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
@@ -121,7 +117,7 @@ class SellExplorationDataEventProcessor(EventProcessor):
 
 class MarketSellEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        star_system = _get_star_system(galaxy_state, pilot_state.system_address)
+        star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
         result = []
         if event["SellPrice"] != event["AvgPricePaid"]:
@@ -135,7 +131,7 @@ class MarketSellEventProcessor(EventProcessor):
 
 class MissionAcceptedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        star_system = _get_star_system(galaxy_state, pilot_state.system_address)
+        star_system = _get_system(galaxy_state, pilot_state.system_address)
         pilot_state.missions[event["MissionID"]] = Mission(event["MissionID"], event["Faction"], event["Influence"], star_system.address)
         return []
 
@@ -156,7 +152,7 @@ class MissionCompletedEventProcessor(EventProcessor):
             # Try the Influence entries
             for faction_effect in event["FactionEffects"]:
                 for influence_effect in faction_effect["Influence"]:
-                    star_system = _get_star_system(galaxy_state, influence_effect["SystemAddress"])
+                    star_system = _get_system(galaxy_state, influence_effect["SystemAddress"])
                     pro, anti = _get_event_minor_faction_impact(faction_effect["Faction"], star_system.minor_factions, influence_effect["Trend"] != "UpGood")
                     result.append(MissionCompletedEventSummary(star_system.name, pro, anti, max_influence))
 
@@ -164,7 +160,7 @@ class MissionCompletedEventProcessor(EventProcessor):
 
             # Add the source system if missing and the mission is known
             if mission:
-                source_system = _get_star_system(galaxy_state, mission.system_address)
+                source_system = _get_system(galaxy_state, mission.system_address)
                 if not any([x for x in result if x.system_name == source_system.name]):
                     pro, anti = _get_event_minor_faction_impact(event["Faction"], source_system.minor_factions)
                     result.append(MissionCompletedEventSummary(source_system.name, pro, anti, max_influence))
@@ -198,7 +194,7 @@ class MissionFailedEventProcessor(EventProcessor):
         result = []
         mission = pilot_state.missions.get(event["MissionID"], None)
         if mission:
-            star_system = _get_star_system(galaxy_state, mission.system_address)
+            star_system = _get_system(galaxy_state, mission.system_address)
             pro, anti = _get_event_minor_faction_impact(mission.minor_faction, star_system.minor_factions, True)
             result.append(MissionFailedEventSummary(star_system.name, pro, anti))
             del pilot_state.missions[mission.id]
@@ -209,7 +205,7 @@ class CommitCrimeEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[MurderEventSummary]:
         result = []
         if event["CrimeType"] == "murder":
-            star_system = _get_star_system(galaxy_state, pilot_state.system_address)
+            star_system = _get_system(galaxy_state, pilot_state.system_address)
             pro, anti = _get_event_minor_faction_impact(event["Faction"], star_system.minor_factions, True)
             result.append(MurderEventSummary(star_system.name, pro, anti))
         return result

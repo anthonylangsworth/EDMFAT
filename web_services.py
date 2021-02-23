@@ -2,9 +2,9 @@ import requests
 import logging
 from typing import Tuple, Callable, Optional
 
-from edmfs.state import StarSystem
+import edmfs
 
-def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> StarSystem:
+def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> edmfs.StarSystem:
     """
     Get the minor factions for the given star system using the ESM API.
     """
@@ -15,7 +15,7 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
             output = response.json()
             if "factions" in output and "name" in output:
                 minor_factions = [faction["name"] for faction in output["factions"]]
-                star_system = StarSystem(output["name"], system_address, minor_factions) 
+                star_system = edmfs.StarSystem(output["name"], system_address, minor_factions) 
                 logger.info(f"Resolved from EDSM: { star_system }")
                 return star_system
             else:
@@ -23,8 +23,7 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
         else:
             response.raise_for_status()
     except Exception as e:
-        logger.exception(f"Error resolving {system_address} from EDSM: {e}")
-        raise
+        raise edmfs.UnknownStarSystemError(system_address) from e
 
 # See https://docs.github.com/en/rest/reference/repos#get-the-latest-release
 def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str, str]:

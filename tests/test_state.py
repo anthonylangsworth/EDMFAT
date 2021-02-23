@@ -1,5 +1,6 @@
 import pytest
 
+from edmfs.event_processors import UnknownStarSystemError
 from edmfs.state import StarSystem, PilotState, Station, GalaxyState, Mission
 
 def test_StarSystem_init():
@@ -58,16 +59,20 @@ def test_galaxy_state_init_args():
 )
 def test_galaxy_state_get_system(resolver, star_systems, system_address, expected_star_system):
     galaxy_state = GalaxyState(resolver, star_systems)
-    assert galaxy_state.get_system(system_address) == expected_star_system
-    if expected_star_system:
-        assert galaxy_state.systems[system_address] == expected_star_system
+    assert galaxy_state.systems.get(system_address, None) == expected_star_system
+    # if expected_star_system:
+    #     assert galaxy_state.systems[system_address] == expected_star_system
 
 def raise_error(x):
-    raise Exception
+    raise UnknownStarSystemError(x)
 
 def test_galaxy_state_get_system_error():
     galaxy_state = GalaxyState(raise_error) 
-    assert galaxy_state.get_system(1) == None
+    try:
+        galaxy_state.systems.get(1, None)
+        assert False
+    except UnknownStarSystemError:
+        assert True
 
 def test_mission_init():
     ID = 564728
