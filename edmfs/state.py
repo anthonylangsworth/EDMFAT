@@ -185,3 +185,10 @@ class ResolvingDict(MutableMapping):
 
     def __len__(self) -> int:
         return self._dict.__len__()
+
+    def __eq__(self, other):
+        if not isinstance(other, ResolvingDict):
+            return NotImplemented
+
+        return self._dict == other._dict \
+            and self._resolver == other._resolver

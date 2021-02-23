@@ -1,7 +1,7 @@
 import pytest
 
 from edmfs.event_processors import UnknownStarSystemError
-from edmfs.state import StarSystem, PilotState, Station, GalaxyState, Mission
+from edmfs.state import StarSystem, PilotState, Station, GalaxyState, Mission, ResolvingDict
 
 def test_StarSystem_init():
     SYSTEM_NAME = "Deneb"
@@ -37,12 +37,12 @@ def test_station_init():
 
 def test_galaxy_state_init():
     galaxy_state = GalaxyState()
-    assert galaxy_state.systems == {}
+    assert galaxy_state.systems == ResolvingDict(None)
 
 def test_galaxy_state_init_args():
     SYSTEMS = {1234: StarSystem("Sol", 1234, ["a", "b"])}
     galaxy_state = GalaxyState(None, SYSTEMS)
-    assert galaxy_state.systems == SYSTEMS
+    assert galaxy_state.systems == ResolvingDict(None, SYSTEMS)
 
 @pytest.mark.parametrize(
     "resolver, star_systems, system_address, expected_star_system",
@@ -60,8 +60,6 @@ def test_galaxy_state_init_args():
 def test_galaxy_state_get_system(resolver, star_systems, system_address, expected_star_system):
     galaxy_state = GalaxyState(resolver, star_systems)
     assert galaxy_state.systems.get(system_address, None) == expected_star_system
-    # if expected_star_system:
-    #     assert galaxy_state.systems[system_address] == expected_star_system
 
 def raise_error(x):
     raise UnknownStarSystemError(x)
