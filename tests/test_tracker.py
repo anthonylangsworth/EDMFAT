@@ -267,6 +267,21 @@ def test_tracker_init():
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
             "3,136 T trade at -1,000 CR average profit per T")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210221171753.01.log",
+            ("Kunti - PRO EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "2 INF+++ mission(s)\n"
+            "2 INF++++ mission(s)\n"
+            "1 INF+++++ mission(s)\n"
+            "348,491 CR of Bounty Vouchers\n"
+            "10,402 CR of Cartography Data\n"
+            "\n"
+            "LTT 2337 - ANTI EDA Kunti League\n"
+            "1 INF+++++ mission(s)")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):
