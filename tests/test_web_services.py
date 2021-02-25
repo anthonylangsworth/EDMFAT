@@ -12,7 +12,8 @@ from edmfs.tracker import _get_dummy_logger
     "system_address, expected_name",
     [
         (5070074488225, "Kamchaa"),
-        (11666338948537, "Oluf")
+        (11666338948537, "Oluf"),
+        (672028108201, "LHS 1832")
     ]
 )
 def test_resolve_star_system_via_edsm(system_address: int, expected_name: StarSystem) -> None:

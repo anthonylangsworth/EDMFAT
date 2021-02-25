@@ -5,8 +5,8 @@ from .state import Station, StarSystem, Mission, PilotState, GalaxyState
 from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 
 
-class NoLastDockedStationError(Exception):
-    """No last docked station in PilotState. Should not happen in game."""
+class UnknownPlayerLocationError(Exception):
+    """No last docked station or current system in PilotState. Should only happen when EDMC is started during play."""
     pass
 
 
@@ -21,7 +21,7 @@ class UnknownStarSystemError(Exception):
 
 
 class UnknownMissionError(Exception):
-    """Mission not found in PilotState. Should not happen in game."""
+    """Mission not found in PilotState. Should only happen when EDMC is started during play."""
     def __init__(self, id: int):
         self._id = id
 
@@ -31,7 +31,9 @@ class UnknownMissionError(Exception):
 
 
 def _get_system(galaxy_state:GalaxyState, system_address:int) -> StarSystem:
-    """Convert any KeyError into an UnknownStarSystemError"""
+    """Convert any KeyError into an UnknownStarSystemError. Convert a missing system_address into an UnknownPlayerLocationError"""
+    if system_address == None:
+        raise UnknownPlayerLocationError
     try:
         return galaxy_state.systems[system_address]
     except KeyError as e:
@@ -66,7 +68,8 @@ class EventProcessor(ABC):
 # Also used for FSDJump. They have the same schema.
 class LocationEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        pilot_state.system_address = event["SystemAddress"]       
+        if "SystemAddress" in event:
+            pilot_state.system_address = event["SystemAddress"]
         if "Factions" in event:
             galaxy_state.systems[event["SystemAddress"]] = StarSystem(event["StarSystem"], event["SystemAddress"], [faction["Name"] for faction in event["Factions"]])
         if event.get("Docked", False):
@@ -78,6 +81,8 @@ class DockedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         station = Station(event["StationName"], event["SystemAddress"], event["StationFaction"]["Name"])
         pilot_state.last_docked_station = station
+        if "SystemAddress" in event:
+            pilot_state.system_address = event["SystemAddress"]
         return []
 
 

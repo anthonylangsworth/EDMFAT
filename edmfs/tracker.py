@@ -4,7 +4,7 @@ from itertools import groupby
 import logging
 
 from .state import Station, PilotState, GalaxyState, StarSystem
-from .event_processors import EventProcessor, _default_event_processors, NoLastDockedStationError, UnknownStarSystemError
+from .event_processors import EventProcessor, _default_event_processors, UnknownPlayerLocationError, UnknownStarSystemError
 from .event_formatters import EventFormatter, _default_event_formatters
 from .event_summaries import EventSummary, _default_event_summary_order
 
@@ -70,10 +70,10 @@ class Tracker:
         if event_processor != None:
             try:
                 result.extend(event_processor.process(event, self.pilot_state, self.galaxy_state))
-            except NoLastDockedStationError:
-                self._logger.exception(f"Last docked station required for {str(event)}")
+            except UnknownPlayerLocationError:
+                self._logger.exception(f"Player location (station or system) required for {str(event)}")
             except UnknownStarSystemError as unknown_star_system_error:
-                self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}'' required for {str(event)}")
+                self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}' required for {str(event)}")
         return result
 
     def _update_activity(self) -> None:

@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any, Set, List, Iterable
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, NoLastDockedStationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 
