@@ -159,13 +159,13 @@ class MissionCompletedEventProcessor(EventProcessor):
                     star_system = _get_system(galaxy_state, influence_effect["SystemAddress"])
                     mission_events.append((star_system, faction_effect["Faction"], influence_effect["Trend"] != "UpGood", max_influence))
 
-            # Add the source system if missing and the mission is known
+            # Add the source faction if missing and the mission is known
             if mission:
                 source_system = _get_system(galaxy_state, mission.system_address)
                 if not any([x for x in mission_events if x[0].address == source_system.address and x[1] == event["Faction"]]):
                     mission_events.append((source_system, event["Faction"], False, max_influence))
 
-            # Add the target system if required and missing
+            # Add the target faction if supplied and missing
             if "TargetFaction" in event:
                 destination_system_name = event.get("DestinationSystem", None) # Ignore redirects from "NewDestinationSystem". It usually applies to assassination or similar missions and not the target faction.
                 if destination_system_name:
