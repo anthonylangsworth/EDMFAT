@@ -137,6 +137,10 @@ class MissionAcceptedEventProcessor(EventProcessor):
 
 
 class MissionCompletedEventProcessor(EventProcessor):
+    def _create_summary(self, star_system:StarSystem, faction:str, inverted:bool, influence:str) -> MissionCompletedEventSummary:
+        pro, anti = _get_event_minor_faction_impact(faction, star_system.minor_factions, inverted)
+        return MissionCompletedEventSummary(star_system.name, pro, anti, influence)
+
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
@@ -153,8 +157,7 @@ class MissionCompletedEventProcessor(EventProcessor):
             for faction_effect in event["FactionEffects"]:
                 for influence_effect in faction_effect["Influence"]:
                     star_system = _get_system(galaxy_state, influence_effect["SystemAddress"])
-                    pro, anti = _get_event_minor_faction_impact(faction_effect["Faction"], star_system.minor_factions, influence_effect["Trend"] != "UpGood")
-                    result.append(MissionCompletedEventSummary(star_system.name, pro, anti, max_influence))
+                    result.append(self._create_summary(star_system, faction_effect["Faction"], influence_effect["Trend"] != "UpGood", max_influence))
 
             # This logic may have issues with the source and destination system are the same but have different source and target factions differ
 
@@ -162,8 +165,7 @@ class MissionCompletedEventProcessor(EventProcessor):
             if mission:
                 source_system = _get_system(galaxy_state, mission.system_address)
                 if not any([x for x in result if x.system_name == source_system.name]):
-                    pro, anti = _get_event_minor_faction_impact(event["Faction"], source_system.minor_factions)
-                    result.append(MissionCompletedEventSummary(source_system.name, pro, anti, max_influence))
+                    result.append(self._create_summary(source_system, event["Faction"], False, max_influence))
 
             # Add the target system if required and missing
             if "TargetFaction" in event:
@@ -173,8 +175,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     if not destination_system:
                         raise UnknownStarSystemError(destination_system_name)
                     if not any([x for x in result if x.system_name == destination_system_name]):
-                        pro, anti = _get_event_minor_faction_impact(event["TargetFaction"], destination_system.minor_factions)
-                        result.append(MissionCompletedEventSummary(destination_system.name, pro, anti, max_influence))                            
+                        result.append(self._create_summary(destination_system, event["TargetFaction"], False, max_influence))
 
         if mission:
             del pilot_state.missions[mission.id]

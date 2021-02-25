@@ -420,22 +420,22 @@ def test_mission_accepted_single(star_system:StarSystem, station:Station, missio
                 MissionCompletedEventSummary("Gebel", {"EG Union"}, {"Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"}, "++"),
                 MissionCompletedEventSummary("LHS 3802", {"LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", }, {"LHS 3802 Rats"}, "++")
             ]
-        )
-        # ,
+        ),
         # (
-        #     "EDA Kunti League",
         #     [
-        #         StarSystem("Negani", 16064922396065, ["EG Union", "Gebel Silver Advanced Org", "Gebel Empire League", "Gebel Freedom Party", "Gebel Industries" ,"Workers of Gebel Labour", "Pilots' Federation Local Branch"])
+        #         StarSystem("Kunti", 9468121064873, ["EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"])
         #     ],
-        #     Station("Thiele Point", 16064922396065, "L.Y.S Corp."),
-        #     Mission(570789967, "Pilots' Federation Administration", "None", 2871051298217, "Pilots' Federation Administration", "Dromi"),
-        #     { "timestamp":"2020-09-13T11:50:16Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Courier_Elections_name", "MissionID":629331402, "TargetFaction":"L.Y.S Corp.", "DestinationSystem":"Negani", "DestinationStation":"Thiele Point", "Reward":150000, "FactionEffects":[ { "Faction":"L.Y.S Corp.", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":16064922396065, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"+" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"+" } ] },
-        #     []
+        #     Station("Syromyatnikov Terminal", 9468121064873, "EDA Kunti League"),
+        #     Mission(716512290, "EDA Kunti League", "++", 9468121064873),
+        #     { "timestamp":"2021-02-21T06:59:50Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Delivery_Investment_name", "MissionID":716512290, "Commodity":"$FoodCartridges_Name;", "Commodity_Localised":"Food Cartridges", "Count":48, "TargetFaction":"Kunti Dynamic Industry", "DestinationSystem":"Kunti", "DestinationStation":"Syromyatnikov Terminal", "Reward":26204, "FactionEffects":[ { "Faction":"Kunti Dynamic Industry", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":9468121064873, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
+        #     [
+        #         MissionCompletedEventSummary("Kunti", {"EDA Kunti League"}, {"Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"}, "+++"),
+        #         MissionCompletedEventSummary("Kunti", {"Kunti Dynamic Industry"}, {"EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Dragons of Kunti"}, "+++")
+        #     ]
         # )
 
         # Testing TODOS:
         # 1. Mission with no destination system or faction, e.g. donation
-        # 1. Mission with the same faction and system, e.g. trade
     )
 )
 def test_mission_completed_single(star_systems:List[StarSystem], station:Station, mission:Mission, mission_completed_event:Dict[str, Any], expected_results:List[MissionCompletedEventSummary]):
