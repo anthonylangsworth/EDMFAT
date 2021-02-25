@@ -4,6 +4,7 @@ from typing import Optional, List, Tuple, Dict, Any, Union
 import logging
 import functools
 import itertools
+import json
 
 import tkinter as tk
 import myNotebook
@@ -153,7 +154,7 @@ def copy_activity_to_clipboard_and_reset() -> None:
     update_activity()
 
 def copy_raw_activity() -> None:
-    copy_to_clipboard(this.tracker._event_summaries)
+    copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries]))
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
