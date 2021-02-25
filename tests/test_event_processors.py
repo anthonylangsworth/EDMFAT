@@ -421,18 +421,18 @@ def test_mission_accepted_single(star_system:StarSystem, station:Station, missio
                 MissionCompletedEventSummary("LHS 3802", {"LHS 2802 Partnership", "HDS 3215 Defense Party", "LHS 3802 Commodities", "Gebel Empire League", "LHS 3802 Law Party", "LHS 3802 Democrats", }, {"LHS 3802 Rats"}, "++")
             ]
         ),
-        # (
-        #     [
-        #         StarSystem("Kunti", 9468121064873, ["EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"])
-        #     ],
-        #     Station("Syromyatnikov Terminal", 9468121064873, "EDA Kunti League"),
-        #     Mission(716512290, "EDA Kunti League", "++", 9468121064873),
-        #     { "timestamp":"2021-02-21T06:59:50Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Delivery_Investment_name", "MissionID":716512290, "Commodity":"$FoodCartridges_Name;", "Commodity_Localised":"Food Cartridges", "Count":48, "TargetFaction":"Kunti Dynamic Industry", "DestinationSystem":"Kunti", "DestinationStation":"Syromyatnikov Terminal", "Reward":26204, "FactionEffects":[ { "Faction":"Kunti Dynamic Industry", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":9468121064873, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
-        #     [
-        #         MissionCompletedEventSummary("Kunti", {"EDA Kunti League"}, {"Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"}, "+++"),
-        #         MissionCompletedEventSummary("Kunti", {"Kunti Dynamic Industry"}, {"EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Dragons of Kunti"}, "+++")
-        #     ]
-        # )
+        (
+            [
+                StarSystem("Kunti", 9468121064873, ["EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"])
+            ],
+            Station("Syromyatnikov Terminal", 9468121064873, "EDA Kunti League"),
+            Mission(716512290, "EDA Kunti League", "++", 9468121064873),
+            { "timestamp":"2021-02-21T06:59:50Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Delivery_Investment_name", "MissionID":716512290, "Commodity":"$FoodCartridges_Name;", "Commodity_Localised":"Food Cartridges", "Count":48, "TargetFaction":"Kunti Dynamic Industry", "DestinationSystem":"Kunti", "DestinationStation":"Syromyatnikov Terminal", "Reward":26204, "FactionEffects":[ { "Faction":"Kunti Dynamic Industry", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":9468121064873, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
+            [
+                MissionCompletedEventSummary("Kunti", {"EDA Kunti League"}, {"Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"}, "+++"),
+                MissionCompletedEventSummary("Kunti", {"Kunti Dynamic Industry"}, {"EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Dragons of Kunti"}, "+++")
+            ]
+        )
 
         # Testing TODOS:
         # 1. Mission with no destination system or faction, e.g. donation

@@ -145,7 +145,7 @@ class MissionCompletedEventProcessor(EventProcessor):
         mission = pilot_state.missions.get(event["MissionID"], None)      
         # May be empty if not started during this play session. The "Missions" event, listing current missions on startup, lacks source system and minor faction.
 
-        result = []
+        mission_events = []
         if not mission or mission.influence != "None":
             # Use the highest influence to mirror the game UI. 
             max_influence = mission.influence if mission else "+"
@@ -157,30 +157,28 @@ class MissionCompletedEventProcessor(EventProcessor):
             for faction_effect in event["FactionEffects"]:
                 for influence_effect in faction_effect["Influence"]:
                     star_system = _get_system(galaxy_state, influence_effect["SystemAddress"])
-                    result.append(self._create_summary(star_system, faction_effect["Faction"], influence_effect["Trend"] != "UpGood", max_influence))
-
-            # This logic may have issues with the source and destination system are the same but have different source and target factions differ
+                    mission_events.append((star_system, faction_effect["Faction"], influence_effect["Trend"] != "UpGood", max_influence))
 
             # Add the source system if missing and the mission is known
             if mission:
                 source_system = _get_system(galaxy_state, mission.system_address)
-                if not any([x for x in result if x.system_name == source_system.name]):
-                    result.append(self._create_summary(source_system, event["Faction"], False, max_influence))
+                if not any([x for x in mission_events if x[0].address == source_system.address and x[1] == event["Faction"]]):
+                    mission_events.append((source_system, event["Faction"], False, max_influence))
 
             # Add the target system if required and missing
             if "TargetFaction" in event:
-                destination_system_name = event.get("NewDestinationSystem", None) if "NewDestinationSystem" in event != None else event.get("DestinationSystem", None)
+                destination_system_name = event.get("DestinationSystem", None) # Ignore redirects from "NewDestinationSystem". It usually applies to assassination or similar missions and not the target faction.
                 if destination_system_name:
                     destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
                     if not destination_system:
                         raise UnknownStarSystemError(destination_system_name)
-                    if not any([x for x in result if x.system_name == destination_system_name]):
-                        result.append(self._create_summary(destination_system, event["TargetFaction"], False, max_influence))
+                    if not any([x for x in mission_events if x[0].address == destination_system.address and x[1] == event["TargetFaction"]]):
+                        mission_events.append((destination_system, event["TargetFaction"], False, max_influence))
 
         if mission:
             del pilot_state.missions[mission.id]
 
-        return result
+        return [self._create_summary(mission_event[0], mission_event[1], mission_event[2], mission_event[3]) for mission_event in mission_events]
 
 
 class MissionAbandonedEventProcessor(EventProcessor):

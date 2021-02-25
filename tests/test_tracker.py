@@ -101,7 +101,7 @@ def test_tracker_init():
             {"EDA Kunti League"}, 
             "Journal.210105181410.01.log",
             ("Anek Wango - ANTI EDA Kunti League\n"
-            "1 INF+ mission(s)\n"
+            "2 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n"
@@ -180,7 +180,7 @@ def test_tracker_init():
             ], 
             "LesPaul58_Journal.210117142551.01.log",
             ("Arun - ANTI EDA Kunti League\n"
-            "1 INF+++++ mission(s)\n"
+            "4 INF+++++ mission(s)\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n"    
             "2 T trade at 51,622 CR average profit per T\n"
@@ -271,7 +271,10 @@ def test_tracker_init():
         (
             {"EDA Kunti League"},
             "Journal.210221171753.01.log",
-            ("Kunti - PRO EDA Kunti League\n"
+            ("Kunti - ANTI EDA Kunti League\n"
+            "2 INF+++ mission(s)\n"
+            "\n"
+            "Kunti - PRO EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "2 INF+++ mission(s)\n"
