@@ -59,7 +59,7 @@ class Tracker:
             self._event_summaries.extend(new_event_summaries)
             self._update_activity()
             self._logger.info(f"Minor faction relevant: { event }")
-            for event_summary in self._event_summaries:
+            for event_summary in new_event_summaries:
                 self._logger.info(f"Created { event_summary }")
             activity_updated = True
         return activity_updated

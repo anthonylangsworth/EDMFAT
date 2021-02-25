@@ -89,7 +89,6 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
 
-    # Windows specific styles used
     this.minor_faction_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
     this.minor_faction_list.config(height=10, width=50)
     this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
@@ -111,6 +110,8 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     HyperlinkLabel(
         frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
     ).grid(row=7, column=0, columnspan=8, padx=PADX, pady=PADY, sticky=tk.W)
+
+    tk.Button(frame, text="Copy Raw Activity", command=copy_raw_activity).grid(row=8, column=3, sticky=tk.W, padx=10)
     
     return frame
 
@@ -134,19 +135,25 @@ def plugin_stop() -> None:
     save_config()
 
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
-def copy_activity_to_clipboard() -> None:
+def copy_to_clipboard(data:str) -> None:
     root = tk.Tk()
     root.withdraw()
     root.clipboard_clear()
-    root.clipboard_append(this.tracker.activity)
+    root.clipboard_append(data)
     root.update()
     root.destroy()
+
+def copy_activity_to_clipboard() -> None:
+    copy_to_clipboard(this.tracker.activity)
 
 def copy_activity_to_clipboard_and_reset() -> None:
     copy_activity_to_clipboard()
     this.tracker.clear_activity()
     save_config()
     update_activity()
+
+def copy_raw_activity() -> None:
+    copy_to_clipboard(this.tracker._event_summaries)
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
