@@ -430,7 +430,18 @@ def test_mission_accepted_single(star_system:StarSystem, station:Station, missio
             { "timestamp":"2021-02-21T06:59:50Z", "event":"MissionCompleted", "Faction":"EDA Kunti League", "Name":"Mission_Delivery_Investment_name", "MissionID":716512290, "Commodity":"$FoodCartridges_Name;", "Commodity_Localised":"Food Cartridges", "Count":48, "TargetFaction":"Kunti Dynamic Industry", "DestinationSystem":"Kunti", "DestinationStation":"Syromyatnikov Terminal", "Reward":26204, "FactionEffects":[ { "Faction":"Kunti Dynamic Industry", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[ { "SystemAddress":9468121064873, "Trend":"UpGood", "Influence":"+++" } ], "ReputationTrend":"UpGood", "Reputation":"++" } ] },
             [
                 MissionCompletedEventSummary("Kunti", {"EDA Kunti League"}, {"Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Kunti Dynamic Industry", "Dragons of Kunti"}, "+++"),
-                MissionCompletedEventSummary("Kunti", {"Kunti Dynamic Industry"}, {"EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Dragons of Kunti"}, "+++")
+                # MissionCompletedEventSummary("Kunti", {"Kunti Dynamic Industry"}, {"EDA Kunti League", "Kunti Central Limited", "LTT 2337 Empire Party", "Workers of Kunti Republic Party", "New Kunti Nationalists", "Kunti Central Limited", "Dragons of Kunti"}, "+++")
+            ]
+        ),
+        (
+            [
+                StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"])
+            ],
+            Station("Coney Gateway", 672028108201, "EDA Kunti League"),
+            Mission(718812242, "EDA Kunti League", "++", 672028108201),
+            { "timestamp":"2021-02-25T11:49:52Z", "event":"MissionCompleted", "Faction":"Federal Defense League", "Name":"Mission_Massacre_Conflict_CivilWar_name", "MissionID":718812242, "TargetFaction":"EDA Kunti League", "KillCount":81, "DestinationSystem":"LHS 1832", "DestinationStation":"Coney Gateway", "Reward":40320868, "FactionEffects":[ { "Faction":"Federal Defense League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_up;", "Effect_Localised":"The economic status of $#MinorFaction; has improved in the $#System; system.", "Trend":"UpGood" } ], "Influence":[  ], "ReputationTrend":"UpGood", "Reputation":"++" }, { "Faction":"EDA Kunti League", "Effects":[ { "Effect":"$MISSIONUTIL_Interaction_Summary_EP_down;", "Effect_Localised":"The economic status of $#MinorFaction; has declined in the $#System; system.", "Trend":"DownBad" } ], "Influence":[  ], "ReputationTrend":"DownBad", "Reputation":"+" } ] },
+            [
+                MissionCompletedEventSummary("LHS 1832", {"Federal Defense League"}, {"EDA Kunti League"}, "++"),
             ]
         )
 

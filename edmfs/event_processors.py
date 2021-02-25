@@ -159,10 +159,14 @@ class MissionCompletedEventProcessor(EventProcessor):
                     star_system = _get_system(galaxy_state, influence_effect["SystemAddress"])
                     mission_events.append((star_system, faction_effect["Faction"], influence_effect["Trend"] != "UpGood", max_influence))
 
+            # This implementation is technically incorrect, missing situations where the source and destination
+            # faction are in the same system. However, this gives a close enough approximation of what is in the
+            # Elite Dangerous UI.
+
             # Add the source faction if missing and the mission is known
             if mission:
                 source_system = _get_system(galaxy_state, mission.system_address)
-                if not any([x for x in mission_events if x[0].address == source_system.address and x[1] == event["Faction"]]):
+                if not any([x for x in mission_events if x[0].address == source_system.address]): #  and x[1] == event["Faction"]
                     mission_events.append((source_system, event["Faction"], False, max_influence))
 
             # Add the target faction if supplied and missing
@@ -172,7 +176,7 @@ class MissionCompletedEventProcessor(EventProcessor):
                     destination_system = next((star_system for star_system in galaxy_state.systems.values() if star_system.name == destination_system_name), None)
                     if not destination_system:
                         raise UnknownStarSystemError(destination_system_name)
-                    if not any([x for x in mission_events if x[0].address == destination_system.address and x[1] == event["TargetFaction"]]):
+                    if not any([x for x in mission_events if x[0].address == destination_system.address]): #  and x[1] == event["TargetFaction"]
                         mission_events.append((destination_system, event["TargetFaction"], False, max_influence))
 
         if mission:
