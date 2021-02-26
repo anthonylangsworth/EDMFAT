@@ -159,7 +159,7 @@ class PilotState:
 
 class ResolvingDict(MutableMapping):
     """
-    Wrap a Dict to make external resolution transparent to the caller.
+    Wrap a Dict to make external resolution transparent to the caller. Similar to defaultdict.
     """
     def __init__(self, resolver:Callable[[Any], Any], inner:Dict[Any, Any] = None):
         self._resolver = resolver
