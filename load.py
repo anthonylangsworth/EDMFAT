@@ -154,7 +154,7 @@ def copy_activity_to_clipboard_and_reset() -> None:
     update_activity()
 
 def copy_raw_activity() -> None:
-    copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries]))
+    copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries], sort_keys=True, indent=4))
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
