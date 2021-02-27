@@ -37,7 +37,7 @@
                     <File Id="web_services.py" Source="..\web_services.py"/>
                     <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\web_services.py"
                         Type="string" Value="Installed" KeyPath="yes" />
-                    <RemoveFile Id="RemoveResolversFile" Name="resolvers.py" On="uninstall" />
+                    <RemoveFile Id="RemoveWebServicesFile" Name="web_services.py" On="uninstall" />
                 </Component>
                 <Directory Id="EDMFATPyCacheFolder" Name="__pycache__" />
                 <Directory Id="edmfsFolder" Name="edmfs">
