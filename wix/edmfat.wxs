@@ -33,11 +33,11 @@
                     <RemoveFile Id="RemoveEMFATPycacheFiles" Directory="EDMFATPyCacheFolder"  Name="*" On="uninstall" />
                     <!-- RemoveFile Id="RemoveSettingsFile" Name="settings.json" On="uninstall" / --> <!-- Leave settings file in place for upgrades -->
                 </Component>
-                <Component Id="web_services.py" Guid="3699dcee-5e2a-4115-a3da-9ce54bfd6311">
-                    <File Id="web_services.py" Source="..\web_services.py"/>
-                    <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\web_services.py"
+                <Component Id="edmfat_web_services.py" Guid="3699dcee-5e2a-4115-a3da-9ce54bfd6311">
+                    <File Id="edmfat_web_services.py" Source="..\edmfat_web_services.py"/>
+                    <RegistryValue Root="HKCU" Key="Software\EDMFAT\EDMFAT\edmfat_web_services.py"
                         Type="string" Value="Installed" KeyPath="yes" />
-                    <RemoveFile Id="RemoveWebServicesFile" Name="web_services.py" On="uninstall" />
+                    <RemoveFile Id="RemoveWebServicesFile" Name="edmfat_web_services.py" On="uninstall" />
                 </Component>
                 <Directory Id="EDMFATPyCacheFolder" Name="__pycache__" />
                 <Directory Id="edmfsFolder" Name="edmfs">
@@ -96,7 +96,7 @@
         </InstallExecuteSequence>        
         <Feature Id="DefaultFeature" Level="1">
             <ComponentRef Id="load.py" />
-            <ComponentRef Id="web_services.py" />
+            <ComponentRef Id="edmfat_web_services.py" />
             <ComponentRef Id="__init__.py" />
             <ComponentRef Id="event_formatters.py" />
             <ComponentRef Id="event_processors.py" />

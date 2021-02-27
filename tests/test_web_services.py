@@ -3,7 +3,7 @@ import logging
 import functools
 from typing import Callable, Dict, Tuple
 
-from web_services import resolve_star_system_via_edsm, split_tag, get_newer_release
+from edmfat_web_services import resolve_star_system_via_edsm, split_tag, get_newer_release
 from edmfs.state import StarSystem
 from edmfs.tracker import _get_dummy_logger
 

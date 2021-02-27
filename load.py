@@ -12,7 +12,7 @@ from ttkHyperlinkLabel import HyperlinkLabel
 from config import config, appname
 
 import edmfs
-import web_services
+import edmfat_web_services
 
 this = sys.modules[__name__]
 this.plugin_name = "Minor Faction Activity Tracker"
@@ -22,7 +22,7 @@ this.current_station = ""
 this.version = (0,19,0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
-this.star_system_resolver = functools.partial(web_services.resolve_star_system_via_edsm, this.logger)
+this.star_system_resolver = functools.partial(edmfat_web_services.resolve_star_system_via_edsm, this.logger)
 this.serializer = edmfs.TrackerFileRepository()
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
@@ -53,7 +53,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
     tk.Label(frame, textvariable=this.activity_summary, anchor=tk.W, justify=tk.LEFT, pady=10).grid(row=2, column=0, columnspan=2, sticky=tk.W)
 
     try:
-        latest_release_url = web_services.get_newer_release(this.logger, REPO_OWNER, REPO, this.version)
+        latest_release_url = edmfat_web_services.get_newer_release(this.logger, REPO_OWNER, REPO, this.version)
         if latest_release_url:
             HyperlinkLabel(
                 frame, text=NEW_RELEASE_AVAILABLE, background=BACKGROUND, url=latest_release_url, underline=True
