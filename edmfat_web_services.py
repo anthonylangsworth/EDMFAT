@@ -10,18 +10,18 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
     """
     URL = "https://www.edsm.net/api-system-v1/factions"
     try:
-        response = requests.get(URL, params={ "systemId64": system_address }, timeout=30)
-        if response.status_code == 200:
-            output = response.json()
-            if "factions" in output and "name" in output:
-                minor_factions = [faction["name"] for faction in output["factions"]]
-                star_system = edmfs.StarSystem(output["name"], system_address, minor_factions) 
-                logger.info(f"Resolved from EDSM: { star_system }")
-                return star_system
+        with requests.get(URL, params={ "systemId64": system_address }, timeout=30) as response:
+            if response.status_code == 200:
+                output = response.json()
+                if "factions" in output and "name" in output:
+                    minor_factions = [faction["name"] for faction in output["factions"]]
+                    star_system = edmfs.StarSystem(output["name"], system_address, minor_factions) 
+                    logger.info(f"Resolved from EDSM: { star_system }")
+                    return star_system
+                else:
+                    raise Exception(f"Response mising 'factions' or 'output': {output}")
             else:
-                raise Exception(f"Response mising 'factions' or 'output': {output}")
-        else:
-            response.raise_for_status()
+                response.raise_for_status()
     except Exception as e:
         raise edmfs.UnknownStarSystemError(system_address) from e
 
@@ -32,13 +32,13 @@ def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str
     """
     URL = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
     try:
-        response = requests.get(URL, headers={"accept":"application/vnd.github.v3+json"}, timeout=30)
-        if response.status_code == 200:
-            output = response.json()
-            logger.info(f"Latest version for {owner}/{repo} is '{output['tag_name']}' at '{output['html_url']}'")
-            return (output["tag_name"], output["html_url"])
-        else:
-            response.raise_for_status()
+        with requests.get(URL, headers={"accept":"application/vnd.github.v3+json"}, timeout=30) as response:
+            if response.status_code == 200:
+                output = response.json()
+                logger.info(f"Latest version for {owner}/{repo} is '{output['tag_name']}' at '{output['html_url']}'")
+                return (output["tag_name"], output["html_url"])
+            else:
+                response.raise_for_status()
     except Exception as e:
         logger.exception(f"Error getting latest version from github: {e}")
         raise
