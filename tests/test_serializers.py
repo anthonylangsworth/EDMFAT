@@ -10,8 +10,8 @@ from edmfs.state import StarSystem
     "minor_factions, journal_file_name",
     [
         ({"HR 1597 & Co"}, "Journal.201019220908.01.log"),
-        ({"EDA Kunti League"}, "Journal.200913212207.01.log"), 
-        ({"EDA Kunti League"}, "Journal.201018213100.01.log"), 
+        ({"EDA Kunti League"}, "Journal.200913212207.01.log"),
+        ({"EDA Kunti League"}, "Journal.201018213100.01.log"),
         ({"EDA Kunti League"}, "Journal.210101234033.01.log"),
         ({"EDA Kunti League"}, "Journal.201212203015.01.log"),
         ({"Green Party of Dulos"}, "Journal.200630212114.01.log"),
