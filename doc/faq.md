@@ -37,8 +37,16 @@ This plug-in saves the selected minor factions. If you exit EDMC and start it la
 
 I do not know. However, I plan to test EDMFAT and add any new, relevant Odyssey features when it is released.
 
-The plug-in intentionally excludes any events from beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any Odyssey alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
+The plug-in intentionally excludes any events from "beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any Odyssey alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
 
 ### 5. I accidentally did a mission that hurt my minor faction. Help!
 
 Don't Panic! This commonly happens when you do not check a mission's target faction. Treat it as a learning experience. You can always edit it out when copying your activity into your squadron Discord (or however you report your activity).
+
+### 6. Why doesn't the plug-in automatically update Discord or upload this to a website? Why do I have to copy and paste it?
+
+I am happy to add this as a feature if there is sufficient demand. However, I have intentionally taken a minimalist approach to the plug-in. I prefer simple, testable and understandable over fully-featured but complex.
+
+Copying allows players to annotate activity. For example, they can explain why actions are relevant or apparent anti-minor faction activity.
+
+Copying allows players to edit or remove irrelevant activity. Some may thing reduces the trustworthiness of EDMFAT's results. However, not all data sent to Discord or a website is automatically trustworthy.
