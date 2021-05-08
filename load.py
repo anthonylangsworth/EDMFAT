@@ -204,6 +204,9 @@ def load_settings() -> List[str]:
 def save_config() -> None:
     with open(this.settings_file, mode="w") as settings_file:
         settings_file.write(this.serializer.serialize(this.tracker))
-    config.delete(CONFIG_MINOR_FACTION)
+    try:
+        config.delete(CONFIG_MINOR_FACTION)
+    except:
+        pass # Do nothing if the config entry does not exist
     this.logger.info(f"Settings saved to \"{this.settings_file}\"")
 
