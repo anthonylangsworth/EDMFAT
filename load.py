@@ -182,7 +182,10 @@ def load_settings_from_file() -> edmfs.Tracker:
     return tracker
 
 def load_settings_from_config() -> edmfs.Tracker:
-    saved_minor_factions = config.get_list(CONFIG_MINOR_FACTION)
+    try:
+        saved_minor_factions = config.get_list(CONFIG_MINOR_FACTION)
+    except:
+        saved_minor_factions = {}
     if len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
         # Windows config saves list with a single empty string instead of an empty list when empty
         saved_minor_factions = {}
