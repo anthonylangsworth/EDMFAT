@@ -186,12 +186,11 @@ def load_settings_from_config() -> edmfs.Tracker:
         saved_minor_factions = config.get_list(CONFIG_MINOR_FACTION)
     except:
         saved_minor_factions = {}
-    if len(saved_minor_factions) == 1 and saved_minor_factions[0] == "":
-        # Windows config saves list with a single empty string instead of an empty list when empty
-        saved_minor_factions = {}
-    elif saved_minor_factions == None:
+    if saved_minor_factions == None:
         saved_minor_factions = DEFAULT_MINOR_FACTIONS
         this.logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
+    else:
+        saved_minor_factions = {}
     return edmfs.Tracker(saved_minor_factions, this.logger, this.star_system_resolver)
 
 def load_settings() -> List[str]:
