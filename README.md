@@ -15,7 +15,7 @@ Fly safe, commanders, from CMDR Akton!
 # Installation and Upgrade
 
 Requirements:
-1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 4.0 or later.
+1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 5.0 (Odyseey release) or later.
 
 To install or upgrade:
 1. If upgrading, `Copy` any activity you want to report, just in case.
