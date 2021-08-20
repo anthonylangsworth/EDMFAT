@@ -34,4 +34,4 @@ See [releasing](releasing.md).
 ## References
 
 1. EDMC Plug-in details: https://github.com/EDCD/EDMarketConnector/blob/main/PLUGINS.md
-2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v28/Journal_Manual_v28.pdf
+2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v31/Journal_Manual_v31.pdf
