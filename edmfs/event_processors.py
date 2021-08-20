@@ -102,11 +102,10 @@ class RedeemVoucherEventProcessor(EventProcessor):
         star_system = _get_system(galaxy_state, pilot_state.system_address)
 
         result = []
-        if event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
-            if event["Type"] == "bounty":
-                result.extend(self._process_bounty(event, star_system.name, star_system.minor_factions))
-            elif event["Type"] == "CombatBond": 
-                result.extend(self._process_combat_bond(event, star_system.name, star_system.minor_factions))
+        if event["Type"] == "bounty" and event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
+            result.extend(self._process_bounty(event, star_system.name, star_system.minor_factions))
+        elif event["Type"] == "CombatBond": 
+            result.extend(self._process_combat_bond(event, star_system.name, star_system.minor_factions))
 
         return result
 

@@ -289,6 +289,16 @@ def test_tracker_init():
             ("LHS 1832 - PRO Federal Defense League\n"
             "2 INF++ mission(s)\n"
             "11,772,015 CR of Combat Bonds")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210817213224.01.log",
+            ("")    
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210818120219.01.log",
+            ("")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):

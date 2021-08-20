@@ -159,19 +159,19 @@ def test_location_sequence(location_events: Tuple, expected_station: Station):
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
-            []
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, set(), "CombatBond", 1127126)]
         ),
         (
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 },
-            []
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 46026)]
         ),
         (
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
-            []
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1127126)]
         ),
 
         # Scannable (Not sure what this is)
