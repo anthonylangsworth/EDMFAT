@@ -165,13 +165,37 @@ def test_location_sequence(location_events: Tuple, expected_station: Station):
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 46026)]
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 61368)]
         ),
         (
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
-            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1127126)]
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1502835)]
+        ),
+        (
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            Station("", 1000, "The Fuel Rats Mischief"),
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":0.000000 },
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1000)]
+        ),
+        (
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            Station("", 1000, "The Fuel Rats Mischief"),
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":1.000000 },
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1010)]
+        ),
+        (
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            Station("", 1000, "The Fuel Rats Mischief"),
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":99.000000 },
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 100000)]
+        ),
+        (
+            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            Station("", 1000, "The Fuel Rats Mischief"),
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":100.000000 },
+            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1000)]
         ),
 
         # Scannable (Not sure what this is)
