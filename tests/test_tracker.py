@@ -211,7 +211,10 @@ def test_tracker_init():
                 "EDA Kunti League"
             },
             "Journal.210122183958.01.log",
-            ""
+            (
+                "Kunti - ANTI EDA Kunti League\n"
+                "3,347,636 CR of Combat Bonds"
+            )
         ),
         (
             {
@@ -266,7 +269,10 @@ def test_tracker_init():
             "2,930,517 CR of Combat Bonds\n"
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
-            "3,136 T trade at -1,000 CR average profit per T")
+            "3,136 T trade at -1,000 CR average profit per T\n"
+            "\n"
+            "Trumuye - PRO EDA Kunti League\n"
+            "1,339,513 CR of Combat Bonds")
         ),
         (
             {"EDA Kunti League"},
@@ -291,14 +297,17 @@ def test_tracker_init():
             "11,772,015 CR of Combat Bonds")
         ),
         (
-            {"EDA Kunti League"},
+            {"Extra Corporation"},
             "Journal.210817213224.01.log",
-            ("")    
+            ("Naualam - ANTI Extra Corporation\n"
+            "5 INF+ mission(s)\n"
+            "1 INF++ mission(s)")    
         ),
         (
             {"EDA Kunti League"},
             "Journal.210818120219.01.log",
-            ("")
+            ("Naualam - PRO EDA Kunti League\n"
+            "7,566,083 CR of Combat Bonds")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):

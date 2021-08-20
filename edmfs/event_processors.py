@@ -102,7 +102,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
             try:
                 broker_percentage = float(event["BrokerPercentage"])
                 if broker_percentage > 0 and broker_percentage < 100:
-                    amount = round(float(amount) * 100.0/(100.0 - broker_percentage), 0)
+                    amount = int(round(float(amount) * 100.0/(100.0 - broker_percentage), 0))
             except ValueError:
                 pass
         return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], amount)]
