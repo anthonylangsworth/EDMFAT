@@ -159,7 +159,7 @@ def test_location_sequence(location_events: Tuple, expected_station: Station):
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
-            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, set(), "CombatBond", 1127126)]
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, set(), "CombatBond", 1502835)]
         ),
         (
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),

@@ -96,14 +96,27 @@ class RedeemVoucherEventProcessor(EventProcessor):
 
     def _process_combat_bond(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
         pro, anti = _get_event_minor_faction_impact(event["Faction"], system_minor_factions)
-        return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], event["Amount"])]
+        # Remove any broker percentage. We want the full amount to approximate work done in a war.
+        amount = event["Amount"]
+        if "BrokerPercentage" in event:
+            try:
+                broker_percentage = float(event["BrokerPercentage"])
+                if broker_percentage > 0 and broker_percentage < 100:
+                    amount = round(float(amount) * 100.0/(100.0 - broker_percentage), 0)
+            except ValueError:
+                pass
+        return [RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], amount)]
 
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = _get_system(galaxy_state, pilot_state.system_address)
 
         result = []
-        if event["Type"] == "bounty" and event.get("BrokerPercentage", None) == None: # Exclude interstellar factors
+        # Exclude interstellar factors (and carriers) for bounties
+        if event["Type"] == "bounty" and event.get("BrokerPercentage", None) == None: 
             result.extend(self._process_bounty(event, star_system.name, star_system.minor_factions))
+        # Include interstellar factors (and carriers) for combat bonds because this is the best way to 
+        # approximate the work in a war, at least until conflict zone wins and losses are added to the 
+        # journal file.
         elif event["Type"] == "CombatBond": 
             result.extend(self._process_combat_bond(event, star_system.name, star_system.minor_factions))
 
