@@ -651,6 +651,24 @@ def test_murder(star_system: StarSystem, murder_event: str, expected_results: It
         (
             StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"]),
             Station("Coney Gateway", 672028108201, "EDA Kunti League"),
+            { "timestamp":"2021-08-05T15:27:05Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ 
+            ] },
+            [
+            ]
+        ),            
+        (
+            StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"]),
+            Station("Coney Gateway", 672028108201, "EDA Kunti League"),
+            { "timestamp":"2021-08-05T15:27:05Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ 
+                { "Genus":"$Codex_Ent_Fonticulus_Genus_Name;", "Genus_Localised":"Fonticulua", "Species":"$Codex_Ent_Fonticulus_02_Name;", "Species_Localised":"Fonticulua Campestris", "Value":63600, "Bonus":0 } 
+            ] },
+            [
+                SellOrganicDataEventSummary("LHS 1832", ["EDA Kunti League"], ["Federal Defense League"], 63600)
+            ]
+        ),            
+        (
+            StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"]),
+            Station("Coney Gateway", 672028108201, "EDA Kunti League"),
             { "timestamp":"2021-08-05T12:04:21Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ 
                 { "Genus":"$Codex_Ent_Stratum_Genus_Name;", "Genus_Localised":"Stratum", "Species":"$Codex_Ent_Stratum_06_Name;", "Species_Localised":"Stratum Cucumisis", "Value":711500, "Bonus":711500 }, 
                 { "Genus":"$Codex_Ent_Bacterial_Genus_Name;", "Genus_Localised":"Bacterium", "Species":"$Codex_Ent_Bacterial_12_Name;", "Species_Localised":"Bacterium Cerbrus", "Value":121300, "Bonus":121300 }, 
