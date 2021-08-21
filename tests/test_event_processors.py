@@ -651,8 +651,7 @@ def test_murder(star_system: StarSystem, murder_event: str, expected_results: It
         (
             StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"]),
             Station("Coney Gateway", 672028108201, "EDA Kunti League"),
-            { "timestamp":"2021-08-05T15:27:05Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ 
-            ] },
+            { "timestamp":"2021-08-05T15:27:05Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ ] },
             [
             ]
         ),            
