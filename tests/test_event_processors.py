@@ -2,9 +2,9 @@ import copy
 from typing import Dict, Any, Set, List, Iterable, Tuple
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
-from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
+from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 @pytest.mark.parametrize(
@@ -640,6 +640,48 @@ def test_murder(star_system: StarSystem, murder_event: str, expected_results: It
     expected_pilot_state = copy.deepcopy(pilot_state)
     expected_galaxy_state = copy.deepcopy(galaxy_state)
     result = CommitCrimeEventProcessor().process(murder_event, pilot_state, galaxy_state)
+    assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+
+@pytest.mark.parametrize(
+    "star_system, station, sell_organic_data_event, expected_results",
+    (
+        (
+            StarSystem("LHS 1832", 672028108201, ["EDA Kunti League", "Federal Defense League"]),
+            Station("Coney Gateway", 672028108201, "EDA Kunti League"),
+            { "timestamp":"2021-08-05T12:04:21Z", "event":"SellOrganicData", "MarketID":672028108201, "BioData":[ 
+                { "Genus":"$Codex_Ent_Stratum_Genus_Name;", "Genus_Localised":"Stratum", "Species":"$Codex_Ent_Stratum_06_Name;", "Species_Localised":"Stratum Cucumisis", "Value":711500, "Bonus":711500 }, 
+                { "Genus":"$Codex_Ent_Bacterial_Genus_Name;", "Genus_Localised":"Bacterium", "Species":"$Codex_Ent_Bacterial_12_Name;", "Species_Localised":"Bacterium Cerbrus", "Value":121300, "Bonus":121300 }, 
+                { "Genus":"$Codex_Ent_Tussocks_Genus_Name;", "Genus_Localised":"Tussock", "Species":"$Codex_Ent_Tussocks_04_Name;", "Species_Localised":"Tussock Cultro", "Value":125600, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Bacterial_Genus_Name;", "Genus_Localised":"Bacterium", "Species":"$Codex_Ent_Bacterial_06_Name;", "Species_Localised":"Bacterium Alcyoneum", "Value":119500, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Tussocks_Genus_Name;", "Genus_Localised":"Tussock", "Species":"$Codex_Ent_Tussocks_04_Name;", "Species_Localised":"Tussock Cultro", "Value":125600, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Bacterial_Genus_Name;", "Genus_Localised":"Bacterium", "Species":"$Codex_Ent_Bacterial_06_Name;", "Species_Localised":"Bacterium Alcyoneum", "Value":119500, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Cactoid_Genus_Name;", "Genus_Localised":"Cactoida", "Species":"$Codex_Ent_Cactoid_02_Name;", "Species_Localised":"Cactoida Lapis", "Value":164000, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Tubus_Genus_Name;", "Genus_Localised":"Tubus", "Species":"$Codex_Ent_Tubus_04_Name;", "Species_Localised":"Tubus Rosarium", "Value":400500, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Fungoids_Genus_Name;", "Genus_Localised":"Fungoida", "Species":"$Codex_Ent_Fungoids_02_Name;", "Species_Localised":"Fungoida Stabitis", "Value":174000, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Tussocks_Genus_Name;", "Genus_Localised":"Tussock", "Species":"$Codex_Ent_Tussocks_11_Name;", "Species_Localised":"Tussock Caputus", "Value":213100, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Conchas_Genus_Name;", "Genus_Localised":"Concha", "Species":"$Codex_Ent_Conchas_01_Name;", "Species_Localised":"Concha Renibus", "Value":264300, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Shrubs_Genus_Name;", "Genus_Localised":"Frutexa", "Species":"$Codex_Ent_Shrubs_02_Name;", "Species_Localised":"Frutexa Acus", "Value":400500, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Cactoid_Genus_Name;", "Genus_Localised":"Cactoida", "Species":"$Codex_Ent_Cactoid_01_Name;", "Species_Localised":"Cactoida Cortexum", "Value":222500, "Bonus":0 }, 
+                { "Genus":"$Codex_Ent_Bacterial_Genus_Name;", "Genus_Localised":"Bacterium", "Species":"$Codex_Ent_Bacterial_12_Name;", "Species_Localised":"Bacterium Cerbrus", "Value":121300, "Bonus":0 } 
+            ] },
+            [
+                SellOrganicDataEventSummary("LHS 1832", ["EDA Kunti League"], ["Federal Defense League"], 3283200)
+            ]
+        ),
+    )
+)
+def test_sell_organic_data(star_system: StarSystem, station: Station, sell_organic_data_event: str, expected_results: Iterable[SellOrganicDataEventSummary]):
+    pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
+    pilot_state.last_docked_station = station
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    result = SellOrganicDataEventProcessor().process(sell_organic_data_event, pilot_state, galaxy_state)
     assert result == expected_results
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state

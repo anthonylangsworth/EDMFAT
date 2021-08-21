@@ -61,7 +61,12 @@ class MissionFailedEventFormatter(EventFormatter):
 class MurderEventFormatter(EventFormatter):
     def process(self, event_summaries:Iterable[EventSummary]) -> List[str]:
         return [f"{len(list(event_summaries))} clean ship kill(s)"]
-    
+
+
+class SellOrganicDataEventFormatter(EventFormatter):
+    def process(self, event_summaries:Iterable[EventSummary]) -> List[str]:
+        return [f"{sum([event_summary.value for event_summary in event_summaries])} CR of Organic Data"]
+
 
 _default_event_formatters:Dict[str, EventFormatter] = {
     "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
@@ -69,5 +74,6 @@ _default_event_formatters:Dict[str, EventFormatter] = {
     "MarketSellEventSummary": MarketSellEventFormatter(),
     "MissionCompletedEventSummary": MissionCompletedEventFormatter(),
     "MissionFailedEventSummary": MissionFailedEventFormatter(),
-    "MurderEventSummary": MurderEventFormatter()
+    "MurderEventSummary": MurderEventFormatter(),
+    "SellOrganicDataEventSummary": SellOrganicDataEventFormatter()
 }

@@ -1,4 +1,4 @@
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, SellOrganicDataEventSummary
 
 def test_redeem_voucher_event_summary_init():
     SYSTEM_NAME = "HR 1597"
@@ -49,3 +49,14 @@ def test_mission_completed_event_summary_init():
     assert(mission_completed_event_summary.pro == PRO)
     assert(mission_completed_event_summary.anti == ANTI)
     assert(mission_completed_event_summary.influence == INFLUENCE)
+
+def test_sell_organic_data_event_summary_init():
+    SYSTEM_NAME = "Sol"
+    PRO = ("Mother Gaia",)
+    ANTI = ()
+    VALUE = 1234
+    mission_completed_event_summary = SellOrganicDataEventSummary(SYSTEM_NAME, PRO, ANTI, VALUE)
+    assert(mission_completed_event_summary.system_name == SYSTEM_NAME)
+    assert(mission_completed_event_summary.pro == PRO)
+    assert(mission_completed_event_summary.anti == ANTI)
+    assert(mission_completed_event_summary.value == VALUE)

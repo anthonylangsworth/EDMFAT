@@ -2,7 +2,7 @@ from typing import Iterable
 
 
 class EventSummary():
-    def __init__(self, system_name:str, pro: Iterable, anti: Iterable):
+    def __init__(self, system_name: str, pro: Iterable, anti: Iterable):
         self._system_name = system_name
         self._pro = set(pro)
         self._anti = set(anti)
@@ -29,7 +29,7 @@ class EventSummary():
 
 
 class RedeemVoucherEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, voucher_type:str, amount:int):
+    def __init__(self, system_name:str, pro: iter, anti: iter, voucher_type: str, amount: int):
         super(RedeemVoucherEventSummary, self).__init__(system_name, pro, anti)
         self._voucher_type:str = voucher_type
         self._amount:int = amount
@@ -55,7 +55,7 @@ class RedeemVoucherEventSummary(EventSummary):
 
 
 class SellExplorationDataEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, amount:int):
+    def __init__(self, system_name:str, pro: iter, anti: iter, amount: int):
         super(SellExplorationDataEventSummary, self).__init__(system_name, pro, anti)
         self._amount:int = amount
     
@@ -75,7 +75,7 @@ class SellExplorationDataEventSummary(EventSummary):
 
 
 class MarketSellEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, count:int, sell_price_per_unit:int, average_buy_price_per_unit:int):
+    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, sell_price_per_unit: int, average_buy_price_per_unit: int):
         super(MarketSellEventSummary, self).__init__(system_name, pro, anti)
         self._count:int = count
         self._sell_price_per_unit:int = sell_price_per_unit
@@ -107,7 +107,7 @@ class MarketSellEventSummary(EventSummary):
 
 
 class MissionCompletedEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, influence:str):
+    def __init__(self, system_name:str, pro: iter, anti: iter, influence: str):
         super(MissionCompletedEventSummary, self).__init__(system_name, pro, anti)
         self._influence:str = influence
 
@@ -146,6 +146,26 @@ class MurderEventSummary(EventSummary):
 
     def __repr__(self) -> str:
         return f"MurderEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
+
+
+class SellOrganicDataEventSummary(EventSummary):
+    def __init__(self, system_name:str, pro: iter, anti: iter, value: int):
+        super().__init__(system_name, pro, anti)
+        self._value: int = value
+
+    @property
+    def value(self) -> int:
+        return self._value
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, SellOrganicDataEventSummary):
+            return NotImplemented
+
+        return (super(SellOrganicDataEventSummary, self).__eq__(other)
+            and self._value == other._value)
+
+    def __repr__(self) -> str:
+        return f"SellOrganicDataEventSummary('{self._system_name}', '{self._pro}', '{self._anti}', {self._value})" 
 
 
 _default_event_summary_order = (

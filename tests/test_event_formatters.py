@@ -1,8 +1,8 @@
 import pytest
 from typing import List
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter, SellOrganicDataEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 @pytest.mark.parametrize(
     "event_summaries, expected_activity",
@@ -134,3 +134,25 @@ def test_mission_failed(event_summaries: List[MissionFailedEventSummary], expect
 )
 def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activity: str):
     assert(MurderEventFormatter().process(event_summaries) == expected_activity)    
+
+@pytest.mark.parametrize(
+    "event_summaries, expected_activity",
+    [
+        (
+            [
+                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 100)
+            ],
+            ["100 CR of Organic Data"]
+        ),        
+        (
+            [
+                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 100),
+                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 500),
+                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 67),
+            ],
+            ["667 CR of Organic Data"]
+        )
+    ]
+)
+def test_sell_organic_data(event_summaries: List[SellOrganicDataEventSummary], expected_activity: str):
+    assert(SellOrganicDataEventFormatter().process(event_summaries) == expected_activity)    

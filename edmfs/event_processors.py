@@ -2,7 +2,7 @@ from typing import Optional, Dict, Union, Any, Set, List, Tuple
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 class UnknownPlayerLocationError(Exception):
@@ -231,6 +231,19 @@ class CommitCrimeEventProcessor(EventProcessor):
         return result
 
 
+class SellOrganicDataEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[SellOrganicDataEventSummary]:
+        result = []
+        value = 0
+        for biodata_entry in event["BioData"]:
+            value += biodata_entry["Value"]
+        if value > 0:
+            star_system = _get_system(galaxy_state, pilot_state.system_address)
+            pro, anti = _get_event_minor_faction_impact(pilot_state.last_docked_station.controlling_minor_faction, star_system.minor_factions)
+            result.append(SellOrganicDataEventSummary(star_system.name, pro, anti, value))
+        return result
+
+
 # Map journal file event types to the EventProcessor that handles them
 _default_event_processors:Dict[str, EventProcessor] = {
     "Location": LocationEventProcessor(),
@@ -245,5 +258,6 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionCompleted": MissionCompletedEventProcessor(),
     "MissionAbandoned": MissionAbandonedEventProcessor(),
     "MissionFailed": MissionFailedEventProcessor(),
-    "CommitCrime": CommitCrimeEventProcessor()
+    "CommitCrime": CommitCrimeEventProcessor(),
+    "SellOrganicData": SellOrganicDataEventProcessor()
 }
