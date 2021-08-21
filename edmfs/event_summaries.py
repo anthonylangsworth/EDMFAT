@@ -174,5 +174,6 @@ _default_event_summary_order = (
     "SellExplorationDataEventSummary",
     "MarketSellEventSummary",
     "MissionFailedEventSummary",
-    "MurderEventSummary"
+    "MurderEventSummary",
+    "SellOrganicDataEventSummary"
 )

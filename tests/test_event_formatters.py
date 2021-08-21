@@ -140,9 +140,9 @@ def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activ
     [
         (
             [
-                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 100)
+                SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000)
             ],
-            ["100 CR of Organic Data"]
+            ["1,000 CR of Organic Data"]
         ),        
         (
             [

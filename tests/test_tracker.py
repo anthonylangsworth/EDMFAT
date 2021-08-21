@@ -308,6 +308,42 @@ def test_tracker_init():
             "Journal.210818120219.01.log",
             ("Naualam - PRO EDA Kunti League\n"
             "7,566,083 CR of Combat Bonds")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210805213331.01.log",
+            ("Kanates - ANTI EDA Kunti League\n"
+            "1 INF+++ mission(s)\n"
+            "1 INF++++ mission(s)\n"
+            "\n"
+            "Kanates - PRO EDA Kunti League\n"
+            "5 INF++ mission(s)\n"
+            "2 INF+++++ mission(s)\n"
+            "3,453,667 CR of Bounty Vouchers\n"
+            "38,289,972 CR of Cartography Data\n"
+            "6 T trade at 515 CR average profit per T\n"
+            "\n" 
+            "Kunti - PRO EDA Kunti League\n"
+            "3,283,200 CR of Organic Data\n"
+            "\n"
+            "Kutjara - ANTI EDA Kunti League\n"
+            "1 INF+++ mission(s)\n"
+            "1 INF++++ mission(s)\n"
+            "\n"
+            "LTT 2337 - ANTI EDA Kunti League\n"
+            "1 INF++ mission(s)\n"
+            "7,150 CR of Bounty Vouchers\n"
+            "8 T trade at 1,255 CR average profit per T\n"
+            "1 failed mission(s)\n"
+            "63,600 CR of Organic Data\n"
+            "\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "2,600 CR of Bounty Vouchers\n"
+            "\n"
+            "Mors - ANTI EDA Kunti League\n"
+            "1 INF++ mission(s)")
         )
     ])
 def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_activity:str):

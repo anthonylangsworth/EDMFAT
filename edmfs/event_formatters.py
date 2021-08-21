@@ -65,7 +65,7 @@ class MurderEventFormatter(EventFormatter):
 
 class SellOrganicDataEventFormatter(EventFormatter):
     def process(self, event_summaries:Iterable[EventSummary]) -> List[str]:
-        return [f"{sum([event_summary.value for event_summary in event_summaries])} CR of Organic Data"]
+        return [f"{sum([event_summary.value for event_summary in event_summaries]):,} CR of Organic Data"]
 
 
 _default_event_formatters:Dict[str, EventFormatter] = {
