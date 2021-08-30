@@ -177,6 +177,7 @@ def load_settings_from_file() -> edmfs.Tracker:
     except FileNotFoundError:
         this.logger.info(f"Setings file \"{this.settings_file}\" not found. This is expected on the first run.")
         pass
+    # except json.decoder.JSONDecodeError:
     except:
         this.logger.exception(f"Error loading settings from \"{this.settings_file}\"")
     return tracker
