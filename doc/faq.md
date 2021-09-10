@@ -36,7 +36,7 @@ This plug-in saves the selected minor factions. If you exit EDMC and start it la
 
 ### 4. Will this plug-in work with the Odyssey expansion?
 
-Yes. The plug-in includes support for organic data, although its BGS relevant is uncertain. Combat bonds earned on foot are treated the same as ship-earned combat bonds.
+Yes. The plug-in includes support for organic data, although its BGS relevance is uncertain. Combat bonds earned on foot are treated the same as ship-earned combat bonds.
 
 The plug-in intentionally excludes any events from "beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
 
