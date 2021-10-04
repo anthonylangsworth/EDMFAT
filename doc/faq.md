@@ -5,8 +5,9 @@
 Unfortunately, **Elite: Dangerous** occasionally records incorrect mission influence values. See the [discussion on missions](missions.md).
 
 Assuming the problem is not due to known issues with missions, please either:
-1. [Raise an issue on Github](https://github.com/anthonylangsworth/EDMFAT/issues) or
-2. Contact me via social media links in [my Github profile](https://github.com/anthonylangsworth).
+1. Direct message me via Discord (preferred for those in my squadron), 
+2. [Raise an issue on Github](https://github.com/anthonylangsworth/EDMFAT/issues) or
+3. Contact me via social media links in [my Github profile](https://github.com/anthonylangsworth).
 
 I will need:
 1. The relevant journal file(s) from the play session. These are usually found in `%userprofile%\Saved Games\Frontier Developments\Elite Dangerous\` in the form of `Journal.YYYYMMDDHHmmSS.01.log` where YYYYMMDDHHmmSS is a date and time in reverse order.
@@ -35,9 +36,9 @@ This plug-in saves the selected minor factions. If you exit EDMC and start it la
 
 ### 4. Will this plug-in work with the Odyssey expansion?
 
-I do not know. However, I plan to test EDMFAT and add any new, relevant Odyssey features when it is released.
+Yes. The plug-in includes support for organic data, although its BGS relevance is uncertain. Combat bonds earned on foot are treated the same as ship-earned combat bonds.
 
-The plug-in intentionally excludes any events from "beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any Odyssey alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
+The plug-in intentionally excludes any events from "beta versions of **Elite: Dangerous**, as per the EDMC API. Presumably, any alphas or betas will use separate universes to the main universe. Any BGS activity there will likely be separate to the main universe.
 
 ### 5. I accidentally did a mission that hurt my minor faction. Help!
 
