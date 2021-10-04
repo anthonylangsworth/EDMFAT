@@ -67,7 +67,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX = 10
     PADY = 10
-    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Multiple selection is allowed. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
+    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Select multiple minor factions using control + left click. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
@@ -112,6 +112,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
         frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
     ).grid(row=7, column=0, columnspan=8, padx=PADX, pady=PADY, sticky=tk.W)
 
+    tk.Button(frame, text="Clear", command=clear_selected_minor_factions).grid(row=8, column=0, sticky=tk.W, padx=10)
     tk.Button(frame, text="Copy Raw Activity", command=copy_raw_activity).grid(row=8, column=3, sticky=tk.W, padx=10)
     
     return frame
@@ -155,6 +156,9 @@ def copy_activity_to_clipboard_and_reset() -> None:
 
 def copy_raw_activity() -> None:
     copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries], sort_keys=True, indent=4))
+
+def clear_selected_minor_factions() -> None:
+    this.minor_faction_list.selection_clear(0, tk.END)
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
