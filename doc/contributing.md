@@ -35,3 +35,4 @@ See [releasing](releasing.md).
 
 1. EDMC Plug-in details: https://github.com/EDCD/EDMarketConnector/blob/main/PLUGINS.md
 2. Elite Dangerous Journal File format: http://hosting.zaonce.net/community/journal/v31/Journal_Manual_v31.pdf
+3. BGS Overview from Frontier: https://customersupport.frontier.co.uk/hc/en-us/articles/4405440213010-What-is-the-Background-Simulation-and-how-does-it-work-
