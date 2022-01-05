@@ -2,6 +2,7 @@ from abc import abstractmethod, ABC
 from itertools import groupby, accumulate
 from typing import Dict, List, Iterable
 import operator
+import math
 
 from .event_summaries import EventSummary
 
@@ -35,14 +36,28 @@ class SellExplorationDataEventFormatter(EventFormatter):
 
 class MarketSellEventFormatter(EventFormatter):
     def process(self, event_summaries: Iterable[EventSummary]) -> List[str]:
+        total_number = 0
         total_sell_price = 0
         total_buy_price = 0
         total_count = 0
+        total_g = 0
         for event_summary in event_summaries:
+            total_number += 1
             total_sell_price += event_summary.sell_price_per_unit * event_summary.count
             total_buy_price += event_summary.average_buy_price_per_unit * event_summary.count
             total_count += event_summary.count
-        return [f"{total_count:,} T trade at {(total_sell_price - total_buy_price) / total_count:,.0f} CR average profit per T",]
+            profit = event_summary.sell_price_per_unit - event_summary.average_buy_price_per_unit
+            profit_g = (-0.04894787 - (-0.005612274 / 0.002608821) * 
+                        (1 - math.exp(-0.002608821 * profit))) / 2.10232
+            if profit_g < 0:
+                profit_g = 0
+            tonnage_g = 3.08656 * event_summary.count / (240.646 + event_summary.count)
+            total_g += tonnage_g * profit_g
+        total_profit = (total_sell_price - total_buy_price)
+        if total_profit > 0:
+            return [f"{total_number}x trade ({total_count / total_number:,.0f} T avg. at {total_profit / total_count:,.0f} CR avg. profit; {total_g:,.2f} +ve)",]
+        else:
+            return [f"{total_count:,} T trade at {(total_sell_price - total_buy_price) / total_count:,.0f} CR average profit per T",]
 
 
 class MissionCompletedEventFormatter(EventFormatter):
