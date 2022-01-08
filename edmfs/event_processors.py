@@ -89,9 +89,13 @@ class DockedEventProcessor(EventProcessor):
 class RedeemVoucherEventProcessor(EventProcessor):
     def _process_bounty(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
         result = []
+        # Redeems at interstellar factors never have a local minor faction name, being ignored.
+        # Redeems at fleet carriers do list minor factions names and do count for influence at
+        # the final cashed amount.
         for x in event["Factions"]:
-            pro, anti = _get_event_minor_faction_impact(x["Faction"], system_minor_factions)
-            result.append(RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], x["Amount"]))
+            if x["Faction"] != "":
+                pro, anti = _get_event_minor_faction_impact(x["Faction"], system_minor_factions)
+                result.append(RedeemVoucherEventSummary(system_name, pro, anti, event["Type"], x["Amount"]))
         return result
 
     def _process_combat_bond(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
@@ -111,8 +115,7 @@ class RedeemVoucherEventProcessor(EventProcessor):
         star_system = _get_system(galaxy_state, pilot_state.system_address)
 
         result = []
-        # Exclude interstellar factors (and carriers) for bounties
-        if event["Type"] == "bounty" and event.get("BrokerPercentage", None) == None: 
+        if event["Type"] == "bounty":
             result.extend(self._process_bounty(event, star_system.name, star_system.minor_factions))
         # Include interstellar factors (and carriers) for combat bonds because this is the best way to 
         # approximate the work in a war, at least until conflict zone wins and losses are added to the 

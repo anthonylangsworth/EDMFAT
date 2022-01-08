@@ -119,16 +119,18 @@ def test_location_sequence(location_events: Tuple, expected_station: Station):
             [RedeemVoucherEventSummary("Fuelum", {"Findja Empire Assembly"}, {"The Fuel Rats Mischief"}, "bounty", 25490)]
         ),
         (
+            # Interstellar factors
             StarSystem("Findja", 1000, ("The Fuel Rats Mischief",)),
             Station("Station", 1000, "The Fuel Rats Mischief"),
             {"timestamp": "2020-05-09T03:42:31Z", "event": "RedeemVoucher", "Type": "bounty", "Amount": 13338, "Factions":[ { "Faction":"", "Amount":13338 } ], "BrokerPercentage": 25.000000 },
             []
         ),
         (
+            # Fleet carrier redemption office
             StarSystem("CPD-59 314", 1000, ("The Fuel Rats Mischief", "CPD-59 314 Imperial Society")),
             Station("Station", 1000, "The Fuel Rats Mischief"),
             {"timestamp": "2020-10-15T14:45:16Z", "event": "RedeemVoucher", "Type": "bounty", "Amount": 1779467, "Factions": [ { "Faction": "CPD-59 314 Imperial Society", "Amount": 1779467 } ], "BrokerPercentage":25.000000 },
-            []
+            [RedeemVoucherEventSummary("CPD-59 314", {"CPD-59 314 Imperial Society"}, {"The Fuel Rats Mischief"}, "bounty", 1779467)]
         ),
         (
             StarSystem("Fuelum", 1000, ("The Fuel Rats Mischief", "Rabh Empire Pact", "Kacomam Empire Group", "Trumuye Emperor's Grace", "EDA Kunti League")),
