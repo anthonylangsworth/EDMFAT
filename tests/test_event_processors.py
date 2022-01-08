@@ -158,46 +158,43 @@ def test_location_sequence(location_events: Tuple, expected_station: Station):
             [RedeemVoucherEventSummary("", {"CPD-59 314 Imperial Society"}, {"The Fuel Rats Mischief"}, "CombatBond", 1177365)]
         ),
         (
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
-            Station("", 1000, "The Fuel Rats Mischief"),
-            {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
-            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, set(), "CombatBond", 1502835)]
-        ),
-        (
+            # Interstellar factors
             StarSystem("", 1000, ("The Fuel Rats Mischief",)),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":46026, "Faction":"", "BrokerPercentage":25.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 61368)]
+            []
         ),
         (
+            # Fleet carrier redemption office
             StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
             {"timestamp":"2020-10-18T11:23:57Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1127126, "Faction":"HR 1597 & Co", "BrokerPercentage":25.000000 },
             [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1502835)]
         ),
+        # Redemption office percentages; this should not happen in game.
         (
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
-            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":0.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1000)]
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"HR 1597 & Co", "BrokerPercentage":0.000000 },
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1000)]
         ),
         (
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
-            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":1.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1010)]
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"HR 1597 & Co", "BrokerPercentage":1.000000 },
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1010)]
         ),
         (
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
-            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":99.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 100000)]
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"HR 1597 & Co", "BrokerPercentage":99.000000 },
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 100000)]
         ),
         (
-            StarSystem("", 1000, ("The Fuel Rats Mischief",)),
+            StarSystem("", 1000, ("The Fuel Rats Mischief", "HR 1597 & Co")),
             Station("", 1000, "The Fuel Rats Mischief"),
-            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"", "BrokerPercentage":100.000000 },
-            [RedeemVoucherEventSummary("", {""}, set(), "CombatBond", 1000)]
+            {"timestamp":"2020-07-17T15:21:20Z", "event":"RedeemVoucher", "Type":"CombatBond", "Amount":1000, "Faction":"HR 1597 & Co", "BrokerPercentage":100.000000 },
+            [RedeemVoucherEventSummary("", {"HR 1597 & Co"}, {"The Fuel Rats Mischief"}, "CombatBond", 1000)]
         ),
 
         # Scannable (Not sure what this is)
