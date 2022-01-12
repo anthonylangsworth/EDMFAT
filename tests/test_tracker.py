@@ -24,7 +24,7 @@ def test_tracker_init():
             {"HR 1597 & Co"}, 
             "Journal.201019220908.01.log", 
             ("HR 1597 - ANTI HR 1597 & Co\n"
-            "1,852,906 CR of Bounty Vouchers\n"
+            "1,916,227 CR of Bounty Vouchers\n"
             "\n"
             "HR 1597 - PRO HR 1597 & Co\n"
             "1 INF++ mission(s)\n"
@@ -301,7 +301,10 @@ def test_tracker_init():
             "Journal.210817213224.01.log",
             ("Naualam - ANTI Extra Corporation\n"
             "5 INF+ mission(s)\n"
-            "1 INF++ mission(s)")    
+            "1 INF++ mission(s)\n"
+            "\n"
+            "Naualam - PRO Extra Corporation\n"
+            "1,278,672 CR of Bounty Vouchers")
         ),
         (
             {"EDA Kunti League"},
