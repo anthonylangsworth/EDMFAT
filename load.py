@@ -67,9 +67,16 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX = 10
     PADY = 10
-    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). Select multiple minor factions using control + left click. If the desired minor faction does not appear in the list, jump to a system where the minor faction is present and reopen this dialog."
+    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). If the desired minor faction does not appear in the available list, jump to a system where the minor faction is present and reopen this dialog."
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
+    AVAILABLE_LABEL = "Available Minor Factions:"
+    TRACKED_LABEL = "Tracked Minor Factions:"
+    TRACK_BUTTON_LABEL = "Track >"
+    UNTRACK_BUTTON_LABEL = "< Untrack"
+    TRACK_ALL_BUTTON_LABEL = "Track All >>"
+    UNTRACK_ALL_BUTTON_LABEL = "<< Untrack All"
+    COPY_RAW_BUTTON_LABEL = "Copy Raw Activity"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
     MISSION_WARNING_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
     BACKGROUND = myNotebook.Label().cget("background")
@@ -77,49 +84,54 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
     # known_minor_factions = {"EDA Kunti League", "Kunti Dragons", "LTT 2337 Empire Party", "HR 1597 & Co", "The Fuel Rats Mischief", "The Scovereign Justice League", "Hutton Orbital Truckers", "The Dark Wheel", "Edge Fraternity", "Colonia Citizens Network", "Mobius Colonial Republic Navy", "Tenjin Pioneers Colonia", "Knights of Colonial Karma", "Ed's 38"}
     known_minor_factions = set(itertools.chain.from_iterable(star_system.minor_factions for star_system in this.tracker.galaxy_state.systems.values()))
-    known_minor_factions.update(this.tracker.minor_factions)
+    known_minor_factions.difference_update(this.tracker.minor_factions)
     known_minor_factions = sorted(known_minor_factions)
 
     frame = myNotebook.Frame(parent)
-    frame.columnconfigure(1, weight=1) # Required for listbox scrollbar
 
     HyperlinkLabel(
         frame, text=this.plugin_name, background=BACKGROUND, url=URL, underline=True
     ).grid(row=0, padx=PADX, pady=PADY, sticky=tk.W)
     myNotebook.Label(frame, text=VERSION).grid(row=0, column=3, padx=PADX, sticky=tk.E)
 
-    myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=500, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=8, padx=PADX, sticky=tk.W)
+    myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=800, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=3, padx=PADX, sticky=tk.W)
 
-    this.minor_faction_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
-    this.minor_faction_list.config(height=10, width=50)
-    this.minor_faction_list.grid(row=5, column=0, sticky=tk.W, padx=(PADX, 0), pady=PADY)
-    this.minor_faction_list.insert(tk.END, *known_minor_factions)
-
-    first_minor_faction_visible = False
-    for minor_faction in this.tracker.minor_factions:
-        this.minor_faction_list.selection_set(known_minor_factions.index(minor_faction))
-        if not first_minor_faction_visible:
-            this.minor_faction_list.see(known_minor_factions.index(minor_faction))
-            first_minor_faction_visible = True
-
+    myNotebook.Label(frame, text=AVAILABLE_LABEL).grid(row=4, column=0, padx=PADX, pady=(PADY, 0), sticky=tk.W)
+    this.available_mf_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
+    this.available_mf_list.config(height=8, width=40)
+    this.available_mf_list.grid(row=5, column=0, rowspan=4, sticky=tk.W, padx=(PADX, 0))
+    this.available_mf_list.insert(tk.END, *known_minor_factions)
     scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
-    scrollbar.config(command=this.minor_faction_list.yview)
-    scrollbar.grid(row=5, column=1, sticky=tk.NS + tk.W, pady=PADY)
+    scrollbar.config(command=this.available_mf_list.yview)
+    scrollbar.grid(row=5, column=0, rowspan=4, sticky=tk.NS + tk.E)
+    this.available_mf_list.config(yscrollcommand=scrollbar.set)
 
-    this.minor_faction_list.config(yscrollcommand=scrollbar.set)
+    tk.Button(frame, text=TRACK_BUTTON_LABEL, command=track_selected_minor_factions).grid(row=5, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame, text=UNTRACK_BUTTON_LABEL, command=untrack_selected_minor_factions).grid(row=6, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame, text=TRACK_ALL_BUTTON_LABEL, command=track_all_minor_factions).grid(row=7, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame, text=UNTRACK_ALL_BUTTON_LABEL, command=untrack_all_minor_factions).grid(row=8, column=1, sticky=(tk.W, tk.E), padx=PADX)
+
+    myNotebook.Label(frame, text=TRACKED_LABEL).grid(row=4, column=2, padx=PADX, pady=(PADY, 0), sticky=tk.W)
+    this.tracked_mf_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
+    this.tracked_mf_list.config(height=8, width=40)
+    this.tracked_mf_list.grid(row=5, column=2, rowspan=4, sticky=tk.W, padx=(PADX, 0))
+    this.tracked_mf_list.insert(tk.END, *sorted(this.tracker.minor_factions))
+    scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+    scrollbar.config(command=this.tracked_mf_list.yview)
+    scrollbar.grid(row=5, column=2, rowspan=4, sticky=tk.NS + tk.E)
+    this.tracked_mf_list.config(yscrollcommand=scrollbar.set)
 
     HyperlinkLabel(
         frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
-    ).grid(row=7, column=0, columnspan=8, padx=PADX, pady=PADY, sticky=tk.W)
+    ).grid(row=9, column=0, columnspan=3, padx=PADX, pady=PADY, sticky=tk.W)
 
-    tk.Button(frame, text="Clear", command=clear_selected_minor_factions).grid(row=8, column=0, sticky=tk.W, padx=10)
-    tk.Button(frame, text="Copy Raw Activity", command=copy_raw_activity).grid(row=8, column=3, sticky=tk.W, padx=10)
+    tk.Button(frame, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=10, column=0, sticky=tk.W, padx=PADX)
     
     return frame
 
 # Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
-    this.tracker.minor_factions = [this.minor_faction_list.get(index) for index in this.minor_faction_list.curselection()]
+    this.tracker.minor_factions = this.tracked_mf_list.get(0, tk.END)
     update_minor_factions()
     update_activity()
     this.logger.info(f"Minor factions changed to {this.tracker.minor_factions}")
@@ -157,8 +169,39 @@ def copy_activity_to_clipboard_and_reset() -> None:
 def copy_raw_activity() -> None:
     copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries], sort_keys=True, indent=4))
 
-def clear_selected_minor_factions() -> None:
-    this.minor_faction_list.selection_clear(0, tk.END)
+def track_selected_minor_factions() -> None:
+    move_selected_minor_factions(this.available_mf_list, this.tracked_mf_list)
+
+def untrack_selected_minor_factions() -> None:
+    move_selected_minor_factions(this.tracked_mf_list, this.available_mf_list)
+
+def move_selected_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
+    selected_mf = [src.get(index) for index in src.curselection()]
+
+    src_set = set(src.get(0, tk.END))
+    src_set.difference_update(selected_mf)
+    src.delete(0, tk.END)
+    src.insert(tk.END, *sorted(src_set))
+
+    dst_set = set(dst.get(0, tk.END))
+    dst_set.update(selected_mf)
+    dst.delete(0, tk.END)
+    dst.insert(tk.END, *sorted(dst_set))
+
+def track_all_minor_factions() -> None:
+    move_all_minor_factions(this.available_mf_list, this.tracked_mf_list)
+
+def untrack_all_minor_factions() -> None:
+    move_all_minor_factions(this.tracked_mf_list, this.available_mf_list)
+
+def move_all_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
+    src_mf = src.get(0, tk.END)
+    src.delete(0, tk.END)
+
+    dst_set = set(dst.get(0, tk.END))
+    dst_set.update(src_mf)
+    dst.delete(0, tk.END)
+    dst.insert(tk.END, *sorted(dst_set))
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
