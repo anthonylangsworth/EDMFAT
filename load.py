@@ -79,6 +79,11 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     COPY_RAW_BUTTON_LABEL = "Copy Raw Activity"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
     MISSION_WARNING_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
+    FORMATTERS_LABEL = "Activity Formatters:"
+    FORMATTERS_FIELDS = "Formatting rules and list of fields by activity"
+    SET_BUTTON_LABEL = "Set"
+    RESET_BUTTON_LABEL = "Reset"
+    DEFAULT_BUTTON_LABEL = "Default"
     BACKGROUND = myNotebook.Label().cget("background")
     FOREGROUND = myNotebook.Label().cget("foreground")
 
@@ -87,47 +92,81 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     known_minor_factions.difference_update(this.tracker.minor_factions)
     known_minor_factions = sorted(known_minor_factions)
 
-    frame = myNotebook.Frame(parent)
+    this.formatter_strings = {
+        "Bounty Vouchers": "{amount:,} CR of Bounty Vouchers",
+        "Combat Bonds": "{amount:,} CR of Combat Bonds", 
+        "Exploration Data": "{amount:,} CR of Cartography Data",
+        "Market Sell": "{total_count:,} T trade at {profit:,.0f} CR average profit per T",
+        "Missions Completed": "{missions_completed} INF{influence} mission(s)",
+        "Missions Failed": "{missions_failed} failed mission(s)",
+        "Murder": "{amount} clean ship kill(s)",
+        "Organic Data": "{amount:,} CR of Organic Data",
+    }
+
+    top_frame = myNotebook.Frame(parent)
+    frame1 = tk.Frame(top_frame)
+    frame1.grid(row=0, column=0, sticky=tk.W)
+    frame2 = tk.Frame(top_frame)
+    frame2.grid(row=1, column=0, sticky=tk.W)
 
     HyperlinkLabel(
-        frame, text=this.plugin_name, background=BACKGROUND, url=URL, underline=True
+        frame1, text=this.plugin_name, background=BACKGROUND, url=URL, underline=True
     ).grid(row=0, padx=PADX, pady=PADY, sticky=tk.W)
-    myNotebook.Label(frame, text=VERSION).grid(row=0, column=3, padx=PADX, sticky=tk.E)
+    myNotebook.Label(frame1, text=VERSION).grid(row=0, column=2, padx=PADX, sticky=tk.E)
 
-    myNotebook.Label(frame, text=INSTRUCTIONS, wraplength=800, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=3, padx=PADX, sticky=tk.W)
+    myNotebook.Label(frame1, text=INSTRUCTIONS, wraplength=800, justify=tk.LEFT, anchor=tk.W).grid(row=2, column=0, columnspan=3, padx=PADX, sticky=tk.W)
 
-    myNotebook.Label(frame, text=AVAILABLE_LABEL).grid(row=4, column=0, padx=PADX, pady=(PADY, 0), sticky=tk.W)
-    this.available_mf_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
+    myNotebook.Label(frame1, text=AVAILABLE_LABEL).grid(row=4, column=0, padx=PADX, pady=(PADY, 0), sticky=tk.W)
+    this.available_mf_list = tk.Listbox(frame1, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
     this.available_mf_list.config(height=8, width=40)
     this.available_mf_list.grid(row=5, column=0, rowspan=4, sticky=tk.W, padx=(PADX, 0))
     this.available_mf_list.insert(tk.END, *known_minor_factions)
-    scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+    scrollbar = tk.Scrollbar(frame1, orient=tk.VERTICAL)
     scrollbar.config(command=this.available_mf_list.yview)
     scrollbar.grid(row=5, column=0, rowspan=4, sticky=tk.NS + tk.E)
     this.available_mf_list.config(yscrollcommand=scrollbar.set)
 
-    tk.Button(frame, text=TRACK_BUTTON_LABEL, command=track_selected_minor_factions).grid(row=5, column=1, sticky=(tk.W, tk.E), padx=PADX)
-    tk.Button(frame, text=UNTRACK_BUTTON_LABEL, command=untrack_selected_minor_factions).grid(row=6, column=1, sticky=(tk.W, tk.E), padx=PADX)
-    tk.Button(frame, text=TRACK_ALL_BUTTON_LABEL, command=track_all_minor_factions).grid(row=7, column=1, sticky=(tk.W, tk.E), padx=PADX)
-    tk.Button(frame, text=UNTRACK_ALL_BUTTON_LABEL, command=untrack_all_minor_factions).grid(row=8, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame1, text=TRACK_BUTTON_LABEL, command=track_selected_minor_factions).grid(row=5, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame1, text=UNTRACK_BUTTON_LABEL, command=untrack_selected_minor_factions).grid(row=6, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame1, text=TRACK_ALL_BUTTON_LABEL, command=track_all_minor_factions).grid(row=7, column=1, sticky=(tk.W, tk.E), padx=PADX)
+    tk.Button(frame1, text=UNTRACK_ALL_BUTTON_LABEL, command=untrack_all_minor_factions).grid(row=8, column=1, sticky=(tk.W, tk.E), padx=PADX)
 
-    myNotebook.Label(frame, text=TRACKED_LABEL).grid(row=4, column=2, padx=PADX, pady=(PADY, 0), sticky=tk.W)
-    this.tracked_mf_list = tk.Listbox(frame, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
+    myNotebook.Label(frame1, text=TRACKED_LABEL).grid(row=4, column=2, padx=PADX, pady=(PADY, 0), sticky=tk.W)
+    this.tracked_mf_list = tk.Listbox(frame1, selectmode="extended", foreground=FOREGROUND, background=BACKGROUND)
     this.tracked_mf_list.config(height=8, width=40)
     this.tracked_mf_list.grid(row=5, column=2, rowspan=4, sticky=tk.W, padx=(PADX, 0))
     this.tracked_mf_list.insert(tk.END, *sorted(this.tracker.minor_factions))
-    scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+    scrollbar = tk.Scrollbar(frame1, orient=tk.VERTICAL)
     scrollbar.config(command=this.tracked_mf_list.yview)
     scrollbar.grid(row=5, column=2, rowspan=4, sticky=tk.NS + tk.E)
     this.tracked_mf_list.config(yscrollcommand=scrollbar.set)
 
     HyperlinkLabel(
-        frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
+        frame1, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
     ).grid(row=9, column=0, columnspan=3, padx=PADX, pady=PADY, sticky=tk.W)
+    tk.Button(frame1, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=9, column=0, columnspan=3, sticky=tk.E, pady=PADY)
 
-    tk.Button(frame, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=10, column=0, sticky=tk.W, padx=PADX)
+    myNotebook.Label(frame2, text=FORMATTERS_LABEL).grid(row=10, column=0, padx=PADX, pady=(PADY, 0), sticky=tk.W)
+    HyperlinkLabel(
+        frame2, text=FORMATTERS_FIELDS, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
+    ).grid(row=10, column=1, columnspan=30, pady=(PADY, 0), sticky=tk.W)
+    this.format_type = tk.StringVar()
+    this.format_string = tk.StringVar()
+    types_combo = tk.ttk.Combobox(frame2, textvariable=this.format_type)
+    types_combo.grid(row=20, column=0, sticky=(tk.W, tk.E), padx=PADX)
+    types_combo.state(["readonly"])
+    types_combo["values"] = sorted(list(this.formatter_strings))
+    types_combo.bind('<<ComboboxSelected>>', types_combo_selected)
+    tk.Button(frame2, text=SET_BUTTON_LABEL, width=6, padx=1, command=set_format_entry).grid(row=20, column=1, sticky=(tk.W, tk.E))
+    tk.Button(frame2, text=RESET_BUTTON_LABEL, width=6, padx=1, command=reset_format_entry).grid(row=20, column=2, sticky=(tk.W, tk.E))
+    tk.Button(frame2, text=DEFAULT_BUTTON_LABEL, width=6, padx=1, command=default_format_entry).grid(row=20, column=3, sticky=(tk.W, tk.E))
+    entry = tk.Entry(frame2, width=100, textvariable=this.format_string)
+    entry.grid(row=30, column=0, columnspan=32, sticky=(tk.W, tk.E), padx=PADX, pady=(5, PADY))
+
+    types_combo.current(0)
+    reset_format_entry()
     
-    return frame
+    return top_frame
 
 # Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
@@ -202,6 +241,18 @@ def move_all_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
     dst_set.update(src_mf)
     dst.delete(0, tk.END)
     dst.insert(tk.END, *sorted(dst_set))
+
+def types_combo_selected(event):
+    reset_format_entry()
+
+def set_format_entry() -> None:
+    this.formatter_strings[this.format_type.get()] = this.format_string.get()
+
+def reset_format_entry() -> None:
+    this.format_string.set(this.formatter_strings[this.format_type.get()])
+
+def default_format_entry() -> None:
+    this.format_string.set(this.formatter_strings[this.format_type.get()])
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
