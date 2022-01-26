@@ -204,6 +204,7 @@ _default_event_summary_order = (
     "MissionCompletedEventSummary",
     "RedeemVoucherEventSummary",
     "SellExplorationDataEventSummary",
+    "MarketBuyEventSummary",
     "MarketSellEventSummary",
     "MissionFailedEventSummary",
     "MurderEventSummary",

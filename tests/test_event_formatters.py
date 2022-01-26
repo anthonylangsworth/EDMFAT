@@ -1,8 +1,8 @@
 import pytest
 from typing import List
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter, SellOrganicDataEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketBuyEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter, SellOrganicDataEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 @pytest.mark.parametrize(
@@ -66,22 +66,22 @@ def test_market_sell(event_summaries: List[MarketSellEventFormatter], expected_a
     assert(market_sell_event_formatter.process(event_summaries) == expected_activity)
 
 
-
-# @pytest.mark.parametrize(
-#     "event_summaries, expected_activity",
-#     [
-#         (
-#             [
-#                 MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50),
-#                 MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 200, 100)
-#             ],
-#             ["2,000 T trade at 75 CR average profit per T"]
-#         )
-#     ]
-# )
-# def test_market_buy(event_summaries: List[MarketSellEventFormatter], expected_activity: str):
-#     market_sell_event_formatter = MarketBuyEventFormatter()
-#     assert(market_sell_event_formatter.process(event_summaries) == expected_activity)
+@pytest.mark.parametrize(
+    "event_summaries, expected_activity",
+    [
+        (
+            [
+                MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 100, 500, 2),
+                MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 50, 500, 2),
+                MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 200, 100, 3)
+            ],
+            ["3 buys. Total: 350 T, 95,000 CR. Average: 271 CR/T at supply 2.3."]
+        )
+    ]
+)
+def test_market_buy(event_summaries: List[MarketSellEventFormatter], expected_activity: str):
+    market_sell_event_formatter = MarketBuyEventFormatter()
+    assert(market_sell_event_formatter.process(event_summaries) == expected_activity)
 
 
 @pytest.mark.parametrize(

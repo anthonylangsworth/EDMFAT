@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Dict, Callable
 
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 from .state import Mission
 from .tracker import Tracker
 
@@ -41,6 +41,16 @@ class TrackerFileRepository:
             }
         }    
 
+    def _serialize_market_buy_event_summary(self, market_buy_event_summary:MarketBuyEventSummary) -> Dict:
+        return {
+            **self._serialize_event_summary(market_buy_event_summary),
+            **{
+                "count": market_buy_event_summary.count,
+                "buy_price_per_unit": market_buy_event_summary.buy_price_per_unit,
+                "supply_bracket": market_buy_event_summary.supply_bracket
+            }
+        }
+
     def _serialize_mission_completed_event_summary(self, mission_completed_event_summary:MissionCompletedEventSummary) -> Dict:
         return {
             **self._serialize_event_summary(mission_completed_event_summary),
@@ -52,6 +62,7 @@ class TrackerFileRepository:
     _event_summary_serializers = {
         "RedeemVoucherEventSummary": _serialize_redeem_voucher_event_summary,
         "SellExplorationDataEventSummary": _serialize_sell_exploration_data_event_summary,
+        "MarketBuyEventSummary": _serialize_market_buy_event_summary,
         "MarketSellEventSummary": _serialize_market_sell_event_summary,
         "MissionCompletedEventSummary": _serialize_mission_completed_event_summary,
         "MissionFailedEventSummary": _serialize_event_summary,
@@ -97,10 +108,15 @@ class TrackerFileRepository:
         return SellExplorationDataEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
             deserialized_event_summary["anti"], deserialized_event_summary["amount"])
 
+    def _deserialize_market_buy_event_summary(self, deserialized_event_summary) -> EventSummary:
+        return MarketBuyEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
+            deserialized_event_summary["anti"], deserialized_event_summary["count"], deserialized_event_summary["buy_price_per_unit"],
+            deserialized_event_summary["supply_bracket"])
+
     def _deserialize_market_sell_event_summary(self, deserialized_event_summary) -> EventSummary:
         return MarketSellEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
             deserialized_event_summary["anti"], deserialized_event_summary["count"], deserialized_event_summary["sell_price_per_unit"],
-            deserialized_event_summary["average_buy_price_per_unit"])
+            deserialized_event_summary["average_buy_price_per_unit"])            
 
     def _deserialize_mission_completed_event_summary(self, deserialized_event_summary) -> EventSummary:
         return MissionCompletedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
@@ -120,6 +136,7 @@ class TrackerFileRepository:
     _event_summary_deserializers = {
         "RedeemVoucherEventSummary": _deserialize_redeem_voucher_event_summary,
         "SellExplorationDataEventSummary": _deserialize_sell_exploration_data_event_summary,
+        "MarketBuyEventSummary": _deserialize_market_buy_event_summary,
         "MarketSellEventSummary": _deserialize_market_sell_event_summary,
         "MissionCompletedEventSummary": _deserialize_mission_completed_event_summary,
         "MissionFailedEventSummary": _deserialize_mission_failed_event_summary,

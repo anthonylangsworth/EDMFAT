@@ -1,7 +1,6 @@
 from abc import abstractmethod, ABC
-from itertools import groupby, accumulate
+from itertools import groupby
 from typing import Dict, List, Iterable
-import operator
 
 from .event_summaries import EventSummary
 
@@ -38,11 +37,13 @@ class MarketBuyEventFormatter(EventFormatter):
         total_t = 0
         total_cr = 0
         total_supply_bracket = 0
+        count = 0
         for event_summary in event_summaries:
             total_t += event_summary.count
             total_cr += event_summary.buy_price_per_unit * event_summary.count
             total_supply_bracket += event_summary.supply_bracket
-        return [f"{len(event_summaries)} buys. Total: {total_t:,} T/{total_cr:,} CR. Average: {total_t/len(event_summaries):,.0f} T/{total_cr / total_t:,.0f} CR/ {total_supply_bracket/len(event_summaries):,.0f} supply.",]
+            count += 1
+        return [f"{count} buys. Total: {total_t:,} T, {total_cr:,} CR. Average: {total_cr / total_t:,.0f} CR/T at supply {total_supply_bracket / count:,.1f}.",]
 
 
 class MarketSellEventFormatter(EventFormatter):
