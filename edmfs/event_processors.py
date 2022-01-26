@@ -158,10 +158,8 @@ class MarketBuyEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
-        result = []
-        if event["BuyPrice"] != event["AvgPricePaid"]:
-            pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
-            result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], 0)] # TODO: Supply bracket
+        pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
+        result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], 0)] # TODO: Supply bracket
         return result
 
 

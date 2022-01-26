@@ -2,9 +2,9 @@ import copy
 from typing import Dict, Any, Set, List, Iterable, Tuple
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
+from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
-from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
+from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 @pytest.mark.parametrize(
@@ -359,6 +359,39 @@ def test_market_sell_single(star_system: StarSystem, last_docked_station: Statio
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
     market_sell_event_processor = MarketSellEventProcessor()
+    result = market_sell_event_processor.process(market_sell_event, pilot_state, galaxy_state)
+    assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+
+@pytest.mark.parametrize(
+   "star_system, last_docked_station, market_sell_event, expected_results",
+    (
+        (
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
+            Station("Pu City", 1000, "Soverign Justice League"),
+            { "timestamp":"2020-05-09T03:09:19Z", "event":"MarketBuy", "MarketID":3223839232, "Type":"atmosphericextractors", "Type_Localised":"Atmospheric Processors", "Count":32, "BuyPrice":385, "TotalCost":12320 },
+            [MarketBuyEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 32, 385, 0)]
+        ),
+        (
+            StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
+            Station("Pu City", 1000, "Afli Blue Society"),
+            { "timestamp":"2021-02-21T06:34:18Z", "event":"MarketBuy", "MarketID":3224940032, "Type":"tantalum", "Count":33, "BuyPrice":3483, "TotalCost":111456 },
+            [MarketBuyEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 33, 3483, 0)]
+        )
+    )
+)
+def test_market_buy_single(star_system: StarSystem, last_docked_station: Station, market_sell_event: Dict[str, Any], expected_results: List):
+    pilot_state = PilotState()
+    pilot_state.system_address = star_system.address
+    pilot_state.last_docked_station = last_docked_station
+    galaxy_state = GalaxyState()
+    galaxy_state.systems[star_system.address] = star_system
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+
+    market_sell_event_processor = MarketBuyEventProcessor()
     result = market_sell_event_processor.process(market_sell_event, pilot_state, galaxy_state)
     assert result == expected_results
     assert pilot_state == expected_pilot_state

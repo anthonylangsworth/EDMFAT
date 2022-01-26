@@ -33,6 +33,18 @@ class SellExplorationDataEventFormatter(EventFormatter):
         return [f"{sum(map(lambda es: es.amount, event_summaries)):,} CR of Cartography Data",]
 
 
+class MarketBuyEventFormatter(EventFormatter):
+    def process(self, event_summaries: Iterable[EventSummary]) -> List[str]:
+        total_t = 0
+        total_cr = 0
+        total_supply_bracket = 0
+        for event_summary in event_summaries:
+            total_t += event_summary.count
+            total_cr += event_summary.buy_price_per_unit * event_summary.count
+            total_supply_bracket += event_summary.supply_bracket
+        return [f"{len(event_summaries)} buys. Total: {total_t:,} T/{total_cr:,} CR. Average: {total_t/len(event_summaries):,.0f} T/{total_cr / total_t:,.0f} CR/ {total_supply_bracket/len(event_summaries):,.0f} supply.",]
+
+
 class MarketSellEventFormatter(EventFormatter):
     def process(self, event_summaries: Iterable[EventSummary]) -> List[str]:
         total_sell_price = 0
@@ -71,6 +83,7 @@ class SellOrganicDataEventFormatter(EventFormatter):
 _default_event_formatters:Dict[str, EventFormatter] = {
     "RedeemVoucherEventSummary" : RedeemVoucherEventFormatter(),
     "SellExplorationDataEventSummary" : SellExplorationDataEventFormatter(),
+    "MarketBuyEventSummary": MarketBuyEventFormatter(),
     "MarketSellEventSummary": MarketSellEventFormatter(),
     "MissionCompletedEventSummary": MissionCompletedEventFormatter(),
     "MissionFailedEventSummary": MissionFailedEventFormatter(),
