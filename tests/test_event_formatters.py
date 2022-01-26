@@ -75,7 +75,7 @@ def test_market_sell(event_summaries: List[MarketSellEventFormatter], expected_a
                 MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 50, 500, 2),
                 MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 200, 100, 3)
             ],
-            ["3 buy(s) Total: 350 T and 95,000 CR Average: 271 CR/T at supply 2.3"]
+            ["3 market buy(s). Total: 350 T and 95,000 CR. Average: 271 CR/T at supply 2.3"]
         )
     ]
 )

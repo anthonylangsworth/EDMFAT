@@ -183,7 +183,7 @@ def test_tracker_init():
             "1 INF+++++ mission(s)\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n" 
-            "2 buy(s) Total: 1,088 T and 1,816,960 CR Average: 1,670 CR/T at supply 0.0\n"
+            "2 market buy(s). Total: 1,088 T and 1,816,960 CR. Average: 1,670 CR/T at supply 0.0\n"
             "2 T trade at 51,622 CR average profit per T\n"
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
@@ -253,7 +253,7 @@ def test_tracker_init():
             ("Atfero - ANTI Atfero Blue General & Co\n"
             "2 INF+ mission(s)\n"
             "3 INF++ mission(s)\n"
-            "1 buy(s) Total: 15 T and 12,885 CR Average: 859 CR/T at supply 0.0\n"
+            "1 market buy(s). Total: 15 T and 12,885 CR. Average: 859 CR/T at supply 0.0\n"
             "77 T trade at 1,048 CR average profit per T\n"
             "1 failed mission(s)\n"
             "\n"
@@ -275,7 +275,7 @@ def test_tracker_init():
             "\n"
             "Trumuye - PRO EDA Kunti League\n"
             "1,339,513 CR of Combat Bonds\n"
-            "13 buy(s) Total: 10,091 T and 847,644 CR Average: 84 CR/T at supply 0.0")
+            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at supply 0.0")
         ),
         (
             {"EDA Kunti League"},
