@@ -74,6 +74,38 @@ class SellExplorationDataEventSummary(EventSummary):
         return f"SellExplorationDataEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._amount})" 
 
 
+class MarketBuyEventSummary(EventSummary):
+    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, buy_price_per_unit: int, supply_bracket: int):
+        super(MarketBuyEventSummary, self).__init__(system_name, pro, anti)
+        self._count:int = count
+        self._buy_price_per_unit:int = buy_price_per_unit
+        self._supply_bracket:int = supply_bracket
+    
+    @property
+    def count(self) -> int:
+        return self._count
+
+    @property
+    def buy_price_per_unit(self) -> int:
+        return self._buy_price_per_unit
+
+    @property
+    def supply_bracket(self) -> int:
+        return self._supply_bracket
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, MarketBuyEventSummary):
+            return NotImplemented
+
+        return (super(MarketBuyEventSummary, self).__eq__(other)
+            and self._count == other._count
+            and self._buy_price_per_unit == other._buy_price_per_unit
+            and self._supply_bracket == other._supply_bracket)
+
+    def __repr__(self) -> str:
+        return f"MarketBuyEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._buy_price_per_unit}, {self._supply_bracket})" 
+
+
 class MarketSellEventSummary(EventSummary):
     def __init__(self, system_name:str, pro: iter, anti: iter, count: int, sell_price_per_unit: int, average_buy_price_per_unit: int):
         super(MarketSellEventSummary, self).__init__(system_name, pro, anti)

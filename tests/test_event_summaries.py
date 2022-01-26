@@ -1,4 +1,4 @@
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, SellOrganicDataEventSummary
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, SellOrganicDataEventSummary
 
 def test_redeem_voucher_event_summary_init():
     SYSTEM_NAME = "HR 1597"
@@ -38,6 +38,21 @@ def test_market_sell_event_summary_init():
     assert(market_sell_event_summary.count == COUNT)
     assert(market_sell_event_summary.sell_price_per_unit == SELL_PRICE_PER_UNIT)
     assert(market_sell_event_summary.average_buy_price_per_unit == AVERAGE_BUY_PRICE_PER_UNIT)
+
+def test_market_buy_event_summary_init():
+    SYSTEM_NAME = "Alpha Centauri"
+    PRO = ("Hutton Orbital Truckers",)
+    ANTI = ("The Dark Wheel",)
+    COUNT = 100
+    BUY_PRICE_PER_UNIT = 7
+    SUPPLY_BRACKET = 2
+    market_buy_event_summary = MarketBuyEventSummary(SYSTEM_NAME, PRO, ANTI, COUNT, BUY_PRICE_PER_UNIT, SUPPLY_BRACKET)
+    assert(market_buy_event_summary.system_name == SYSTEM_NAME)
+    assert(market_buy_event_summary.pro == PRO)
+    assert(market_buy_event_summary.anti == ANTI)
+    assert(market_buy_event_summary.count == COUNT)
+    assert(market_buy_event_summary.buy_price_per_unit == BUY_PRICE_PER_UNIT)
+    assert(market_buy_event_summary.supply_bracket == SUPPLY_BRACKET)
 
 def test_mission_completed_event_summary_init():
     SYSTEM_NAME = "Sol"

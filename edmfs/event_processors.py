@@ -2,7 +2,7 @@ from typing import Optional, Dict, Union, Any, Set, List, Tuple
 from abc import ABC, abstractmethod
 
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 class UnknownPlayerLocationError(Exception):
@@ -154,6 +154,17 @@ class MarketSellEventProcessor(EventProcessor):
         return result
 
 
+class MarketBuyEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        star_system = _get_system(galaxy_state, pilot_state.system_address)
+        station = pilot_state.last_docked_station
+        result = []
+        if event["BuyPrice"] != event["AvgPricePaid"]:
+            pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
+            result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], 0)] # TODO: Supply bracket
+        return result
+
+
 class MissionAcceptedEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
         star_system = _get_system(galaxy_state, pilot_state.system_address)
@@ -262,6 +273,7 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "SellExplorationData": SellExplorationDataEventProcessor(),
     "MultiSellExplorationData": SellExplorationDataEventProcessor(),
     "MarketSell": MarketSellEventProcessor(),
+    "MarketBuy": MarketBuyEventProcessor(),
     "MissionAccepted": MissionAcceptedEventProcessor(),
     "MissionCompleted": MissionCompletedEventProcessor(),
     "MissionAbandoned": MissionAbandonedEventProcessor(),
