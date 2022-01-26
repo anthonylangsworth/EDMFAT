@@ -43,7 +43,7 @@ class MarketBuyEventFormatter(EventFormatter):
             total_cr += event_summary.buy_price_per_unit * event_summary.count
             total_supply_bracket += event_summary.supply_bracket
             count += 1
-        return [f"{count} buys. Total: {total_t:,} T, {total_cr:,} CR. Average: {total_cr / total_t:,.0f} CR/T at supply {total_supply_bracket / count:,.1f}.",]
+        return [f"{count} buy(s) Total: {total_t:,} T and {total_cr:,} CR Average: {total_cr / total_t:,.0f} CR/T at supply {total_supply_bracket / count:,.1f}",]
 
 
 class MarketSellEventFormatter(EventFormatter):
