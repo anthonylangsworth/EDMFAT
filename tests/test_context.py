@@ -1,7 +1,7 @@
 import pytest
 from typing import Dict
 
-from edmfs.market import get_market_entry
+from edmfs.context import Context
 
 @pytest.mark.parametrize(
     "commodity_name, expected_result",
@@ -12,8 +12,8 @@ from edmfs.market import get_market_entry
         ("Not A Commodity", None)
     ]
 )
-def test_get_market_entry(commodity_name:str, expected_result:Dict):
-    market_entry = get_market_entry(commodity_name, "tests/market_files/market.json")
+def test_get_last_market_entry(commodity_name:str, expected_result:Dict):
+    market_entry = Context().get_last_market_entry(commodity_name, "tests/market_files/market.json")
     if expected_result:
         assert market_entry["Name_Localised"] == commodity_name
         for key in expected_result:
