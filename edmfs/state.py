@@ -1,6 +1,6 @@
-from typing import Dict, Callable, Any, Iterable
+from typing import Dict, Callable, Any
 from collections.abc import MutableMapping
-
+import json
 
 class StarSystem:
     def __init__(self, name:str, address:int, minor_factions:iter):
@@ -108,6 +108,13 @@ class GalaxyState:
     @property
     def systems(self) -> Dict[int, StarSystem]:
         return self._systems
+
+    def get_last_market_entry(self, commodity_name: str, market_json_file_path:str = None) -> Dict:
+        '''Return a Dict containg the market.json line for commodity_name or None, if no line matches'''
+        file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path == None else market_json_file_path
+        with open(file_path, mode="r") as market_json_file:
+            market = json.load(market_json_file)
+        return next(filter(lambda market_entry: market_entry["Name_Localised"] == commodity_name, market["Items"]), None)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
