@@ -86,6 +86,12 @@ class DockedEventProcessor(EventProcessor):
         return []
 
 
+class MarketEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        galaxy_state.last_market.clear()
+        return []
+
+
 class RedeemVoucherEventProcessor(EventProcessor):
     def _process_bounty(self, event:Dict[str, Any], system_name:str, system_minor_factions:list) -> List[EventSummary]:
         result = []
@@ -277,5 +283,6 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionAbandoned": MissionAbandonedEventProcessor(),
     "MissionFailed": MissionFailedEventProcessor(),
     "CommitCrime": CommitCrimeEventProcessor(),
-    "SellOrganicData": SellOrganicDataEventProcessor()
+    "SellOrganicData": SellOrganicDataEventProcessor(),
+    "Market": MarketEventProcessor()
 }

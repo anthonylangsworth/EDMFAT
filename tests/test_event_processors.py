@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any, Set, List, Iterable, Tuple
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
+from edmfs.event_processors import MarketEventProcessor, _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
@@ -732,5 +732,17 @@ def test_sell_organic_data(star_system: StarSystem, station: Station, sell_organ
     expected_galaxy_state = copy.deepcopy(galaxy_state)
     result = SellOrganicDataEventProcessor().process(sell_organic_data_event, pilot_state, galaxy_state)
     assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+
+def test_market():
+    event = { "timestamp":"2020-05-09T03:08:12Z", "event":"Market", "MarketID":3223839232, "StationName":"White Enterprise", "StarSystem":"LTT 9104" }
+    pilot_state = PilotState()
+    galaxy_state = GalaxyState(last_market = {"a": dict(), "b":dict()})
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    expected_galaxy_state.last_market.clear()
+    assert MarketEventProcessor().process(event, pilot_state, galaxy_state) == []
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
