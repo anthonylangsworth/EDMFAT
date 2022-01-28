@@ -1,8 +1,10 @@
 import requests
 import logging
-from typing import Tuple, Callable, Optional
+from typing import Tuple, Callable, Optional, Dict
+import json
 
 import edmfs
+
 
 def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> edmfs.StarSystem:
     """
@@ -25,6 +27,7 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
     except Exception as e:
         raise edmfs.UnknownStarSystemError(system_address) from e
 
+
 # See https://docs.github.com/en/rest/reference/repos#get-the-latest-release
 def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str, str]:
     """
@@ -43,8 +46,10 @@ def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str
         logger.exception(f"Error getting latest version from github: {e}")
         raise
 
+
 def split_tag(tag:str) -> Tuple[int]:
     return tuple(map(int, tag.lstrip("v").split(".")))
+
 
 def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_version:Tuple,
         get_latest_release_callable:Callable[[logging.Logger, str, str], Tuple[str, str]] = get_latest_release) -> Optional[str]:
@@ -53,3 +58,14 @@ def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_versi
     """
     tag_name, url = get_latest_release_callable(logger, owner, repo)
     return url if split_tag(tag_name) > current_version else None
+
+
+def get_last_market_entry(commodity_name: str, market_json_file_path:str = None) -> Dict[str, Dict]:
+    """
+    Return a Dict containg the market.json line for commodity_name or None, if no line matches.
+    Technically, not a web service but still an external access.
+    """
+    file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path == None else market_json_file_path
+    with open(file_path, mode="r") as market_json_file:
+        market = json.load(market_json_file)
+    return next(filter(lambda market_entry: market_entry["Name_Localised"] == commodity_name, market["Items"]), None)

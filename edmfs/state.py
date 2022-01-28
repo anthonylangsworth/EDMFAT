@@ -1,6 +1,5 @@
 from typing import Dict, Callable, Any
 from collections.abc import MutableMapping
-import json
 
 class StarSystem:
     def __init__(self, name:str, address:int, minor_factions:iter):
@@ -102,28 +101,28 @@ class Mission:
 
 
 class GalaxyState:
-    def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None):
+    def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None,
+        last_market_resolver:Callable[[str], Dict] = None, last_market:Dict[str, Dict] = None):
         self._systems = ResolvingDict(star_system_resolver, star_systems if star_systems else dict())
+        self._last_market = ResolvingDict(last_market_resolver, last_market if last_market else dict())
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
         return self._systems
 
-    def get_last_market_entry(self, commodity_name: str, market_json_file_path:str = None) -> Dict:
-        '''Return a Dict containg the market.json line for commodity_name or None, if no line matches'''
-        file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path == None else market_json_file_path
-        with open(file_path, mode="r") as market_json_file:
-            market = json.load(market_json_file)
-        return next(filter(lambda market_entry: market_entry["Name_Localised"] == commodity_name, market["Items"]), None)
+    @property
+    def last_market(self) -> Dict[str, Dict]:
+        return self._last_market
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
             return NotImplemented
 
-        return self._systems == other._systems
+        return self._systems == other._systems \
+            and self._last_market == other._last_market
 
     def __repr__(self) -> str:
-        return f"GalaxyState({self._systems})"
+        return f"GalaxyState({self._systems}, {self._last_market})"
 
 
 class PilotState:
