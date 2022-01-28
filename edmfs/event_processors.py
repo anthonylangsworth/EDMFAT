@@ -30,6 +30,16 @@ class UnknownMissionError(Exception):
         return self._id
 
 
+class CommodityNotInLastMarketError(Exception):
+    """Commodities were sold or bought at a market without a corresponding entry in market.json."""
+    def __init__(self, commodity_name: str):
+        self._name = commodity_name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+
 def _get_system(galaxy_state:GalaxyState, system_address:int) -> StarSystem:
     """Convert any KeyError into an UnknownStarSystemError. Convert a missing system_address into an UnknownPlayerLocationError"""
     if system_address == None:
@@ -83,6 +93,12 @@ class DockedEventProcessor(EventProcessor):
         pilot_state.last_docked_station = station
         if "SystemAddress" in event:
             pilot_state.system_address = event["SystemAddress"]
+        return []
+
+
+class MarketEventProcessor(EventProcessor):
+    def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
+        galaxy_state.last_market.clear()
         return []
 
 
@@ -159,7 +175,17 @@ class MarketBuyEventProcessor(EventProcessor):
         star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
-        result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], 0)] # TODO: Supply bracket
+        if "Type_Localised" in event.keys():
+            commodity_name = event["Type_Localised"]
+            market_entry = galaxy_state.last_market[commodity_name]
+        elif "Type" in event.keys():
+            commodity_name = event["Type"]
+            market_entry = next(filter(lambda me: me["Name"] == f'${commodity_name}_name;', galaxy_state.last_market.values()), None) 
+        else:
+            raise CommodityNotInLastMarketError("(Unknown)")
+        if not market_entry:
+            raise CommodityNotInLastMarketError(commodity_name)
+        result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], market_entry["StockBracket"])]
         return result
 
 
@@ -277,5 +303,6 @@ _default_event_processors:Dict[str, EventProcessor] = {
     "MissionAbandoned": MissionAbandonedEventProcessor(),
     "MissionFailed": MissionFailedEventProcessor(),
     "CommitCrime": CommitCrimeEventProcessor(),
-    "SellOrganicData": SellOrganicDataEventProcessor()
+    "SellOrganicData": SellOrganicDataEventProcessor(),
+    "Market": MarketEventProcessor()
 }

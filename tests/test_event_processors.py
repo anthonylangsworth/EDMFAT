@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any, Set, List, Iterable, Tuple
 import pytest
 
-from edmfs.event_processors import _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
+from edmfs.event_processors import MarketEventProcessor, _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
@@ -366,33 +366,35 @@ def test_market_sell_single(star_system: StarSystem, last_docked_station: Statio
 
 
 @pytest.mark.parametrize(
-   "star_system, last_docked_station, market_sell_event, expected_results",
+   "star_system, last_docked_station, market_entry, market_buy_event, expected_results",
     (
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Soverign Justice League"),
+            { "id":128064028, "Name":"$atmosphericextractors_name;", "Name_Localised":"Atmospheric Processors", "Category":"$MARKET_category_machinery;", "Category_Localised":"Machinery", "BuyPrice":205, "SellPrice":204, "MeanPrice":571, "StockBracket":2, "DemandBracket":0, "Stock":4100, "Demand":0, "Consumer":False, "Producer":True, "Rare":False }, 
             { "timestamp":"2020-05-09T03:09:19Z", "event":"MarketBuy", "MarketID":3223839232, "Type":"atmosphericextractors", "Type_Localised":"Atmospheric Processors", "Count":32, "BuyPrice":385, "TotalCost":12320 },
-            [MarketBuyEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 32, 385, 0)]
+            [MarketBuyEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 32, 385, 2)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Afli Blue Society"),
+            { "id":128049171, "Name":"$tantalum_name;", "Name_Localised":"Tantalum", "Category":"$MARKET_category_metals;", "Category_Localised":"Metals", "BuyPrice":2567, "SellPrice":2566, "MeanPrice":4044, "StockBracket":1, "DemandBracket":0, "Stock":22680, "Demand":0, "Consumer":False, "Producer":True, "Rare":False }, 
             { "timestamp":"2021-02-21T06:34:18Z", "event":"MarketBuy", "MarketID":3224940032, "Type":"tantalum", "Count":33, "BuyPrice":3483, "TotalCost":111456 },
-            [MarketBuyEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 33, 3483, 0)]
+            [MarketBuyEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 33, 3483, 1)]
         )
     )
 )
-def test_market_buy_single(star_system: StarSystem, last_docked_station: Station, market_sell_event: Dict[str, Any], expected_results: List):
+def test_market_buy_single(star_system: StarSystem, last_docked_station: Station, market_entry:Dict[str, str], market_buy_event: Dict[str, Any], expected_results: List):
     pilot_state = PilotState()
     pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
+    galaxy_state.last_market[market_entry["Name_Localised"]] = market_entry
     expected_pilot_state = copy.deepcopy(pilot_state)
     expected_galaxy_state = copy.deepcopy(galaxy_state)
-
-    market_sell_event_processor = MarketBuyEventProcessor()
-    result = market_sell_event_processor.process(market_sell_event, pilot_state, galaxy_state)
+    market_buy_event_processor = MarketBuyEventProcessor()
+    result = market_buy_event_processor.process(market_buy_event, pilot_state, galaxy_state)
     assert result == expected_results
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
@@ -732,5 +734,17 @@ def test_sell_organic_data(star_system: StarSystem, station: Station, sell_organ
     expected_galaxy_state = copy.deepcopy(galaxy_state)
     result = SellOrganicDataEventProcessor().process(sell_organic_data_event, pilot_state, galaxy_state)
     assert result == expected_results
+    assert pilot_state == expected_pilot_state
+    assert galaxy_state == expected_galaxy_state
+
+
+def test_market():
+    event = { "timestamp":"2020-05-09T03:08:12Z", "event":"Market", "MarketID":3223839232, "StationName":"White Enterprise", "StarSystem":"LTT 9104" }
+    pilot_state = PilotState()
+    galaxy_state = GalaxyState(last_market = {"a": dict(), "b":dict()})
+    expected_pilot_state = copy.deepcopy(pilot_state)
+    expected_galaxy_state = copy.deepcopy(galaxy_state)
+    expected_galaxy_state.last_market.clear()
+    assert MarketEventProcessor().process(event, pilot_state, galaxy_state) == []
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
