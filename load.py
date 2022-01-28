@@ -92,16 +92,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     known_minor_factions.difference_update(this.tracker.minor_factions)
     known_minor_factions = sorted(known_minor_factions)
 
-    this.formatter_strings = {
-        "Bounty Vouchers": "{amount:,} CR of Bounty Vouchers",
-        "Combat Bonds": "{amount:,} CR of Combat Bonds", 
-        "Exploration Data": "{amount:,} CR of Cartography Data",
-        "Market Sell": "{total_count:,} T trade at {profit:,.0f} CR average profit per T",
-        "Missions Completed": "{missions_completed} INF{influence} mission(s)",
-        "Missions Failed": "{missions_failed} failed mission(s)",
-        "Murder": "{amount} clean ship kill(s)",
-        "Organic Data": "{amount:,} CR of Organic Data",
-    }
+    this.formatter_strings = this.tracker.formatter_strings
 
     top_frame = myNotebook.Frame(parent)
     frame1 = tk.Frame(top_frame)
@@ -170,6 +161,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 
 # Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
+    this.tracker.formatter_strings = this.formatter_strings
     this.tracker.minor_factions = this.tracked_mf_list.get(0, tk.END)
     update_minor_factions()
     update_activity()
@@ -252,7 +244,7 @@ def reset_format_entry() -> None:
     this.format_string.set(this.formatter_strings[this.format_type.get()])
 
 def default_format_entry() -> None:
-    this.format_string.set(this.formatter_strings[this.format_type.get()])
+    this.format_string.set(edmfs.event_formatters._default_formatter_strings[this.format_type.get()])
 
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:

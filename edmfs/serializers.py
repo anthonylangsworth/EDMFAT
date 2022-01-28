@@ -5,6 +5,7 @@ from typing import Dict, Callable
 from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
 from .state import Mission
 from .tracker import Tracker
+from .event_formatters import _default_formatter_strings
 
 class TrackerFileRepository:
     def _serialize_event_summary(self, event_summary:EventSummary) -> Dict:
@@ -72,10 +73,11 @@ class TrackerFileRepository:
             "system_address": mission.system_address
         }
 
-    def _serialize_tracker_v1(self, tracker:Tracker) -> Dict:
+    def _serialize_tracker_v2(self, tracker:Tracker) -> Dict:
         # Do not save the current system or last docked station from PilotState. Elite will set these when restarted.
         result = {
             "minor_factions": list(tracker.minor_factions),
+            "formatter_strings": tracker.formatter_strings,
             "pilot_state": {
                 "missions": [self._serialize_mission_v1(mission) for mission in tracker._pilot_state.missions.values()]
             },
@@ -85,8 +87,8 @@ class TrackerFileRepository:
 
     def serialize(self, tracker:Tracker) -> str:
         return json.dumps({
-            "version": 1,
-            "tracker": self._serialize_tracker_v1(tracker)
+            "version": 2,
+            "tracker": self._serialize_tracker_v2(tracker)
         }, indent=4)
 
     def _deserialize_redeem_voucher_event_summary(self, deserialized_event_summary) -> EventSummary:
@@ -132,6 +134,16 @@ class TrackerFileRepository:
 
     def _deserialize_tracker_v1(self, deserialized_tracker:dict, logger:logging.Logger, resolver:Callable) -> Tracker:
         tracker = Tracker(deserialized_tracker["minor_factions"], logger, resolver)
+        tracker.formatter_strings = dict(_default_formatter_strings)
+        tracker.pilot_state.missions.update([(mission["id"], self._deserialize_mission_v1(mission)) for mission in deserialized_tracker["pilot_state"]["missions"]])
+        # Consider moving these into tracker
+        tracker._event_summaries.extend([self._deserialize_event_summary_v1(event_summary) for event_summary in deserialized_tracker["event_summaries"]])
+        tracker._update_activity()
+        return tracker
+
+    def _deserialize_tracker_v2(self, deserialized_tracker:dict, logger:logging.Logger, resolver:Callable) -> Tracker:
+        tracker = Tracker(deserialized_tracker["minor_factions"], logger, resolver)
+        tracker.formatter_strings = dict(deserialized_tracker["formatter_strings"])
         tracker.pilot_state.missions.update([(mission["id"], self._deserialize_mission_v1(mission)) for mission in deserialized_tracker["pilot_state"]["missions"]])
         # Consider moving these into tracker
         tracker._event_summaries.extend([self._deserialize_event_summary_v1(event_summary) for event_summary in deserialized_tracker["event_summaries"]])
@@ -139,7 +151,8 @@ class TrackerFileRepository:
         return tracker
 
     _deserializers = {
-        1: _deserialize_tracker_v1
+        1: _deserialize_tracker_v1,
+        2: _deserialize_tracker_v2,
     }
 
     def deserialize(self, serialized_tracker:str, logger:logging.Logger, resolver:Callable) -> Tracker:

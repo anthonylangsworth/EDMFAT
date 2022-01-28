@@ -5,7 +5,7 @@ import logging
 
 from .state import Station, PilotState, GalaxyState, StarSystem
 from .event_processors import EventProcessor, _default_event_processors, UnknownPlayerLocationError, UnknownStarSystemError
-from .event_formatters import EventFormatter, _default_event_formatters
+from .event_formatters import EventFormatter, _default_event_formatters, _default_formatter_strings
 from .event_summaries import EventSummary, _default_event_summary_order
 
 def _get_dummy_logger():
@@ -18,6 +18,7 @@ class Tracker:
     def __init__(self, minor_factions:Iterable[str], logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
             event_processors:Dict[str, object] = None,  event_formatters: Dict[str, object] = None, event_summary_order:Iterable[str] = None):
         self._minor_factions = set(minor_factions)
+        self._formatter_strings = dict(_default_formatter_strings)
         self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState(star_system_resolver)
@@ -35,6 +36,14 @@ class Tracker:
     def minor_factions(self, value:Iterable) -> None:
         self._minor_factions = set(value)
         self._update_activity()
+
+    @property
+    def formatter_strings(self) -> Dict:
+        return dict(self._formatter_strings)
+
+    @formatter_strings.setter
+    def formatter_strings(self, value:Dict) -> None:
+        self._formatter_strings = dict(value)
 
     @property
     def pilot_state(self) -> PilotState:

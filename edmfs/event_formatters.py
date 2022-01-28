@@ -77,3 +77,14 @@ _default_event_formatters:Dict[str, EventFormatter] = {
     "MurderEventSummary": MurderEventFormatter(),
     "SellOrganicDataEventSummary": SellOrganicDataEventFormatter()
 }
+
+_default_formatter_strings:Dict[str, str] = {
+    "Bounty Vouchers": "{amount:,} CR of Bounty Vouchers",
+    "Combat Bonds": "{amount:,} CR of Combat Bonds",
+    "Exploration Data": "{amount:,} CR of Cartography Data",
+    "Market Sell": "{total_count:,} T trade at {profit:,.0f} CR average profit per T",
+    "Missions Completed": "{missions_completed} INF{influence} mission(s)",
+    "Missions Failed": "{missions_failed} failed mission(s)",
+    "Murder": "{amount} clean ship kill(s)",
+    "Organic Data": "{amount:,} CR of Organic Data",
+}
