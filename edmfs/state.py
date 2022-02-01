@@ -102,7 +102,7 @@ class Mission:
 
 class GalaxyState:
     def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None,
-        last_market_resolver:Callable[[str], Dict] = None, last_market:Dict[str, Dict] = None):
+        last_market_resolver:Callable[[str], Dict[str, Dict]] = None, last_market:Dict[str, Dict] = None):
         self._systems = ResolvingDict(star_system_resolver, star_systems if star_systems else dict())
         self._last_market = ResolvingDict(last_market_resolver, last_market if last_market else dict())
 
