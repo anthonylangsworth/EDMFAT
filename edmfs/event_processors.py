@@ -182,7 +182,8 @@ class MarketBuyEventProcessor(EventProcessor):
             commodity_name = event["Type"]
             market_entry = next(filter(lambda me: me["Name"] == f'${commodity_name}_name;', galaxy_state.last_market.values()), None) 
         else:
-            raise CommodityNotInLastMarketError("(Unknown)")
+            commodity_name = "(Unknown)"
+            market_entry = None
         if not market_entry:
             raise CommodityNotInLastMarketError(commodity_name)
         result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], market_entry["StockBracket"])]
