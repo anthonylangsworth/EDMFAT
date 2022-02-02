@@ -3,7 +3,7 @@ import logging
 import functools
 from typing import Callable, Dict, Tuple
 
-from edmfat_web_services import resolve_star_system_via_edsm, split_tag, get_newer_release, get_last_market_entry
+from edmfat_web_services import resolve_star_system_via_edsm, split_tag, get_newer_release, get_last_market
 from edmfs.state import StarSystem
 from edmfs.tracker import _get_dummy_logger
 
@@ -45,10 +45,11 @@ def test_get_newer_release():
         ("Not A Commodity", None)
     ]
 )
-def test_get_last_market_entry(commodity_name:str, expected_result:Dict):
-    market_entry = get_last_market_entry(commodity_name, "tests/market_files/market.json")
+def test_get_last_market(commodity_name:str, expected_result:Dict):
+    market = get_last_market("tests/market_files/market.json")
+    market_entry = market.get(commodity_name)
     if expected_result:
-        assert market_entry["Name_Localised"] == commodity_name
+        market_entry == market[commodity_name]
         for key in expected_result:
             assert market_entry[key] == expected_result[key]
     else:

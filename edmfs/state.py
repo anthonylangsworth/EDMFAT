@@ -102,9 +102,10 @@ class Mission:
 
 class GalaxyState:
     def __init__(self, star_system_resolver:Callable[[int], StarSystem] = None, star_systems:Dict[int, StarSystem] = None,
-        last_market_resolver:Callable[[str], Dict[str, Dict]] = None, last_market:Dict[str, Dict] = None):
+        load_last_market:Callable[[], Dict[str, Dict]] = None, last_market:Dict[str, Dict] = None):
         self._systems = ResolvingDict(star_system_resolver, star_systems if star_systems else dict())
-        self._last_market = ResolvingDict(last_market_resolver, last_market if last_market else dict())
+        self._last_market = last_market if last_market else dict()
+        self._load_last_market = load_last_market
 
     @property
     def systems(self) -> Dict[int, StarSystem]:
@@ -114,12 +115,19 @@ class GalaxyState:
     def last_market(self) -> Dict[str, Dict]:
         return self._last_market
 
+    def reload_market(self) -> None:
+        if self._load_last_market:
+            self._last_market = self._load_last_market()
+        else:
+            self._last_market.clear()
+
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):
             return NotImplemented
 
         return self._systems == other._systems \
-            and self._last_market == other._last_market
+            and self._last_market == other._last_market \
+            and self._load_last_market == other._load_last_market
 
     def __repr__(self) -> str:
         return f"GalaxyState({self._systems}, {self._last_market})"

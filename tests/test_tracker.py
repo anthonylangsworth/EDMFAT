@@ -368,20 +368,26 @@ def test_journal_file(minor_factions:List[str], journal_file_name:str, expected_
     #print(stream.getvalue())
 
 @pytest.mark.parametrize(
-    "journal_file_name",
+    "journal_file_name, load_last_market",
     [
-        None,
-        "Journal.201019220908.01.log"
+        (None, None),
+        (
+            "Journal.201019220908.01.log",
+            lambda: { 
+                "Consumer Technology": { "id":128049240, "Name":"$consumertechnology_name;", "Name_Localised":"Consumer Technology", "Category":"$MARKET_category_consumer_items;", "Category_Localised":"Consumer items", "BuyPrice":0, "SellPrice":7186, "MeanPrice":6690, "StockBracket":0, "DemandBracket":2, "Stock":0, "Demand":18, "Consumer":True, "Producer":False, "Rare":False },
+                "Coltan": { "id":128049159, "Name":"$coltan_name;", "Name_Localised":"Coltan", "Category":"$MARKET_category_minerals;", "Category_Localised":"Minerals", "BuyPrice":5051, "SellPrice":4846, "MeanPrice":6163, "StockBracket":3, "DemandBracket":0, "Stock":277, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }
+            }
+        )
     ]
 )
-def test_tracker_clear_activity(journal_file_name):
+def test_tracker_clear_activity(journal_file_name, load_last_market):
     events = []
     if(journal_file_name):
         with open("tests/journal_files/" + journal_file_name) as journal_file:
             events = [json.loads(line) for line in journal_file.readlines()]
 
     MINOR_FACTIONS = set(["EDA Kunti League"])
-    tracker = Tracker(MINOR_FACTIONS)
+    tracker = Tracker(minor_factions = MINOR_FACTIONS, load_last_market = load_last_market)
     for event in events:
         tracker.on_event(event)
     tracker.clear_activity()

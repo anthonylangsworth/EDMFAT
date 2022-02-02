@@ -60,12 +60,14 @@ def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_versi
     return url if split_tag(tag_name) > current_version else None
 
 
-def get_last_market_entry(commodity_name: str, market_json_file_path:str = None) -> Dict[str, Dict]:
+def get_last_market(market_json_file_path:str = None) -> Dict[str, Dict]:
     """
-    Return a Dict containg the market.json line for commodity_name or None, if no line matches.
-    Technically, not a web service but still an external access.
+    Return a Dict containing market.json Items. Technically not a web service but still an external access.
     """
     file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path == None else market_json_file_path
     with open(file_path, mode="r") as market_json_file:
         market = json.load(market_json_file)
-    return next(filter(lambda market_entry: market_entry["Name_Localised"] == commodity_name, market["Items"]), None)
+    result = {}
+    for market_entry in market["Items"]:
+        result[market_entry["Name_Localised"]] = market_entry
+    return result

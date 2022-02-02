@@ -98,7 +98,7 @@ class DockedEventProcessor(EventProcessor):
 
 class MarketEventProcessor(EventProcessor):
     def process(self, event:Dict[str, Any], pilot_state:PilotState, galaxy_state:GalaxyState) -> List[EventSummary]:
-        galaxy_state.last_market.clear()
+        galaxy_state.reload_market()
         return []
 
 
@@ -186,8 +186,7 @@ class MarketBuyEventProcessor(EventProcessor):
             market_entry = None
         if not market_entry:
             raise CommodityNotInLastMarketError(commodity_name)
-        result = [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], market_entry["StockBracket"])]
-        return result
+        return [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], market_entry["StockBracket"])]
 
 
 class MissionAcceptedEventProcessor(EventProcessor):

@@ -16,12 +16,12 @@ def _get_dummy_logger():
 
 class Tracker:
     def __init__(self, minor_factions:Iterable[str], logger:logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None, 
-            last_market_resolver: Callable[[str], Dict[str, Dict]] = None, event_processors:Dict[str, object] = None, 
+            load_last_market: Callable[[str], Dict[str, Dict]] = None, event_processors: Dict[str, object] = None, 
             event_formatters: Dict[str, object] = None, event_summary_order:Iterable[str] = None):
         self._minor_factions = set(minor_factions)
         self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
-        self._galaxy_state = GalaxyState(star_system_resolver = star_system_resolver, last_market_resolver = last_market_resolver)
+        self._galaxy_state = GalaxyState(star_system_resolver = star_system_resolver, load_last_market = load_last_market)
         self.clear_activity()
         self._event_processors = event_processors if event_processors else _default_event_processors
         self._event_formatters = event_formatters if event_formatters else _default_event_formatters
