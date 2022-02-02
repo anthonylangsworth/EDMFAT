@@ -69,5 +69,5 @@ def get_last_market(market_json_file_path:str = None) -> Dict[str, Dict]:
         market = json.load(market_json_file)
     result = {}
     for market_entry in market["Items"]:
-        result[market_entry["Name_Localised"]] = market_entry
+        result[str(market_entry["Name_Localised"]).strip()] = market_entry
     return result

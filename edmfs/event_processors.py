@@ -176,8 +176,8 @@ class MarketBuyEventProcessor(EventProcessor):
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
         if "Type_Localised" in event.keys():
-            commodity_name = event["Type_Localised"]
-            market_entry = galaxy_state.last_market[commodity_name]
+            commodity_name = str(event["Type_Localised"]).strip()
+            market_entry = galaxy_state.last_market.get(commodity_name)
         elif "Type" in event.keys():
             commodity_name = event["Type"]
             market_entry = next(filter(lambda me: me["Name"] == f'${commodity_name}_name;', galaxy_state.last_market.values()), None) 
