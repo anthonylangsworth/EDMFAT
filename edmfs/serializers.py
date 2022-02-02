@@ -37,7 +37,8 @@ class TrackerFileRepository:
             **{
                 "count": market_sell_event_summary.count,
                 "sell_price_per_unit": market_sell_event_summary.sell_price_per_unit,
-                "average_buy_price_per_unit": market_sell_event_summary.average_buy_price_per_unit
+                "average_buy_price_per_unit": market_sell_event_summary.average_buy_price_per_unit,
+                "supply_bracket": market_buy_event_summary.demand_bracket
             }
         }    
 
@@ -116,7 +117,7 @@ class TrackerFileRepository:
     def _deserialize_market_sell_event_summary(self, deserialized_event_summary) -> EventSummary:
         return MarketSellEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 
             deserialized_event_summary["anti"], deserialized_event_summary["count"], deserialized_event_summary["sell_price_per_unit"],
-            deserialized_event_summary["average_buy_price_per_unit"])            
+            deserialized_event_summary["average_buy_price_per_unit"], deserialized_event_summary.get("demand_bracket", 0))
 
     def _deserialize_mission_completed_event_summary(self, deserialized_event_summary) -> EventSummary:
         return MissionCompletedEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"], 

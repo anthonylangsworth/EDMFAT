@@ -54,8 +54,8 @@ def test_sell_exploration_data(event_summaries: List[SellExplorationDataEventSum
     [
         (
             [
-                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50),
-                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 200, 100)
+                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50, 0),
+                MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 200, 100, 0)
             ],
             ["2,000 T trade at 75 CR average profit per T"]
         )

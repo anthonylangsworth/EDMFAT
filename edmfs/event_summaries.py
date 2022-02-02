@@ -107,11 +107,13 @@ class MarketBuyEventSummary(EventSummary):
 
 
 class MarketSellEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, sell_price_per_unit: int, average_buy_price_per_unit: int):
+    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, sell_price_per_unit: int, 
+            average_buy_price_per_unit: int, demand_bracket: float):
         super(MarketSellEventSummary, self).__init__(system_name, pro, anti)
         self._count:int = count
         self._sell_price_per_unit:int = sell_price_per_unit
         self._average_buy_price_per_unit:int = average_buy_price_per_unit
+        self._demand_bracket:float = demand_bracket
     
     @property
     def count(self) -> int:
@@ -125,6 +127,10 @@ class MarketSellEventSummary(EventSummary):
     def average_buy_price_per_unit(self) -> int:
         return self._average_buy_price_per_unit
 
+    @property
+    def demand_bracket(self) -> float:
+        return self._demand_bracket
+
     def __eq__(self, other) -> bool:
         if not isinstance(other, MarketSellEventSummary):
             return NotImplemented
@@ -132,10 +138,11 @@ class MarketSellEventSummary(EventSummary):
         return (super(MarketSellEventSummary, self).__eq__(other)
             and self._count == other._count
             and self._sell_price_per_unit == other._sell_price_per_unit
-            and self._average_buy_price_per_unit == other._average_buy_price_per_unit)
+            and self._average_buy_price_per_unit == other._average_buy_price_per_unit
+            and self._demand_bracket == other._demand_bracket)
 
     def __repr__(self) -> str:
-        return f"MarketSellEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit})" 
+        return f"MarketSellEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit}, {self._demand_bracket})" 
 
 
 class MissionCompletedEventSummary(EventSummary):

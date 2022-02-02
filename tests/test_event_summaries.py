@@ -31,13 +31,15 @@ def test_market_sell_event_summary_init():
     COUNT = 100
     SELL_PRICE_PER_UNIT = 10
     AVERAGE_BUY_PRICE_PER_UNIT = 5
-    market_sell_event_summary:MarketSellEventSummary = MarketSellEventSummary(SYSTEM_NAME, PRO, ANTI, COUNT, SELL_PRICE_PER_UNIT, AVERAGE_BUY_PRICE_PER_UNIT)
+    DEMAND_BRACKET = 1.2
+    market_sell_event_summary:MarketSellEventSummary = MarketSellEventSummary(SYSTEM_NAME, PRO, ANTI, COUNT, SELL_PRICE_PER_UNIT, AVERAGE_BUY_PRICE_PER_UNIT, DEMAND_BRACKET)
     assert(market_sell_event_summary.system_name == SYSTEM_NAME)
     assert(market_sell_event_summary.pro == PRO)
     assert(market_sell_event_summary.anti == ANTI)
     assert(market_sell_event_summary.count == COUNT)
     assert(market_sell_event_summary.sell_price_per_unit == SELL_PRICE_PER_UNIT)
     assert(market_sell_event_summary.average_buy_price_per_unit == AVERAGE_BUY_PRICE_PER_UNIT)
+    assert(market_sell_event_summary.demand_bracket == AVERDEMAND_BRACKETAGE_BUY_PRICE_PER_UNIT)
 
 def test_market_buy_event_summary_init():
     SYSTEM_NAME = "Alpha Centauri"

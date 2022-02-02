@@ -1,6 +1,8 @@
 from typing import Optional, Dict, Union, Any, Set, List, Tuple
 from abc import ABC, abstractmethod
 
+from pytest import mark
+
 from .state import Station, StarSystem, Mission, PilotState, GalaxyState
 from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
@@ -67,6 +69,25 @@ def _get_event_minor_faction_impact(event_minor_faction: str, system_minor_facti
         pro = set([event_minor_faction])
         anti = set()
     return (pro, anti) if not inverted else (anti, pro)
+
+
+def _get_market_entry(event:Dict[str, Any], galaxy_state:GalaxyState) -> Dict[str, Any]:
+    """
+    Get the relevent line of market.json for the given MarketSell or MarketBuy event.
+    Raises a CommodityNotInLastMarketError if the commodity is not found.
+    """
+    if "Type_Localised" in event.keys():
+        commodity_name = str(event["Type_Localised"]).strip()
+        market_entry = galaxy_state.last_market.get(commodity_name)
+    elif "Type" in event.keys():
+        commodity_name = event["Type"]
+        market_entry = next(filter(lambda me: me["Name"] == f'${commodity_name}_name;', galaxy_state.last_market.values()), None) 
+    else:
+        commodity_name = "(Unknown)"
+        market_entry = None
+    if not market_entry:
+        raise CommodityNotInLastMarketError(commodity_name)
+    return market_entry
 
 
 class EventProcessor(ABC):
@@ -166,7 +187,8 @@ class MarketSellEventProcessor(EventProcessor):
             sold_at_blackmarket = "BlackMarket" in event
             pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions, 
                 (sold_at_loss and not sold_at_blackmarket) or (not sold_at_loss and sold_at_blackmarket))
-            result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"])]
+            market_entry = _get_market_entry(event, galaxy_state)
+            result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"], market_entry["DemandBracket"])]
         return result
 
 
@@ -175,17 +197,7 @@ class MarketBuyEventProcessor(EventProcessor):
         star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
-        if "Type_Localised" in event.keys():
-            commodity_name = str(event["Type_Localised"]).strip()
-            market_entry = galaxy_state.last_market.get(commodity_name)
-        elif "Type" in event.keys():
-            commodity_name = event["Type"]
-            market_entry = next(filter(lambda me: me["Name"] == f'${commodity_name}_name;', galaxy_state.last_market.values()), None) 
-        else:
-            commodity_name = "(Unknown)"
-            market_entry = None
-        if not market_entry:
-            raise CommodityNotInLastMarketError(commodity_name)
+        market_entry = _get_market_entry(event, galaxy_state)
         return [MarketBuyEventSummary(star_system.name, pro, anti, event["Count"], event["BuyPrice"], market_entry["StockBracket"])]
 
 
