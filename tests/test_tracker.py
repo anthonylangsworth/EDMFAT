@@ -311,7 +311,7 @@ def load_test_market():
             "\n"
             "Trumuye - PRO EDA Kunti League\n"
             "1,339,513 CR of Combat Bonds\n"
-            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at supply 0.0")
+            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at supply 3.0")
         ),
         (
             {"EDA Kunti League"},
