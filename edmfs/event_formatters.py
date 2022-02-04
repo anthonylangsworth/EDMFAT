@@ -50,12 +50,16 @@ class MarketSellEventFormatter(EventFormatter):
     def process(self, event_summaries: Iterable[EventSummary]) -> List[str]:
         total_sell_price = 0
         total_buy_price = 0
-        total_count = 0
+        total_t = 0
+        total_demand_bracket = 0
+        count = 0
         for event_summary in event_summaries:
             total_sell_price += event_summary.sell_price_per_unit * event_summary.count
             total_buy_price += event_summary.average_buy_price_per_unit * event_summary.count
-            total_count += event_summary.count
-        return [f"{total_count:,} T trade at {(total_sell_price - total_buy_price) / total_count:,.0f} CR average profit per T",]
+            total_t += event_summary.count
+            total_demand_bracket += event_summary.demand_bracket
+            count += 1
+        return [f"{count} market sell(s). Total: {total_t:,} T and {total_sell_price - total_buy_price:,} CR profit. Average: {(total_sell_price - total_buy_price) / total_t:,.0f} CR/T profit at demand {total_demand_bracket / count:,.1f}",]
 
 
 class MissionCompletedEventFormatter(EventFormatter):
