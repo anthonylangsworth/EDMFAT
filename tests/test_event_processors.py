@@ -303,58 +303,66 @@ def test_sell_exploration_data_single(star_system: StarSystem, last_docked_stati
 
 
 @pytest.mark.parametrize(
-   "star_system, last_docked_station, market_sell_event, expected_results",
+   "star_system, last_docked_station, market_entry, market_sell_event, expected_results",
     (
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Soverign Justice League"),
+            { "id":128049154, "Name":"$gold_name;", "Name_Localised":"Gold", "Category":"$MARKET_category_metals;", "Category_Localised":"Metals", "BuyPrice":44266, "SellPrice":43761, "MeanPrice":47610, "StockBracket":3, "DemandBracket":0, "Stock":80, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568},
             [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 756, 59759, 4568, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Afli Blue Society"),
+            { "id":128049154, "Name":"$gold_name;", "Name_Localised":"Gold", "Category":"$MARKET_category_metals;", "Category_Localised":"Metals", "BuyPrice":44266, "SellPrice":43761, "MeanPrice":47610, "StockBracket":3, "DemandBracket":2, "Stock":80, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-12-26T14:44:02Z", "event":"MarketSell", "MarketID":3510023936, "Type":"gold", "Count":756, "SellPrice":59759, "TotalSale":45177804, "AvgPricePaid":4568},
-            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 756, 59759, 4568, 0)]
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 756, 59759, 4568, 2)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Soverign Justice League"),
+            { "id":128064028, "Name":"$battleweapons_name;", "Name_Localised":"Battle Weapons", "Category":"$MARKET_category_machinery;", "Category_Localised":"Machinery", "BuyPrice":205, "SellPrice":204, "MeanPrice":571, "StockBracket":2, "DemandBracket":3, "Stock":4100, "Demand":0, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
-            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0, 0)]
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 0, 3)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Afli Blue Society"),
+            { "id":128064028, "Name":"$battleweapons_name;", "Name_Localised":"Battle Weapons", "Category":"$MARKET_category_machinery;", "Category_Localised":"Machinery", "BuyPrice":205, "SellPrice":204, "MeanPrice":571, "StockBracket":2, "DemandBracket":3, "Stock":4100, "Demand":0, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":0, "IllegalGoods":True, "BlackMarket":True},
-            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0, 0)]
+            [MarketSellEventSummary("Afli", {"Soverign Justice League"}, {"Afli Blue Society"}, 1, 7111, 0, 3)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Soverign Justice League"),
+            { "id":128049202, "Name":"$hydrogenfuel_name;", "Name_Localised":"Hydrogen Fuel", "Category":"$MARKET_category_chemicals;", "Category_Localised":"Chemicals", "BuyPrice":84, "SellPrice":80, "MeanPrice":113, "StockBracket":3, "DemandBracket":0, "Stock":1103, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":64, "SellPrice":80, "TotalSale":5120, "AvgPricePaid":1080},
             [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 64, 80, 1080, 0)]
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Soverign Justice League"),
+            { "id":128049202, "Name":"$hydrogenfuel_name;", "Name_Localised":"Hydrogen Fuel", "Category":"$MARKET_category_chemicals;", "Category_Localised":"Chemicals", "BuyPrice":84, "SellPrice":80, "MeanPrice":113, "StockBracket":3, "DemandBracket":0, "Stock":1103, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-10-01T13:31:38Z", "event":"MarketSell", "MarketID":3223702528, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":1, "SellPrice":80, "TotalSale":80, "AvgPricePaid":80},
             []
         ),
         (
             StarSystem("Afli", 1000, ("Soverign Justice League", "Afli Blue Society")),
             Station("Pu City", 1000, "Afli Blue Society"),
+            { "id":128064028, "Name":"$battleweapons_name;", "Name_Localised":"Battle Weapons", "Category":"$MARKET_category_machinery;", "Category_Localised":"Machinery", "BuyPrice":205, "SellPrice":204, "MeanPrice":571, "StockBracket":2, "DemandBracket":3, "Stock":4100, "Demand":0, "Consumer":False, "Producer":True, "Rare":False }, 
             {"timestamp":"2020-10-25T13:00:41Z", "event":"MarketSell", "MarketID":3228014336, "Type":"battleweapons", "Type_Localised":"Battle Weapons", "Count":1, "SellPrice":7111, "TotalSale":7111, "AvgPricePaid":10000, "IllegalGoods":True, "BlackMarket":True},
-            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 10000, 0)]
+            [MarketSellEventSummary("Afli", {"Afli Blue Society"}, {"Soverign Justice League"}, 1, 7111, 10000, 3)]
         )
     )
 )
-def test_market_sell_single(star_system: StarSystem, last_docked_station: Station, market_sell_event: Dict[str, Any], expected_results: List):
+def test_market_sell_single(star_system: StarSystem, last_docked_station: Station, market_entry:Dict[str, Any], market_sell_event: Dict[str, Any], expected_results: List):
     pilot_state = PilotState()
     pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = last_docked_station
     galaxy_state = GalaxyState()
     galaxy_state.systems[star_system.address] = star_system
+    galaxy_state.last_market[market_entry["Name_Localised"]] = market_entry
     expected_pilot_state = copy.deepcopy(pilot_state)
     expected_galaxy_state = copy.deepcopy(galaxy_state)
 
@@ -384,7 +392,7 @@ def test_market_sell_single(star_system: StarSystem, last_docked_station: Statio
         )
     )
 )
-def test_market_buy_single(star_system: StarSystem, last_docked_station: Station, market_entry:Dict[str, str], market_buy_event: Dict[str, Any], expected_results: List):
+def test_market_buy_single(star_system: StarSystem, last_docked_station: Station, market_entry:Dict[str, Any], market_buy_event: Dict[str, Any], expected_results: List):
     pilot_state = PilotState()
     pilot_state.system_address = star_system.address
     pilot_state.last_docked_station = last_docked_station

@@ -39,7 +39,7 @@ def test_market_sell_event_summary_init():
     assert(market_sell_event_summary.count == COUNT)
     assert(market_sell_event_summary.sell_price_per_unit == SELL_PRICE_PER_UNIT)
     assert(market_sell_event_summary.average_buy_price_per_unit == AVERAGE_BUY_PRICE_PER_UNIT)
-    assert(market_sell_event_summary.demand_bracket == AVERDEMAND_BRACKETAGE_BUY_PRICE_PER_UNIT)
+    assert(market_sell_event_summary.demand_bracket == DEMAND_BRACKET)
 
 def test_market_buy_event_summary_init():
     SYSTEM_NAME = "Alpha Centauri"
