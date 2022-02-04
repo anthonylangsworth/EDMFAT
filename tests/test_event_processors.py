@@ -2,7 +2,7 @@ import copy
 from typing import Dict, Any, Set, List, Iterable, Tuple
 import pytest
 
-from edmfs.event_processors import MarketEventProcessor, _get_event_minor_faction_impact, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
+from edmfs.event_processors import CommodityNotInLastMarketError, MarketEventProcessor, _get_event_minor_faction_impact, _get_market_entry, LocationEventProcessor, RedeemVoucherEventProcessor, DockedEventProcessor, SellExplorationDataEventProcessor, MarketSellEventProcessor, MarketBuyEventProcessor, UnknownPlayerLocationError, UnknownStarSystemError, MissionAcceptedEventProcessor, MissionCompletedEventProcessor, MissionAbandonedEventProcessor, MissionFailedEventProcessor, CommitCrimeEventProcessor, SellOrganicDataEventProcessor
 from edmfs.state import PilotState, GalaxyState, Station, Mission, StarSystem
 from edmfs.event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketSellEventSummary, MarketBuyEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
@@ -756,3 +756,44 @@ def test_market():
     assert MarketEventProcessor().process(event, pilot_state, galaxy_state) == []
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state
+
+
+@pytest.mark.parametrize(
+    "event, market_entry, expected_result",
+    (
+        (
+            { "timestamp":"2021-08-05T13:31:48Z", "event":"MarketSell", "MarketID":3224806912, "Type":"algae", "Count":1, "SellPrice":28, "TotalSale":28, "AvgPricePaid":0 },
+            { "id":128049177, "Name":"$algae_name;", "Name_Localised":"Algae", "Category":"$MARKET_category_foods;", "Category_Localised":"Foods", "BuyPrice":27, "SellPrice":26, "MeanPrice":356, "StockBracket":0, "DemandBracket":0, "Stock":0, "Demand":0, "Consumer":False, "Producer":False, "Rare":False }, 
+            { "DemandBracket": 0, "StockBracket": 0 }
+        ),
+        (
+            { "timestamp":"2021-02-12T08:21:35Z", "event":"MarketSell", "MarketID":3704085504, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":784, "SellPrice":6, "TotalSale":4704, "AvgPricePaid":84 },
+            { "id":128049202, "Name":"$hydrogenfuel_name;", "Name_Localised":"Hydrogen Fuel", "Category":"$MARKET_category_chemicals;", "Category_Localised":"Chemicals", "BuyPrice":84, "SellPrice":80, "MeanPrice":113, "StockBracket":3, "DemandBracket":0, "Stock":1103, "Demand":1, "Consumer":False, "Producer":True, "Rare":False }, 
+            { "DemandBracket": 0, "StockBracket": 3 }
+        ),
+        (
+            { "timestamp":"2021-02-12T12:01:19Z", "event":"MarketSell", "MarketID":3704085504, "Type":"hydrogenfuel", "Type_Localised":"Hydrogen Fuel", "Count":784, "SellPrice":6, "TotalSale":4704, "AvgPricePaid":84 },
+            { "id":128049177, "Name":"$algae_name;", "Name_Localised":"Algae", "Category":"$MARKET_category_foods;", "Category_Localised":"Foods", "BuyPrice":27, "SellPrice":26, "MeanPrice":356, "StockBracket":0, "DemandBracket":0, "Stock":0, "Demand":0, "Consumer":False, "Producer":False, "Rare":False }, 
+            None
+        ),
+        (
+            { "timestamp":"2021-02-21T06:27:23Z", "event":"MarketBuy", "MarketID":3224939776, "Type":"copper", "Count":32, "BuyPrice":408, "TotalCost":13056 },
+            { "id":128049175, "Name":"$copper_name;", "Name_Localised":"Copper", "Category":"$MARKET_category_metals;", "Category_Localised":"Metals", "BuyPrice":246, "SellPrice":245, "MeanPrice":689, "StockBracket":1, "DemandBracket":2, "Stock":0, "Demand":0, "Consumer":False, "Producer":False, "Rare":False },
+            { "DemandBracket": 2, "StockBracket": 1 }
+        ),
+        (
+            { "timestamp":"2021-02-21T06:27:23Z", "event":"MarketBuy", "MarketID":3224939776, "Type":"copper", "Count":32, "BuyPrice":408, "TotalCost":13056 },
+            { "id":128049177, "Name":"$algae_name;", "Name_Localised":"Algae", "Category":"$MARKET_category_foods;", "Category_Localised":"Foods", "BuyPrice":27, "SellPrice":26, "MeanPrice":356, "StockBracket":0, "DemandBracket":0, "Stock":0, "Demand":0, "Consumer":False, "Producer":False, "Rare":False }, 
+            None
+        )
+    )
+)
+def test_get_market_entry(event:Dict[str, Any], market_entry:Dict[str, Any], expected_result:Dict[str, Any]):
+    galaxy_state = GalaxyState(last_market = {market_entry["Name_Localised"]: market_entry})
+    try:
+        result = _get_market_entry(event, galaxy_state)
+        for key in expected_result.keys():
+            assert result[key] == expected_result[key]
+    except CommodityNotInLastMarketError as e:
+        assert expected_result == None
+        assert e.name == event["Type_Localised"] if "Type_Localised" in event.keys() else f'${event["Type"]}_name;'
