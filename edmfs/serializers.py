@@ -38,7 +38,7 @@ class TrackerFileRepository:
                 "count": market_sell_event_summary.count,
                 "sell_price_per_unit": market_sell_event_summary.sell_price_per_unit,
                 "average_buy_price_per_unit": market_sell_event_summary.average_buy_price_per_unit,
-                "supply_bracket": market_buy_event_summary.demand_bracket
+                "demand_bracket": market_sell_event_summary.demand_bracket
             }
         }    
 
