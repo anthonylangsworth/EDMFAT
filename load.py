@@ -70,7 +70,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
     PADX = 10
     PADY = 10
-    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). If the desired minor faction does not appear in the available list, jump to a system where the minor faction is present and reopen this dialog."
+    INSTRUCTIONS = "Track missions and activity for or against minor faction(s). If the desired minor faction does not appear in 'Available Minor Factions', jump to a system where the minor faction is present and reopen this dialog."
     VERSION = f"Version: {'.'.join(map(str, this.version))}"
     URL = "https://github.com/anthonylangsworth/EDMFAT"
     AVAILABLE_LABEL = "Available Minor Factions:"
