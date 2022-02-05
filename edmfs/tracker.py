@@ -3,7 +3,7 @@ from itertools import groupby
 import logging
 
 from .state import PilotState, GalaxyState, StarSystem
-from .event_processors import _default_event_processors, UnknownPlayerLocationError, UnknownStarSystemError
+from .event_processors import CommodityNotInLastMarketError, _default_event_processors, UnknownPlayerLocationError, UnknownStarSystemError
 from .event_formatters import _default_event_formatters
 from .event_summaries import _default_event_summary_order
 
@@ -70,11 +70,14 @@ class Tracker:
         result = []
         if event_processor is not None:
             try:
+                self._logger.info(f"Processing event {event['event']}")
                 result.extend(event_processor.process(event, self.pilot_state, self.galaxy_state))
             except UnknownPlayerLocationError:
                 self._logger.exception(f"Player location (station or system) required for {str(event)}")
             except UnknownStarSystemError as unknown_star_system_error:
                 self._logger.exception(f"Unknown star system '{unknown_star_system_error.system}' required for {str(event)}")
+            except CommodityNotInLastMarketError as commodity_not_in_last_market_error:
+                self._logger.exception(f"Commodity '{commodity_not_in_last_market_error.name}' not in last market")
         return result
 
     def _update_activity(self) -> None:

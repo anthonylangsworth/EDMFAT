@@ -118,7 +118,7 @@ class DockedEventProcessor(EventProcessor):
 
 class MarketEventProcessor(EventProcessor):
     def process(self, event: Dict[str, Any], pilot_state: PilotState, galaxy_state: GalaxyState) -> List[EventSummary]:
-        galaxy_state.reload_market()
+        galaxy_state.clear_market()
         return []
 
 

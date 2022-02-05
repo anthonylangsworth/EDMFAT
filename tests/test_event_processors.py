@@ -861,7 +861,7 @@ def test_market():
     galaxy_state = GalaxyState(last_market={"a": dict(), "b": dict()})
     expected_pilot_state = copy.deepcopy(pilot_state)
     expected_galaxy_state = copy.deepcopy(galaxy_state)
-    expected_galaxy_state.last_market.clear()
+    expected_galaxy_state.clear_market()
     assert MarketEventProcessor().process(event, pilot_state, galaxy_state) == []
     assert pilot_state == expected_pilot_state
     assert galaxy_state == expected_galaxy_state

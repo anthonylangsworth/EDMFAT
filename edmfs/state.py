@@ -114,13 +114,18 @@ class GalaxyState:
 
     @property
     def last_market(self) -> Dict[str, Dict]:
+        if self._last_market is None:
+            self.reload_market()
         return self._last_market
+
+    def clear_market(self) -> None:
+        self._last_market = None
 
     def reload_market(self) -> None:
         if self._load_last_market:
             self._last_market = self._load_last_market()
         else:
-            self._last_market.clear()
+            self._last_market = dict()
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, GalaxyState):

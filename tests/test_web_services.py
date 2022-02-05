@@ -50,7 +50,7 @@ def test_get_newer_release():
     ]
 )
 def test_get_last_market(commodity_name: str, expected_result: Dict):
-    market = get_last_market("tests/market_files/market.json")
+    market = get_last_market(_get_dummy_logger(), "tests/market_files/market.json")
     market_entry = market.get(commodity_name)
     if expected_result:
         market_entry == market[commodity_name]

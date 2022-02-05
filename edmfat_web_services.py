@@ -60,7 +60,7 @@ def get_newer_release(logger: logging.Logger, owner: str, repo: str, current_ver
     return url if split_tag(tag_name) > current_version else None
 
 
-def get_last_market(market_json_file_path: str = None) -> Dict[str, Dict]:
+def get_last_market(logger: logging.Logger, market_json_file_path: str = None) -> Dict[str, Dict]:
     """
     Return a Dict containing market.json Items. Technically not a web service but still an external access.
     """
@@ -70,4 +70,5 @@ def get_last_market(market_json_file_path: str = None) -> Dict[str, Dict]:
     result = {}
     for market_entry in market["Items"]:
         result[str(market_entry["Name_Localised"]).strip()] = market_entry
+    logger.info(f"Reloaded '{file_path}'")
     return result
