@@ -1,8 +1,10 @@
 import pytest
 from typing import List
 
-from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketBuyEventFormatter, MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter, SellOrganicDataEventFormatter
-from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
+from edmfs.event_formatters import RedeemVoucherEventFormatter, SellExplorationDataEventFormatter, MarketBuyEventFormatter, \
+    MarketSellEventFormatter, MissionCompletedEventFormatter, MissionFailedEventFormatter, MurderEventFormatter, SellOrganicDataEventFormatter
+from edmfs.event_summaries import RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, \
+    MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 
 
 @pytest.mark.parametrize(
@@ -98,7 +100,7 @@ def test_market_buy(event_summaries: List[MarketSellEventFormatter], expected_ac
                 MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+")
             ],
             ["1 INF+ mission(s)"]
-        ),        
+        ),
         (
             [
                 MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+"),
@@ -127,7 +129,7 @@ def test_mission_completed(event_summaries: List[MissionCompletedEventSummary], 
                 MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {})
             ],
             ["1 failed mission(s)"]
-        ),        
+        ),
         (
             [
                 MissionFailedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
@@ -151,7 +153,7 @@ def test_mission_failed(event_summaries: List[MissionFailedEventSummary], expect
                 MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {})
             ],
             ["1 clean ship kill(s)"]
-        ),        
+        ),
         (
             [
                 MurderEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}),
@@ -163,7 +165,7 @@ def test_mission_failed(event_summaries: List[MissionFailedEventSummary], expect
     ]
 )
 def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activity: str):
-    assert(MurderEventFormatter().process(event_summaries) == expected_activity)    
+    assert(MurderEventFormatter().process(event_summaries) == expected_activity)
 
 
 @pytest.mark.parametrize(
@@ -174,7 +176,7 @@ def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activ
                 SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000)
             ],
             ["1,000 CR of Organic Data"]
-        ),        
+        ),
         (
             [
                 SellOrganicDataEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 100),
@@ -186,4 +188,4 @@ def test_murder(event_summaries: List[MissionFailedEventSummary], expected_activ
     ]
 )
 def test_sell_organic_data(event_summaries: List[SellOrganicDataEventSummary], expected_activity: str):
-    assert(SellOrganicDataEventFormatter().process(event_summaries) == expected_activity)    
+    assert(SellOrganicDataEventFormatter().process(event_summaries) == expected_activity)

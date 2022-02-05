@@ -1,17 +1,20 @@
 import cProfile
 import json
-import pytest
-import logging
 
-from edmfs.tracker import Tracker,_get_dummy_logger
+from edmfs.tracker import Tracker, _get_dummy_logger
 from edmfs.serializers import TrackerFileRepository
 from edmfs.state import StarSystem
+
+
+def _test_resolver(_):
+    return StarSystem("a", 122, [])
+
 
 def serialize():
     data = [
         ({"HR 1597 & Co"}, "Journal.201019220908.01.log"),
-        ({"EDA Kunti League"}, "Journal.200913212207.01.log"), 
-        ({"EDA Kunti League"}, "Journal.201018213100.01.log"), 
+        ({"EDA Kunti League"}, "Journal.200913212207.01.log"),
+        ({"EDA Kunti League"}, "Journal.201018213100.01.log"),
         ({"EDA Kunti League"}, "Journal.210101234033.01.log"),
         ({"EDA Kunti League"}, "Journal.201212203015.01.log"),
         ({"Green Party of Dulos"}, "Journal.200630212114.01.log"),
@@ -33,10 +36,11 @@ def serialize():
                 tracker.on_event(json.loads(line))
 
         logger = _get_dummy_logger()
-        resolver = lambda x: StarSystem("a", 122, [])
+        resolver = _test_resolver
 
         repository = TrackerFileRepository()
         serialized_tracker = repository.serialize(tracker)
-        repository.deserialize(serialized_tracker, logger, resolver)    
+        repository.deserialize(serialized_tracker, logger, resolver)
 
-cProfile.runctx('serialize()', {'serialize':serialize}, {})
+
+cProfile.runctx('serialize()', {'serialize': serialize}, {})

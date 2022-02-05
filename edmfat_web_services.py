@@ -6,18 +6,18 @@ import json
 import edmfs
 
 
-def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> edmfs.StarSystem:
+def resolve_star_system_via_edsm(logger: logging.Logger, system_address: int) -> edmfs.StarSystem:
     """
     Get the minor factions for the given star system using the ESM API.
     """
     URL = "https://www.edsm.net/api-system-v1/factions"
     try:
-        with requests.get(URL, params={ "systemId64": system_address }, timeout=30) as response:
+        with requests.get(URL, params={"systemId64": system_address}, timeout=30) as response:
             if response.status_code == 200:
                 output = response.json()
                 if "factions" in output and "name" in output:
                     minor_factions = [faction["name"] for faction in output["factions"]]
-                    star_system = edmfs.StarSystem(output["name"], system_address, minor_factions) 
+                    star_system = edmfs.StarSystem(output["name"], system_address, minor_factions)
                     logger.info(f"Resolved from EDSM: { star_system }")
                     return star_system
                 else:
@@ -29,13 +29,13 @@ def resolve_star_system_via_edsm(logger: logging.Logger, system_address:int) -> 
 
 
 # See https://docs.github.com/en/rest/reference/repos#get-the-latest-release
-def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str, str]:
+def get_latest_release(logger: logging.Logger, owner: str, repo: str) -> Tuple[str, str]:
     """
     Get the latest github release for the given owner and repo. Returns a tuple containing the tag name and the HTML URL.
     """
     URL = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
     try:
-        with requests.get(URL, headers={"accept":"application/vnd.github.v3+json"}, timeout=30) as response:
+        with requests.get(URL, headers={"accept": "application/vnd.github.v3+json"}, timeout=30) as response:
             if response.status_code == 200:
                 output = response.json()
                 logger.info(f"Latest version for {owner}/{repo} is '{output['tag_name']}' at '{output['html_url']}'")
@@ -47,12 +47,12 @@ def get_latest_release(logger: logging.Logger, owner:str, repo:str) -> Tuple[str
         raise
 
 
-def split_tag(tag:str) -> Tuple[int]:
+def split_tag(tag: str) -> Tuple[int]:
     return tuple(map(int, tag.lstrip("v").split(".")))
 
 
-def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_version:Tuple,
-        get_latest_release_callable:Callable[[logging.Logger, str, str], Tuple[str, str]] = get_latest_release) -> Optional[str]:
+def get_newer_release(logger: logging.Logger, owner: str, repo: str, current_version: Tuple,
+        get_latest_release_callable: Callable[[logging.Logger, str, str], Tuple[str, str]] = get_latest_release) -> Optional[str]:
     """
     Get the URL of the most recent release for the given open and repo if it is a later version than current_version. Otherwise, return None.
     """
@@ -60,11 +60,11 @@ def get_newer_release(logger: logging.Logger, owner:str, repo:str, current_versi
     return url if split_tag(tag_name) > current_version else None
 
 
-def get_last_market(market_json_file_path:str = None) -> Dict[str, Dict]:
+def get_last_market(market_json_file_path: str = None) -> Dict[str, Dict]:
     """
     Return a Dict containing market.json Items. Technically not a web service but still an external access.
     """
-    file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path == None else market_json_file_path
+    file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path is None else market_json_file_path
     with open(file_path, mode="r") as market_json_file:
         market = json.load(market_json_file)
     result = {}

@@ -19,7 +19,7 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
-this.version = (0,27,0)
+this.version = (0, 27, 0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
 this.star_system_resolver = functools.partial(edmfat_web_services.resolve_star_system_via_edsm, this.logger)
@@ -30,12 +30,14 @@ DEFAULT_MINOR_FACTIONS = {"EDA Kunti League"}
 NO_ACTIVITY = "(No activity)"
 NO_MINOR_FACTIONS = "(Select minor faction(s) in the Settings dialog)"
 
+
 # Called by EDMC on startup
 def plugin_start3(plugin_dir: str) -> str:
     load_settings()
     update_activity()
     update_minor_factions()
     return this.plugin_name
+
 
 # Called by EDMC to show plug-in details on EDMC main window
 def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]]:
@@ -62,6 +64,7 @@ def plugin_app(parent: tk.Frame) -> Union[tk.Widget, Tuple[tk.Widget, tk.Widget]
         this.logger.error(f"Error getting latest version from github: {e}")
 
     return frame
+
 
 # Called by EDMC to populate preferences dialog
 def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optional[tk.Frame]:
@@ -126,8 +129,9 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     ).grid(row=9, column=0, columnspan=3, padx=PADX, pady=PADY, sticky=tk.W)
 
     tk.Button(frame, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=10, column=0, sticky=tk.W, padx=PADX)
-    
+
     return frame
+
 
 # Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
@@ -137,6 +141,7 @@ def prefs_changed(cmdr: str, is_beta: bool) -> None:
     this.logger.info(f"Minor factions changed to {this.tracker.minor_factions}")
     save_config()
 
+
 # Called by EDMC when a new entry is written to a journal file
 def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Optional[str], entry: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
     if not is_beta:
@@ -144,12 +149,14 @@ def journal_entry(cmdr: str, is_beta: bool, system: Optional[str], station: Opti
             this.activity_summary.set(this.tracker.activity)
             save_config()
 
+
 # Called by EDMC on shutdown
 def plugin_stop() -> None:
     save_config()
 
+
 # Copied from https://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard/4203897#4203897
-def copy_to_clipboard(data:str) -> None:
+def copy_to_clipboard(data: str) -> None:
     root = tk.Tk()
     root.withdraw()
     root.clipboard_clear()
@@ -157,8 +164,10 @@ def copy_to_clipboard(data:str) -> None:
     root.update()
     root.destroy()
 
+
 def copy_activity_to_clipboard() -> None:
     copy_to_clipboard(this.tracker.activity)
+
 
 def copy_activity_to_clipboard_and_reset() -> None:
     copy_activity_to_clipboard()
@@ -166,14 +175,18 @@ def copy_activity_to_clipboard_and_reset() -> None:
     save_config()
     update_activity()
 
+
 def copy_raw_activity() -> None:
     copy_to_clipboard(json.dumps([this.serializer._serialize_event_summary_v1(event_summary) for event_summary in this.tracker._event_summaries], sort_keys=True, indent=4))
+
 
 def track_selected_minor_factions() -> None:
     move_selected_minor_factions(this.available_mf_list, this.tracked_mf_list)
 
+
 def untrack_selected_minor_factions() -> None:
     move_selected_minor_factions(this.tracked_mf_list, this.available_mf_list)
+
 
 def move_selected_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
     selected_mf = [src.get(index) for index in src.curselection()]
@@ -188,11 +201,14 @@ def move_selected_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
     dst.delete(0, tk.END)
     dst.insert(tk.END, *sorted(dst_set))
 
+
 def track_all_minor_factions() -> None:
     move_all_minor_factions(this.available_mf_list, this.tracked_mf_list)
 
+
 def untrack_all_minor_factions() -> None:
     move_all_minor_factions(this.tracked_mf_list, this.available_mf_list)
+
 
 def move_all_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
     src_mf = src.get(0, tk.END)
@@ -203,17 +219,20 @@ def move_all_minor_factions(src: tk.Listbox, dst: tk.Listbox) -> None:
     dst.delete(0, tk.END)
     dst.insert(tk.END, *sorted(dst_set))
 
+
 def update_activity() -> None:
     if len(this.tracker.activity.strip(" \r\n\t")) > 0:
         this.activity_summary.set(this.tracker.activity)
     else:
         this.activity_summary.set(NO_ACTIVITY)
 
+
 def update_minor_factions() -> None:
     if len(this.tracker.minor_factions) > 0:
         this.minor_factions.set(", ".join(sorted(this.tracker.minor_factions)))
     else:
         this.minor_factions.set(NO_MINOR_FACTIONS)
+
 
 def load_settings_from_file() -> edmfs.Tracker:
     tracker = None
@@ -225,33 +244,35 @@ def load_settings_from_file() -> edmfs.Tracker:
         this.logger.info(f"Setings file \"{this.settings_file}\" not found. This is expected on the first run.")
         pass
     # except json.decoder.JSONDecodeError:
-    except:
+    except Exception:
         this.logger.exception(f"Error loading settings from \"{this.settings_file}\"")
     return tracker
+
 
 def load_settings_from_config() -> edmfs.Tracker:
     try:
         saved_minor_factions = config.get_list(CONFIG_MINOR_FACTION)
-    except:
+    except Exception:
         saved_minor_factions = {}
-    if saved_minor_factions == None:
+    if saved_minor_factions is None:
         saved_minor_factions = DEFAULT_MINOR_FACTIONS
         this.logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
     else:
         saved_minor_factions = {}
     return edmfs.Tracker(saved_minor_factions, this.logger, this.star_system_resolver)
 
+
 def load_settings() -> List[str]:
     this.tracker = load_settings_from_file()
     if not this.tracker:
         this.tracker = load_settings_from_config()
+
 
 def save_config() -> None:
     with open(this.settings_file, mode="w") as settings_file:
         settings_file.write(this.serializer.serialize(this.tracker))
     try:
         config.delete(CONFIG_MINOR_FACTION)
-    except:
-        pass # Do nothing if the config entry does not exist
+    except Exception:
+        pass  # Do nothing if the config entry does not exist
     this.logger.info(f"Settings saved to \"{this.settings_file}\"")
-

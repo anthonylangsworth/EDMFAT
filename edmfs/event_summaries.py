@@ -29,11 +29,11 @@ class EventSummary():
 
 
 class RedeemVoucherEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, voucher_type: str, amount: int):
+    def __init__(self, system_name: str, pro: iter, anti: iter, voucher_type: str, amount: int):
         super(RedeemVoucherEventSummary, self).__init__(system_name, pro, anti)
-        self._voucher_type:str = voucher_type
-        self._amount:int = amount
-    
+        self._voucher_type: str = voucher_type
+        self._amount: int = amount
+
     @property
     def voucher_type(self) -> str:
         return self._voucher_type
@@ -48,17 +48,17 @@ class RedeemVoucherEventSummary(EventSummary):
 
         return super(RedeemVoucherEventSummary, self).__eq__(other) \
             and self._voucher_type == other._voucher_type \
-            and self._amount == other._amount        
+            and self._amount == other._amount
 
     def __repr__(self) -> str:
-        return f"RedeemVoucherEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._voucher_type}', {self._amount})" 
+        return f"RedeemVoucherEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._voucher_type}', {self._amount})"
 
 
 class SellExplorationDataEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, amount: int):
+    def __init__(self, system_name: str, pro: iter, anti: iter, amount: int):
         super(SellExplorationDataEventSummary, self).__init__(system_name, pro, anti)
-        self._amount:int = amount
-    
+        self._amount: int = amount
+
     @property
     def amount(self) -> int:
         return self._amount
@@ -68,19 +68,19 @@ class SellExplorationDataEventSummary(EventSummary):
             return NotImplemented
 
         return super(SellExplorationDataEventSummary, self).__eq__(other) \
-            and self._amount == other._amount        
+            and self._amount == other._amount
 
     def __repr__(self) -> str:
-        return f"SellExplorationDataEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._amount})" 
+        return f"SellExplorationDataEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._amount})"
 
 
 class MarketBuyEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, buy_price_per_unit: int, supply_bracket: int):
+    def __init__(self, system_name: str, pro: iter, anti: iter, count: int, buy_price_per_unit: int, supply_bracket: int):
         super(MarketBuyEventSummary, self).__init__(system_name, pro, anti)
-        self._count:int = count
-        self._buy_price_per_unit:int = buy_price_per_unit
-        self._supply_bracket:int = supply_bracket
-    
+        self._count: int = count
+        self._buy_price_per_unit: int = buy_price_per_unit
+        self._supply_bracket: int = supply_bracket
+
     @property
     def count(self) -> int:
         return self._count
@@ -103,18 +103,18 @@ class MarketBuyEventSummary(EventSummary):
             and self._supply_bracket == other._supply_bracket)
 
     def __repr__(self) -> str:
-        return f"MarketBuyEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._buy_price_per_unit}, {self._supply_bracket})" 
+        return f"MarketBuyEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._buy_price_per_unit}, {self._supply_bracket})"
 
 
 class MarketSellEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, count: int, sell_price_per_unit: int, 
+    def __init__(self, system_name: str, pro: iter, anti: iter, count: int, sell_price_per_unit: int,
             average_buy_price_per_unit: int, demand_bracket: float):
         super(MarketSellEventSummary, self).__init__(system_name, pro, anti)
-        self._count:int = count
-        self._sell_price_per_unit:int = sell_price_per_unit
-        self._average_buy_price_per_unit:int = average_buy_price_per_unit
-        self._demand_bracket:float = demand_bracket
-    
+        self._count: int = count
+        self._sell_price_per_unit: int = sell_price_per_unit
+        self._average_buy_price_per_unit: int = average_buy_price_per_unit
+        self._demand_bracket: float = demand_bracket
+
     @property
     def count(self) -> int:
         return self._count
@@ -142,13 +142,13 @@ class MarketSellEventSummary(EventSummary):
             and self._demand_bracket == other._demand_bracket)
 
     def __repr__(self) -> str:
-        return f"MarketSellEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit}, {self._demand_bracket})" 
+        return f"MarketSellEventSummary('{self._system_name}', '{self._pro}', {self._anti}, {self._count}, {self._sell_price_per_unit}, {self._average_buy_price_per_unit}, {self._demand_bracket})"
 
 
 class MissionCompletedEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, influence: str):
+    def __init__(self, system_name: str, pro: iter, anti: iter, influence: str):
         super(MissionCompletedEventSummary, self).__init__(system_name, pro, anti)
-        self._influence:str = influence
+        self._influence: str = influence
 
     @property
     def influence(self) -> str:
@@ -162,33 +162,33 @@ class MissionCompletedEventSummary(EventSummary):
             and self._influence == other._influence)
 
     def __repr__(self) -> str:
-        return f"MissionCompletedEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._influence}')" 
+        return f"MissionCompletedEventSummary('{self._system_name}', '{self._pro}', {self._anti}, '{self._influence}')"
 
 
 class MissionFailedEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter):
+    def __init__(self, system_name: str, pro: iter, anti: iter):
         super().__init__(system_name, pro, anti)
 
     def __eq__(self, other) -> bool:
         return isinstance(other, MissionFailedEventSummary)
 
     def __repr__(self) -> str:
-        return f"MissionFailedEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
+        return f"MissionFailedEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')"
 
 
 class MurderEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter):
+    def __init__(self, system_name: str, pro: iter, anti: iter):
         super().__init__(system_name, pro, anti)
 
     def __eq__(self, other) -> bool:
         return isinstance(other, MurderEventSummary)
 
     def __repr__(self) -> str:
-        return f"MurderEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')" 
+        return f"MurderEventSummary('{self._system_name}', '{self._pro}', '{self._anti}')"
 
 
 class SellOrganicDataEventSummary(EventSummary):
-    def __init__(self, system_name:str, pro: iter, anti: iter, value: int):
+    def __init__(self, system_name: str, pro: iter, anti: iter, value: int):
         super().__init__(system_name, pro, anti)
         self._value: int = value
 
@@ -204,7 +204,7 @@ class SellOrganicDataEventSummary(EventSummary):
             and self._value == other._value)
 
     def __repr__(self) -> str:
-        return f"SellOrganicDataEventSummary('{self._system_name}', '{self._pro}', '{self._anti}', {self._value})" 
+        return f"SellOrganicDataEventSummary('{self._system_name}', '{self._pro}', '{self._anti}', {self._value})"
 
 
 _default_event_summary_order = (
