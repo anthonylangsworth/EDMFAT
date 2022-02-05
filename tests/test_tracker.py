@@ -474,7 +474,7 @@ def load_test_market():
                     {"EDA Kunti League"},
                     (
                         "San Davokje - ANTI EDA Kunti League\n"
-                        "80 T trade at 3,477 CR average profit per T\n"
+                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at demand 0.0\n"
                         "\n"
                         "San Davokje - PRO EDA Kunti League\n"
                         "1 INF++++ mission(s)"
@@ -487,7 +487,7 @@ def load_test_market():
                         "1 INF++++ mission(s)\n"
                         "\n"
                         "San Davokje - PRO San Davokje Empire Party\n"
-                        "80 T trade at 3,477 CR average profit per T"
+                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at demand 0.0"
                     )
                 )
             ]
