@@ -238,7 +238,7 @@ def load_settings_from_file() -> edmfs.Tracker:
     tracker = None
     try:
         with open(this.settings_file, "r") as settings_file:
-            tracker = this.serializer.deserialize(settings_file.read(), this.logger, this.star_system_resolver)
+            tracker = this.serializer.deserialize(settings_file.read(), this.logger, this.star_system_resolver, edmfat_web_services.get_last_market)
         this.logger.info(f"Loaded settings from \"{this.settings_file}\"")
     except FileNotFoundError:
         this.logger.info(f"Setings file \"{this.settings_file}\" not found. This is expected on the first run.")
