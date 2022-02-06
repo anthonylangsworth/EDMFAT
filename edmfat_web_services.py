@@ -2,6 +2,7 @@ import requests
 import logging
 from typing import Tuple, Callable, Optional, Dict
 import json
+import os
 
 import edmfs
 
@@ -64,7 +65,7 @@ def get_last_market(logger: logging.Logger, market_json_file_path: str = None) -
     """
     Return a Dict containing market.json Items. Technically not a web service but still an external access.
     """
-    file_path = "%%userprofile%%\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json" if market_json_file_path is None else market_json_file_path
+    file_path = os.path.expandvars("${userprofile}\\Saved Games\\Frontier Developments\\Elite Dangerous\\market.json") if market_json_file_path is None else market_json_file_path
     with open(file_path, mode="r") as market_json_file:
         market = json.load(market_json_file)
     result = {}

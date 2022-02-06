@@ -70,7 +70,7 @@ class Tracker:
         result = []
         if event_processor is not None:
             try:
-                self._logger.info(f"Processing event {event['event']}")
+                self._logger.debug(f"Processing event {event['event']}")
                 result.extend(event_processor.process(event, self.pilot_state, self.galaxy_state))
             except UnknownPlayerLocationError:
                 self._logger.exception(f"Player location (station or system) required for {str(event)}")

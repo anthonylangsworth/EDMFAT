@@ -23,6 +23,7 @@ this.version = (0, 27, 0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
 this.star_system_resolver = functools.partial(edmfat_web_services.resolve_star_system_via_edsm, this.logger)
+this.get_last_market = functools.partial(edmfat_web_services.get_last_market, this.logger)
 this.serializer = edmfs.TrackerFileRepository()
 
 CONFIG_MINOR_FACTION = "edmfat_minor_faction"
@@ -238,7 +239,7 @@ def load_settings_from_file() -> edmfs.Tracker:
     tracker = None
     try:
         with open(this.settings_file, "r") as settings_file:
-            tracker = this.serializer.deserialize(settings_file.read(), this.logger, this.star_system_resolver, edmfat_web_services.get_last_market)
+            tracker = this.serializer.deserialize(settings_file.read(), this.logger, this.star_system_resolver, this.get_last_market)
         this.logger.info(f"Loaded settings from \"{this.settings_file}\"")
     except FileNotFoundError:
         this.logger.info(f"Setings file \"{this.settings_file}\" not found. This is expected on the first run.")
@@ -260,7 +261,7 @@ def load_settings_from_config() -> edmfs.Tracker:
     else:
         saved_minor_factions = {}
     return edmfs.Tracker(saved_minor_factions, this.logger, star_system_resolver=this.star_system_resolver,
-        get_last_market=edmfat_web_services.get_last_market)
+        get_last_market=this.get_last_market)
 
 
 def load_settings() -> List[str]:
