@@ -120,14 +120,14 @@ def load_test_market():
             "Journal.201212203015.01.log",
             load_test_market,
             ("Antai - PRO EDA Kunti League\n"
-            "10 market sell(s). Total: 2,840 T and 7,117,040 CR profit. Average: 2,506 CR/T profit at demand 2.0")
+            "10 market sell(s). Total: 2,840 T and 7,117,040 CR profit. Average: 2,506 CR/T profit at bracket 2.0")
         ),
         (
             {"Green Party of Dulos"},
             "Journal.200630212114.01.log",
             load_test_market,
             ("Dulos - ANTI Green Party of Dulos\n"
-            "6 market sell(s). Total: 28 T and 1,238 CR profit. Average: 44 CR/T profit at demand 0.0\n"
+            "6 market sell(s). Total: 28 T and 1,238 CR profit. Average: 44 CR/T profit at bracket 0.0\n"
             "\n"
             "Dulos - PRO Green Party of Dulos\n"
             "1 INF+++ mission(s)")
@@ -167,10 +167,10 @@ def load_test_market():
             "LTT 2337 - ANTI EDA Kunti League\n"
             "2 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
-            "1 market sell(s). Total: 6 T and -1,188 CR profit. Average: -198 CR/T profit at demand 0.0\n"
+            "1 market sell(s). Total: 6 T and -1,188 CR profit. Average: -198 CR/T profit at bracket 0.0\n"
             "\n"
             "LTT 2337 - PRO EDA Kunti League\n"
-            "5 market sell(s). Total: 5 T and 1,323 CR profit. Average: 265 CR/T profit at demand 1.0")
+            "5 market sell(s). Total: 5 T and 1,323 CR profit. Average: 265 CR/T profit at bracket 1.0")
         ),
         (
             {"EDA Kunti League"},
@@ -233,8 +233,8 @@ def load_test_market():
             "1 INF+++++ mission(s)\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n"
-            "2 market buy(s). Total: 1,088 T and 1,816,960 CR. Average: 1,670 CR/T at supply 0.0\n"
-            "2 market sell(s). Total: 2 T and 103,244 CR profit. Average: 51,622 CR/T profit at demand 0.0\n"
+            "2 market buy(s). Total: 1,088 T and 1,816,960 CR. Average: 1,670 CR/T at bracket 0.0\n"
+            "2 market sell(s). Total: 2 T and 103,244 CR profit. Average: 51,622 CR/T profit at bracket 0.0\n"
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
             "7 INF++ mission(s)\n"
@@ -278,7 +278,7 @@ def load_test_market():
             load_test_market,
             (
                 "San Davokje - ANTI EDA Kunti League\n"
-                "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at demand 0.0\n"
+                "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0\n"
                 "\n"
                 "San Davokje - PRO EDA Kunti League\n1 INF++++ mission(s)"
             )
@@ -291,7 +291,7 @@ def load_test_market():
             load_test_market,
             (
                 "HR 1597 - PRO EDA Kunti League\n"
-                "2 market sell(s). Total: 5 T and 18,669 CR profit. Average: 3,734 CR/T profit at demand 0.0"
+                "2 market sell(s). Total: 5 T and 18,669 CR profit. Average: 3,734 CR/T profit at bracket 0.0"
             )
         ),
         (
@@ -310,8 +310,8 @@ def load_test_market():
             ("Atfero - ANTI Atfero Blue General & Co\n"
             "2 INF+ mission(s)\n"
             "3 INF++ mission(s)\n"
-            "1 market buy(s). Total: 15 T and 12,885 CR. Average: 859 CR/T at supply 0.0\n"
-            "8 market sell(s). Total: 77 T and 80,705 CR profit. Average: 1,048 CR/T profit at demand 1.2\n"
+            "1 market buy(s). Total: 15 T and 12,885 CR. Average: 859 CR/T at bracket 0.0\n"
+            "8 market sell(s). Total: 77 T and 80,705 CR profit. Average: 1,048 CR/T profit at bracket 1.2\n"
             "1 failed mission(s)\n"
             "\n"
             "Atfero - PRO Atfero Blue General & Co\n"
@@ -323,17 +323,17 @@ def load_test_market():
             "Journal.210212124540.01.log",
             load_test_market,
             ("Anek Wango - ANTI EDA Kunti League\n"
-            "4 market sell(s). Total: 1,168 T and -1,168,000 CR profit. Average: -1,000 CR/T profit at demand 0.0\n"
+            "4 market sell(s). Total: 1,168 T and -1,168,000 CR profit. Average: -1,000 CR/T profit at bracket 0.0\n"
             "\n"
             "Herci - PRO EDA Kunti League\n"
             "2,930,517 CR of Combat Bonds\n"
             "\n"
             "Trumuye - ANTI EDA Kunti League\n"
-            "4 market sell(s). Total: 3,136 T and -3,136,000 CR profit. Average: -1,000 CR/T profit at demand 0.0\n"
+            "4 market sell(s). Total: 3,136 T and -3,136,000 CR profit. Average: -1,000 CR/T profit at bracket 0.0\n"
             "\n"
             "Trumuye - PRO EDA Kunti League\n"
             "1,339,513 CR of Combat Bonds\n"
-            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at supply 3.0")
+            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at bracket 3.0")
         ),
         (
             {"EDA Kunti League"},
@@ -390,7 +390,7 @@ def load_test_market():
             "2 INF+++++ mission(s)\n"
             "3,453,667 CR of Bounty Vouchers\n"
             "38,289,972 CR of Cartography Data\n"
-            "4 market sell(s). Total: 6 T and 3,092 CR profit. Average: 515 CR/T profit at demand 0.8\n"
+            "4 market sell(s). Total: 6 T and 3,092 CR profit. Average: 515 CR/T profit at bracket 0.8\n"
             "\n"
             "Kunti - PRO EDA Kunti League\n"
             "3,283,200 CR of Organic Data\n"
@@ -402,7 +402,7 @@ def load_test_market():
             "LTT 2337 - ANTI EDA Kunti League\n"
             "1 INF++ mission(s)\n"
             "7,150 CR of Bounty Vouchers\n"
-            "7 market sell(s). Total: 8 T and 10,041 CR profit. Average: 1,255 CR/T profit at demand 1.3\n"
+            "7 market sell(s). Total: 8 T and 10,041 CR profit. Average: 1,255 CR/T profit at bracket 1.3\n"
             "1 failed mission(s)\n"
             "63,600 CR of Organic Data\n"
             "\n"
@@ -477,7 +477,7 @@ def load_test_market():
                     {"EDA Kunti League"},
                     (
                         "San Davokje - ANTI EDA Kunti League\n"
-                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at demand 0.0\n"
+                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0\n"
                         "\n"
                         "San Davokje - PRO EDA Kunti League\n"
                         "1 INF++++ mission(s)"
@@ -490,7 +490,7 @@ def load_test_market():
                         "1 INF++++ mission(s)\n"
                         "\n"
                         "San Davokje - PRO San Davokje Empire Party\n"
-                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at demand 0.0"
+                        "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0"
                     )
                 )
             ]

@@ -58,14 +58,14 @@ def test_sell_exploration_data(event_summaries: List[SellExplorationDataEventSum
             [
                 MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50, 2),
             ],
-            ["1 market sell(s). Total: 1,000 T and 50,000 CR profit. Average: 50 CR/T profit at demand 2.0"]
+            ["1 market sell(s). Total: 1,000 T and 50,000 CR profit. Average: 50 CR/T profit at bracket 2.0"]
         ),
         (
             [
                 MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 100, 50, 3),
                 MarketSellEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 1000, 200, 100, 0)
             ],
-            ["2 market sell(s). Total: 2,000 T and 150,000 CR profit. Average: 75 CR/T profit at demand 1.5"]
+            ["2 market sell(s). Total: 2,000 T and 150,000 CR profit. Average: 75 CR/T profit at bracket 1.5"]
         )
     ]
 )
@@ -83,7 +83,7 @@ def test_market_sell(event_summaries: List[MarketSellEventFormatter], expected_a
                 MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 50, 500, 2),
                 MarketBuyEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, 200, 100, 3)
             ],
-            ["3 market buy(s). Total: 350 T and 95,000 CR. Average: 271 CR/T at supply 2.3"]
+            ["3 market buy(s). Total: 350 T and 95,000 CR. Average: 271 CR/T at bracket 2.3"]
         )
     ]
 )
