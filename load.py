@@ -260,7 +260,7 @@ def load_settings_from_config() -> edmfs.Tracker:
     else:
         saved_minor_factions = {}
     return edmfs.Tracker(saved_minor_factions, this.logger, star_system_resolver=this.star_system_resolver,
-        load_last_market=edmfat_web_services.get_last_market)
+        get_last_market=edmfat_web_services.get_last_market)
 
 
 def load_settings() -> List[str]:

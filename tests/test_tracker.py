@@ -56,7 +56,7 @@ def load_test_market():
 
 
 @pytest.mark.parametrize(
-    "minor_factions, journal_file_name, load_last_market, expected_activity",
+    "minor_factions, journal_file_name, get_last_market, expected_activity",
     [
         (
             {"HR 1597 & Co"},
@@ -415,8 +415,8 @@ def load_test_market():
             "1 INF++ mission(s)")
         )
     ])
-def test_journal_file(minor_factions: List[str], journal_file_name: str, load_last_market: Callable[[], Dict], expected_activity: str):
-    tracker = Tracker(minor_factions=minor_factions, load_last_market=load_last_market)
+def test_journal_file(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):
+    tracker = Tracker(minor_factions=minor_factions, get_last_market=get_last_market)
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))
@@ -432,7 +432,7 @@ def test_journal_file(minor_factions: List[str], journal_file_name: str, load_la
 
 
 @pytest.mark.parametrize(
-    "journal_file_name, load_last_market",
+    "journal_file_name, get_last_market",
     [
         (None, None),
         (
@@ -444,14 +444,14 @@ def test_journal_file(minor_factions: List[str], journal_file_name: str, load_la
         )
     ]
 )
-def test_tracker_clear_activity(journal_file_name, load_last_market):
+def test_tracker_clear_activity(journal_file_name, get_last_market):
     events = []
     if(journal_file_name):
         with open("tests/journal_files/" + journal_file_name) as journal_file:
             events = [json.loads(line) for line in journal_file.readlines()]
 
     MINOR_FACTIONS = set(["EDA Kunti League"])
-    tracker = Tracker(minor_factions=MINOR_FACTIONS, load_last_market=load_last_market)
+    tracker = Tracker(minor_factions=MINOR_FACTIONS, get_last_market=get_last_market)
     for event in events:
         tracker.on_event(event)
     tracker.clear_activity()
@@ -467,7 +467,7 @@ def load_test_market():
 
 
 @pytest.mark.parametrize(
-    "journal_file_name, load_last_market, minor_factions_and_expected_activty",
+    "journal_file_name, get_last_market, minor_factions_and_expected_activty",
     [
         (
             "Journal.210125173739.01.log",
@@ -497,8 +497,8 @@ def load_test_market():
         )
     ]
 )
-def test_tracker_change_minor_factions(journal_file_name: str, load_last_market: Callable[[], Dict], minor_factions_and_expected_activty: List):
-    tracker = Tracker(minor_factions=[], load_last_market=load_last_market)
+def test_tracker_change_minor_factions(journal_file_name: str, get_last_market: Callable[[], Dict], minor_factions_and_expected_activty: List):
+    tracker = Tracker(minor_factions=[], get_last_market=get_last_market)
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))

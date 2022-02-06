@@ -50,7 +50,7 @@ def _test_star_system_resolver(_):
 
 
 @pytest.mark.parametrize(
-    "minor_factions, journal_file_name, load_last_market",
+    "minor_factions, journal_file_name, get_last_market",
     [
         ({"HR 1597 & Co"}, "Journal.201019220908.01.log", load_test_market),
         ({"EDA Kunti League"}, "Journal.200913212207.01.log", load_test_market),
@@ -72,8 +72,8 @@ def _test_star_system_resolver(_):
         ({"EDA Kunti League"}, "Journal.210221171753.01.log", load_test_market)
     ]
 )
-def test_serialize_tracker(minor_factions: str, journal_file_name: str, load_last_market: Callable[[], Dict]):
-    tracker = Tracker(minor_factions=minor_factions, load_last_market=load_last_market)
+def test_serialize_tracker(minor_factions: str, journal_file_name: str, get_last_market: Callable[[], Dict]):
+    tracker = Tracker(minor_factions=minor_factions, get_last_market=get_last_market)
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))
@@ -83,7 +83,7 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, load_las
 
     repository = TrackerFileRepository()
     serialized_tracker = repository.serialize(tracker)
-    new_tracker = repository.deserialize(serialized_tracker, logger, star_system_resolver, load_last_market)
+    new_tracker = repository.deserialize(serialized_tracker, logger, star_system_resolver, get_last_market)
 
     assert tracker.minor_factions == new_tracker.minor_factions
     assert tracker.pilot_state.missions == new_tracker.pilot_state.missions
@@ -96,4 +96,4 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, load_las
 
     assert new_tracker._logger == logger
     assert new_tracker.galaxy_state.systems.resolver == star_system_resolver
-    assert new_tracker.galaxy_state._load_last_market == load_last_market
+    assert new_tracker.galaxy_state._get_last_market == get_last_market
