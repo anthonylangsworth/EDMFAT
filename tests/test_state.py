@@ -92,5 +92,3 @@ def test_mission_init():
     assert mission.id == ID
     assert mission.influence == INFLUENCE
     assert mission.system_address == SYSTEM_ADDRESS
-
-

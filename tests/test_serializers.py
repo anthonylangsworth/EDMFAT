@@ -45,7 +45,7 @@ def load_test_market():
     }
 
 
-def _test_resolver(_):
+def _test_star_system_resolver(_):
     return StarSystem("a", 122, [])
 
 
@@ -79,11 +79,11 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, load_las
             tracker.on_event(json.loads(line))
 
     logger = _get_dummy_logger()
-    resolver = _test_resolver
+    star_system_resolver = _test_star_system_resolver
 
     repository = TrackerFileRepository()
     serialized_tracker = repository.serialize(tracker)
-    new_tracker = repository.deserialize(serialized_tracker, logger, resolver)
+    new_tracker = repository.deserialize(serialized_tracker, logger, star_system_resolver, load_last_market)
 
     assert tracker.minor_factions == new_tracker.minor_factions
     assert tracker.pilot_state.missions == new_tracker.pilot_state.missions
@@ -95,4 +95,5 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, load_las
     assert new_tracker.pilot_state.last_docked_station is None
 
     assert new_tracker._logger == logger
-    assert new_tracker.galaxy_state.systems.resolver == resolver
+    assert new_tracker.galaxy_state.systems.resolver == star_system_resolver
+    assert new_tracker.galaxy_state._load_last_market == load_last_market

@@ -149,8 +149,8 @@ class TrackerFileRepository:
         return Mission(deserialized_mission["id"], deserialized_mission["minor_faction"],
             deserialized_mission["influence"], deserialized_mission["system_address"])
 
-    def _deserialize_tracker_v1(self, deserialized_tracker: dict, logger: logging.Logger, resolver: Callable) -> Tracker:
-        tracker = Tracker(deserialized_tracker["minor_factions"], logger, resolver)
+    def _deserialize_tracker_v1(self, deserialized_tracker: dict, logger: logging.Logger, star_system_resolver: Callable, load_last_market: Callable[[str], Dict[str, Dict]]) -> Tracker:
+        tracker = Tracker(deserialized_tracker["minor_factions"], logger, star_system_resolver=star_system_resolver, load_last_market=load_last_market)
         tracker.pilot_state.missions.update([(mission["id"], self._deserialize_mission_v1(mission)) for mission in deserialized_tracker["pilot_state"]["missions"]])
         # Consider moving these into tracker
         tracker._event_summaries.extend([self._deserialize_event_summary_v1(event_summary) for event_summary in deserialized_tracker["event_summaries"]])
@@ -161,6 +161,6 @@ class TrackerFileRepository:
         1: _deserialize_tracker_v1
     }
 
-    def deserialize(self, serialized_tracker: str, logger: logging.Logger, resolver: Callable) -> Tracker:
+    def deserialize(self, serialized_tracker: str, logger: logging.Logger, star_system_resolver: Callable, load_last_market: Callable[[str], Dict[str, Dict]]) -> Tracker:
         deserialized_tracker = json.loads(serialized_tracker)
-        return self._deserializers[deserialized_tracker["version"]](self, deserialized_tracker["tracker"], logger, resolver)
+        return self._deserializers[deserialized_tracker["version"]](self, deserialized_tracker["tracker"], logger, star_system_resolver, load_last_market)
