@@ -76,8 +76,9 @@ def get_last_market(logger: logging.Logger, market_json_file_path: str = None) -
     Return a Dict containing market.json Items. Technically not a web service but still an external access.
     """
     if market_json_file_path is None:
-        journal_dir = config.get_str('journaldir') if config.get_str('journaldir') != "" else config.default_journal_dir
-        file_path = journal_dir + "/market.json"
+        config_journal_dir = config.get_str("journaldir")
+        journal_dir = config_journal_dir if os.path.exists(config_journal_dir) else config.default_journal_dir
+        file_path = os.path.join(journal_dir, "market.json")
     else:
         file_path = market_json_file_path
     with open(file_path, mode="r") as market_json_file:
