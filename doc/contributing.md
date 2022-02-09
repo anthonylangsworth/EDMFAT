@@ -16,7 +16,7 @@ Guidelines:
     5. `event_formatters.py` contains code to make event summaries human-readable. Any localization code should go here. One event formatter usually handles one event summary type.
     6. `state.py` contains code to store details about the **Elite: Dangerous** universe like missions and stations. These are also anaemic excepting resolving star systems.
     7. `resolvers.py` contains calls to EDSM and potentially other sources to resolve data not in entries.
-2. I will deny pull requests that only reformat code. Yes, not all the code is [PEP 8](https://www.python.org/dev/peps/pep-0008/) formatted. I will fix it eventually.
+2. I will deny pull requests that only reformat code. PEP8 format is ideal.
 
 ## Development Principles
 
