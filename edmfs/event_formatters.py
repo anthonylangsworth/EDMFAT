@@ -69,8 +69,13 @@ class MarketSellEventFormatter(EventFormatter):
 class MissionCompletedEventFormatter(EventFormatter):
     def process(self, event_summaries: Iterable[EventSummary]) -> List[str]:
         result = []
+        total_inf = 0
         for influence, mission_completed_events in groupby(sorted(event_summaries, key=lambda x: x.influence), key=lambda x: x.influence):
-            result.append(f"{len(list(mission_completed_events))} INF{influence} mission(s)")
+            mission_completed_events_list = list(mission_completed_events)
+            result.append(f"{len(mission_completed_events_list)} INF{influence} mission(s)")
+            total_inf += len(influence) * len(mission_completed_events_list)
+        if total_inf > 0:
+            result.append(f"{total_inf} total mission INF")
         return result
 
 

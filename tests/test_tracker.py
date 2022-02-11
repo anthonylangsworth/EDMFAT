@@ -68,6 +68,7 @@ def load_test_market():
             "HR 1597 - PRO HR 1597 & Co\n"
             "1 INF++ mission(s)\n"
             "2 INF+++ mission(s)\n"
+            "8 total mission INF\n"
             "12,801,574 CR of Bounty Vouchers")
         ),
         (
@@ -76,6 +77,7 @@ def load_test_market():
             load_test_market,
             ("Kunti - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "Shambogi - ANTI EDA Kunti League\n"
             "965,956 CR of Bounty Vouchers\n"
@@ -83,6 +85,7 @@ def load_test_market():
             "Shambogi - PRO EDA Kunti League\n"
             "7 INF++ mission(s)\n"
             "1 INF+++ mission(s)\n"
+            "17 total mission INF\n"
             "139,652 CR of Bounty Vouchers")
         ),
         (
@@ -91,15 +94,18 @@ def load_test_market():
             load_test_market,
             ("9 G. Carinae - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "Kanates - PRO EDA Kunti League\n"
             "3 INF+++ mission(s)\n"
             "1 INF++++ mission(s)\n"
+            "13 total mission INF\n"
             "436,046 CR of Bounty Vouchers\n"
             "61,635 CR of Cartography Data\n"
             "\n"
             "Kutjara - ANTI EDA Kunti League\n"
-            "1 INF++++ mission(s)")
+            "1 INF++++ mission(s)\n"
+            "4 total mission INF")
         ),
         (
             {"EDA Kunti League"},
@@ -130,7 +136,8 @@ def load_test_market():
             "6 market sell(s). Total: 28 T and 1,238 CR profit. Average: 44 CR/T profit at bracket 0.0\n"
             "\n"
             "Dulos - PRO Green Party of Dulos\n"
-            "1 INF+++ mission(s)")
+            "1 INF+++ mission(s)\n"
+            "3 total mission INF")
         ),
         (
             {"EDA Kunti League"},
@@ -149,24 +156,29 @@ def load_test_market():
             ("Anek Wango - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
             "1 INF+++ mission(s)\n"
+            "6 total mission INF\n"
             "\n"
             "LHS 1832 - PRO EDA Kunti League\n"
             "1 INF++ mission(s)\n"
+            "2 total mission INF\n"
             "194,136 CR of Bounty Vouchers\n"
             "12,039 CR of Cartography Data\n"
             "\n"
             "LPM 229 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "2 INF++ mission(s)\n"
+            "5 total mission INF\n"
             "\n"
             "LTT 2337 - ANTI EDA Kunti League\n"
             "2 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
+            "4 total mission INF\n"
             "1 market sell(s). Total: 6 T and -1,188 CR profit. Average: -198 CR/T profit at bracket 0.0\n"
             "\n"
             "LTT 2337 - PRO EDA Kunti League\n"
@@ -179,9 +191,11 @@ def load_test_market():
             ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF+++ mission(s)\n"
+            "4 total mission INF\n"
             "\n"
             "Shongbon - ANTI EDA Kunti League\n"
-            "1 INF+++ mission(s)")
+            "1 INF+++ mission(s)\n"
+            "3 total mission INF")
         ),
         (
             {
@@ -193,15 +207,19 @@ def load_test_market():
             ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF+++ mission(s)\n"
+            "4 total mission INF\n"
             "\n"
             "Shongbon - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "LHS 1832 - ANTI LHS 1832 Labour\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "LHS 1832 - PRO LHS 1832 Labour\n"
-            "1 INF+ mission(s)")
+            "1 INF+ mission(s)\n"
+            "1 total mission INF")
         ),
         (
             [
@@ -213,15 +231,19 @@ def load_test_market():
             ("LHS 1832 - ANTI EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF+++ mission(s)\n"
+            "4 total mission INF\n"
             "\n"
             "Shongbon - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "LHS 1832 - ANTI LHS 1832 Labour\n"
             "1 INF+++ mission(s)\n"
+            "3 total mission INF\n"
             "\n"
             "LHS 1832 - PRO LHS 1832 Labour\n"
-            "1 INF+ mission(s)")
+            "1 INF+ mission(s)\n"
+            "1 total mission INF")
         ),
         (
             [
@@ -231,6 +253,7 @@ def load_test_market():
             load_test_market,
             ("Arun - ANTI EDA Kunti League\n"
             "1 INF+++++ mission(s)\n"
+            "5 total mission INF\n"
             "\n"
             "LHS 1832 - ANTI EDA Kunti League\n"
             "2 market buy(s). Total: 1,088 T and 1,816,960 CR. Average: 1,670 CR/T at bracket 0.0\n"
@@ -239,7 +262,8 @@ def load_test_market():
             "Trumuye - ANTI EDA Kunti League\n"
             "7 INF++ mission(s)\n"
             "3 INF+++ mission(s)\n"
-            "8 INF+++++ mission(s)")
+            "8 INF+++++ mission(s)\n"
+            "63 total mission INF")
         ),
         (
             {
@@ -248,7 +272,8 @@ def load_test_market():
             "696613390.log",
             load_test_market,
             ("Trumuye - ANTI EDA Kunti League\n"
-            "1 INF+++ mission(s)")
+            "1 INF+++ mission(s)\n"
+            "3 total mission INF")
         ),
         (
             {
@@ -257,7 +282,8 @@ def load_test_market():
             "696609571.log",
             load_test_market,
             ("Trumuye - ANTI EDA Kunti League\n"
-            "1 INF++ mission(s)")
+            "1 INF++ mission(s)\n"
+            "2 total mission INF")
         ),
         (
             {
@@ -280,7 +306,9 @@ def load_test_market():
                 "San Davokje - ANTI EDA Kunti League\n"
                 "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0\n"
                 "\n"
-                "San Davokje - PRO EDA Kunti League\n1 INF++++ mission(s)"
+                "San Davokje - PRO EDA Kunti League\n"
+                "1 INF++++ mission(s)\n"
+                "4 total mission INF"
             )
         ),
         (
@@ -310,13 +338,15 @@ def load_test_market():
             ("Atfero - ANTI Atfero Blue General & Co\n"
             "2 INF+ mission(s)\n"
             "3 INF++ mission(s)\n"
+            "8 total mission INF\n"
             "1 market buy(s). Total: 15 T and 12,885 CR. Average: 859 CR/T at bracket 0.0\n"
             "8 market sell(s). Total: 77 T and 80,705 CR profit. Average: 1,048 CR/T profit at bracket 1.2\n"
             "1 failed mission(s)\n"
             "\n"
             "Atfero - PRO Atfero Blue General & Co\n"
             "4 INF+ mission(s)\n"
-            "1 INF++ mission(s)")
+            "1 INF++ mission(s)\n"
+            "6 total mission INF")
         ),
         (
             {"EDA Kunti League"},
@@ -345,11 +375,13 @@ def load_test_market():
             "2 INF+++ mission(s)\n"
             "2 INF++++ mission(s)\n"
             "1 INF+++++ mission(s)\n"
+            "22 total mission INF\n"
             "348,491 CR of Bounty Vouchers\n"
             "10,402 CR of Cartography Data\n"
             "\n"
             "LTT 2337 - ANTI EDA Kunti League\n"
-            "1 INF+++++ mission(s)")
+            "1 INF+++++ mission(s)\n"
+            "5 total mission INF")
         ),
         (
             {"Federal Defense League"},
@@ -357,6 +389,7 @@ def load_test_market():
             load_test_market,
             ("LHS 1832 - PRO Federal Defense League\n"
             "2 INF++ mission(s)\n"
+            "4 total mission INF\n"
             "11,772,015 CR of Combat Bonds")
         ),
         (
@@ -366,6 +399,7 @@ def load_test_market():
             ("Naualam - ANTI Extra Corporation\n"
             "5 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
+            "7 total mission INF\n"
             "\n"
             "Naualam - PRO Extra Corporation\n"
             "1,278,672 CR of Bounty Vouchers")
@@ -384,10 +418,12 @@ def load_test_market():
             ("Kanates - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
             "1 INF++++ mission(s)\n"
+            "7 total mission INF\n"
             "\n"
             "Kanates - PRO EDA Kunti League\n"
             "5 INF++ mission(s)\n"
             "2 INF+++++ mission(s)\n"
+            "20 total mission INF\n"
             "3,453,667 CR of Bounty Vouchers\n"
             "38,289,972 CR of Cartography Data\n"
             "4 market sell(s). Total: 6 T and 3,092 CR profit. Average: 515 CR/T profit at bracket 0.8\n"
@@ -398,9 +434,11 @@ def load_test_market():
             "Kutjara - ANTI EDA Kunti League\n"
             "1 INF+++ mission(s)\n"
             "1 INF++++ mission(s)\n"
+            "7 total mission INF\n"
             "\n"
             "LTT 2337 - ANTI EDA Kunti League\n"
             "1 INF++ mission(s)\n"
+            "2 total mission INF\n"
             "7,150 CR of Bounty Vouchers\n"
             "7 market sell(s). Total: 8 T and 10,041 CR profit. Average: 1,255 CR/T profit at bracket 1.3\n"
             "1 failed mission(s)\n"
@@ -409,10 +447,12 @@ def load_test_market():
             "LTT 2337 - PRO EDA Kunti League\n"
             "1 INF+ mission(s)\n"
             "1 INF++ mission(s)\n"
+            "3 total mission INF\n"
             "2,600 CR of Bounty Vouchers\n"
             "\n"
             "Mors - ANTI EDA Kunti League\n"
-            "1 INF++ mission(s)")
+            "1 INF++ mission(s)\n"
+            "2 total mission INF")
         )
     ])
 def test_journal_file(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):
@@ -480,7 +520,8 @@ def load_test_market():
                         "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0\n"
                         "\n"
                         "San Davokje - PRO EDA Kunti League\n"
-                        "1 INF++++ mission(s)"
+                        "1 INF++++ mission(s)\n"
+                        "4 total mission INF"
                     )
                 ),
                 (
@@ -488,6 +529,7 @@ def load_test_market():
                     (
                         "San Davokje - ANTI San Davokje Empire Party\n"
                         "1 INF++++ mission(s)\n"
+                        "4 total mission INF\n"
                         "\n"
                         "San Davokje - PRO San Davokje Empire Party\n"
                         "1 market sell(s). Total: 80 T and 278,160 CR profit. Average: 3,477 CR/T profit at bracket 0.0"
