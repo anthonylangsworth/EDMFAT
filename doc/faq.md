@@ -50,4 +50,4 @@ I am happy to add this as a feature if there is sufficient demand. However, I ha
 
 Copying allows players to annotate activity. For example, they can explain why actions are relevant or apparent anti-minor faction activity.
 
-Copying allows players to edit or remove irrelevant activity. Some may thing reduces the trustworthiness of EDMFAT's results. However, not all data sent to Discord or a website is automatically trustworthy.
+Copying allows players to edit or remove irrelevant activity. Some may think this reduces the trustworthiness of EDMFAT's results. However, ignoring this potential change, not all data sent to Discord or a website is automatically trustworthy.
