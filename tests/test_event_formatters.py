@@ -99,7 +99,10 @@ def test_market_buy(event_summaries: List[MarketSellEventFormatter], expected_ac
             [
                 MissionCompletedEventSummary("Shambogi", {"Shambogi Crimson Rats"}, {}, "+")
             ],
-            ["1 INF+ mission(s)"]
+            [
+                "1 INF+ mission(s)",
+                "1 total mission INF"
+            ]
         ),
         (
             [
@@ -111,7 +114,8 @@ def test_market_buy(event_summaries: List[MarketSellEventFormatter], expected_ac
             [
                 "2 INF+ mission(s)",
                 "1 INF++ mission(s)",
-                "1 INF+++ mission(s)"
+                "1 INF+++ mission(s)",
+                "7 total mission INF"
             ]
         )
     ]
