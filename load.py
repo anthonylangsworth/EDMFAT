@@ -80,9 +80,10 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
     UNTRACK_BUTTON_LABEL = "< Untrack"
     TRACK_ALL_BUTTON_LABEL = "Track All >>"
     UNTRACK_ALL_BUTTON_LABEL = "<< Untrack All"
-    COPY_RAW_BUTTON_LABEL = "Copy Raw Activity"
+    # COPY_RAW_BUTTON_LABEL = "Copy Raw Activity"
     MISSION_WARNING = "This plug-in may not record some missions correctly due to Elite: Dangerous limitations."
     MISSION_WARNING_URL = "https://github.com/anthonylangsworth/EDMFAT/blob/master/doc/missions.md"
+    SHOW_ANTI_LABEL = "Show ANTI work. Uncheck to declutter activity when working for multiple minor factions in the same star system."
     BACKGROUND = myNotebook.Label().cget("background")
     FOREGROUND = myNotebook.Label().cget("foreground")
 
@@ -129,7 +130,13 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
         frame, text=MISSION_WARNING, background=BACKGROUND, url=MISSION_WARNING_URL, underline=True
     ).grid(row=9, column=0, columnspan=3, padx=PADX, pady=PADY, sticky=tk.W)
 
-    tk.Button(frame, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=10, column=0, sticky=tk.W, padx=PADX)
+    this.show_anti = tk.IntVar(value=int(this.tracker.show_anti))
+    myNotebook.Checkbutton(
+        frame, text=SHOW_ANTI_LABEL, variable=this.show_anti, onvalue=1, offvalue=0
+    ).grid(row=10, column=0, columnspan=10, sticky=tk.W, padx=(PADX, 0))
+
+    # Removing for now
+    # tk.Button(frame, text=COPY_RAW_BUTTON_LABEL, command=copy_raw_activity).grid(row=10, column=0, sticky=tk.W, padx=PADX)
 
     return frame
 
@@ -137,6 +144,7 @@ def plugin_prefs(parent: myNotebook.Notebook, cmdr: str, is_beta: bool) -> Optio
 # Called by EMDC when the user presses "OK" on the settings dialog
 def prefs_changed(cmdr: str, is_beta: bool) -> None:
     this.tracker.minor_factions = this.tracked_mf_list.get(0, tk.END)
+    this.tracker.show_anti = bool(this.show_anti.get())
     update_minor_factions()
     update_activity()
     this.logger.info(f"Minor factions changed to {this.tracker.minor_factions}")
@@ -260,7 +268,7 @@ def load_settings_from_config() -> edmfs.Tracker:
         this.logger.info(f"Defaulting to minor faction(s): { ', '.join(sorted(saved_minor_factions)) }")
     else:
         saved_minor_factions = {}
-    return edmfs.Tracker(saved_minor_factions, this.logger, star_system_resolver=this.star_system_resolver,
+    return edmfs.Tracker(saved_minor_factions, True, this.logger, star_system_resolver=this.star_system_resolver,
         get_last_market=this.get_last_market)
 
 

@@ -15,10 +15,11 @@ def _get_dummy_logger():
 
 
 class Tracker:
-    def __init__(self, minor_factions: Iterable[str], logger: logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None,
+    def __init__(self, minor_factions: Iterable[str], show_anti: bool = True, logger: logging.Logger = None, star_system_resolver: Callable[[int], StarSystem] = None,
             get_last_market: Callable[[str], Dict[str, Dict]] = None, event_processors: Dict[str, object] = None,
             event_formatters: Dict[str, object] = None, event_summary_order: Iterable[str] = None):
         self._minor_factions = set(minor_factions)
+        self._show_anti = bool(show_anti)
         self._logger = logger if logger else _get_dummy_logger()
         self._pilot_state = PilotState()
         self._galaxy_state = GalaxyState(star_system_resolver=star_system_resolver, get_last_market=get_last_market)
@@ -35,6 +36,15 @@ class Tracker:
     @minor_factions.setter
     def minor_factions(self, value: Iterable) -> None:
         self._minor_factions = set(value)
+        self._update_activity()
+
+    @property
+    def show_anti(self) -> bool:
+        return self._show_anti
+
+    @show_anti.setter
+    def show_anti(self, value: bool) -> None:
+        self._show_anti = bool(value)
         self._update_activity()
 
     @property
@@ -83,7 +93,10 @@ class Tracker:
     def _update_activity(self) -> None:
         activity = []
         for minor_faction in sorted(self._minor_factions):
-            filtered_event_summaries = filter(lambda x: minor_faction in x.pro or minor_faction in x.anti, self._event_summaries)
+            if self._show_anti:
+                filtered_event_summaries = filter(lambda x: minor_faction in x.pro or minor_faction in x.anti, self._event_summaries)
+            else:
+                filtered_event_summaries = filter(lambda x: minor_faction in x.pro, self._event_summaries)
             sorted_event_summaries = sorted(sorted(sorted(filtered_event_summaries, key=lambda x: self._event_summary_order.index(type(x).__name__)), key=lambda x: minor_faction in x.pro), key=lambda x: x.system_name)
             for (system_name, supports), event_summaries_by_system in groupby(sorted_event_summaries, key=lambda x: (x.system_name, minor_faction in x.pro)):
                 activity.append(f"{system_name} - {'PRO' if supports else 'ANTI'} {minor_faction}")

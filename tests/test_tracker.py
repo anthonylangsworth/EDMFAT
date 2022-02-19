@@ -8,8 +8,10 @@ from edmfs.tracker import Tracker
 
 def test_tracker_init():
     MINOR_FACTIONS = ("EDA Kunti League",)
-    tracker = Tracker(MINOR_FACTIONS)
+    SHOW_ANTI = False
+    tracker = Tracker(MINOR_FACTIONS, SHOW_ANTI)
     assert(tracker.minor_factions == MINOR_FACTIONS)
+    assert(tracker.show_anti == SHOW_ANTI)
     assert(tracker.pilot_state == PilotState())
     assert(tracker.galaxy_state == GalaxyState())
     assert(tracker.activity == "")
