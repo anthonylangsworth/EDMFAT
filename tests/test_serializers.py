@@ -86,6 +86,7 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, get_last
     new_tracker = repository.deserialize(serialized_tracker, logger, star_system_resolver, get_last_market)
 
     assert tracker.minor_factions == new_tracker.minor_factions
+    assert tracker.show_anti == new_tracker.show_anti
     assert tracker.pilot_state.missions == new_tracker.pilot_state.missions
     assert tracker._event_summaries == new_tracker._event_summaries
     assert len(new_tracker.galaxy_state.systems) == 0

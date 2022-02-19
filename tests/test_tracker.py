@@ -457,8 +457,8 @@ def load_test_market():
             "2 total mission INF")
         )
     ])
-def test_journal_file(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):
-    tracker = Tracker(minor_factions=minor_factions, get_last_market=get_last_market)
+def test_journal_file_show_anti(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):
+    tracker = Tracker(minor_factions=minor_factions, show_anti=True, get_last_market=get_last_market)
     with open("tests/journal_files/" + journal_file_name) as journal_file:
         for line in journal_file.readlines():
             tracker.on_event(json.loads(line))
@@ -471,6 +471,274 @@ def test_journal_file(minor_factions: List[str], journal_file_name: str, get_las
     # tracker._update_activity()
     assert tracker.activity == expected_activity
     # print(stream.getvalue())
+
+
+@pytest.mark.parametrize(
+    "minor_factions, journal_file_name, get_last_market, expected_activity",
+    [
+        (
+            {"HR 1597 & Co"},
+            "Journal.201019220908.01.log",
+            load_test_market,
+            ("HR 1597 - PRO HR 1597 & Co\n"
+            "1 INF++ mission(s)\n"
+            "2 INF+++ mission(s)\n"
+            "8 total mission INF\n"
+            "12,801,574 CR of Bounty Vouchers")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.200913212207.01.log",
+            load_test_market,
+            ("Shambogi - PRO EDA Kunti League\n"
+            "7 INF++ mission(s)\n"
+            "1 INF+++ mission(s)\n"
+            "17 total mission INF\n"
+            "139,652 CR of Bounty Vouchers")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.201018213100.01.log",
+            load_test_market,
+            ("Kanates - PRO EDA Kunti League\n"
+            "3 INF+++ mission(s)\n"
+            "1 INF++++ mission(s)\n"
+            "13 total mission INF\n"
+            "436,046 CR of Bounty Vouchers\n"
+            "61,635 CR of Cartography Data")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210101234033.01.log",
+            load_test_market,
+            ("HR 1597 - PRO EDA Kunti League\n"
+            "559,467 CR of Combat Bonds\n"
+            "\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
+            "718,360 CR of Bounty Vouchers\n"
+            "141,361 CR of Cartography Data\n"
+            "\n"
+            "Shambogi - PRO EDA Kunti League\n"
+            "50,765 CR of Cartography Data")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.201212203015.01.log",
+            load_test_market,
+            ("Antai - PRO EDA Kunti League\n"
+            "10 market sell(s). Total: 2,840 T and 7,117,040 CR profit. Average: 2,506 CR/T profit at bracket 2.0")
+        ),
+        (
+            {"Green Party of Dulos"},
+            "Journal.200630212114.01.log",
+            load_test_market,
+            ("Dulos - PRO Green Party of Dulos\n"
+            "1 INF+++ mission(s)\n"
+            "3 total mission INF")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210102190919.01.log",
+            load_test_market,
+            ("Groanomana - PRO EDA Kunti League\n"
+             "18,704,140 CR of Bounty Vouchers\n"
+             "\n"
+             "HR 1597 - PRO EDA Kunti League\n"
+             "7,622,618 CR of Bounty Vouchers")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210105181410.01.log",
+            load_test_market,
+            ("LHS 1832 - PRO EDA Kunti League\n"
+            "1 INF++ mission(s)\n"
+            "2 total mission INF\n"
+            "194,136 CR of Bounty Vouchers\n"
+            "12,039 CR of Cartography Data\n"
+            "\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
+            "5 market sell(s). Total: 5 T and 1,323 CR profit. Average: 265 CR/T profit at bracket 1.0")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210105214916.01.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {
+                "EDA Kunti League",
+                "LHS 1832 Labour"
+            },
+            "Journal.210105214916.01.log",
+            load_test_market,
+            ("LHS 1832 - PRO LHS 1832 Labour\n"
+            "1 INF+ mission(s)\n"
+            "1 total mission INF")
+        ),
+        (
+            [
+                "LHS 1832 Labour",
+                "EDA Kunti League"
+            ],
+            "Journal.210105214916.01.log",
+            load_test_market,
+            ("LHS 1832 - PRO LHS 1832 Labour\n"
+            "1 INF+ mission(s)\n"
+            "1 total mission INF")
+        ),
+        (
+            [
+                "EDA Kunti League"
+            ],
+            "LesPaul58_Journal.210117142551.01.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "696613390.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "696609571.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210122183958.01.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210125173739.01.log",
+            load_test_market,
+            (
+                "San Davokje - PRO EDA Kunti League\n"
+                "1 INF++++ mission(s)\n"
+                "4 total mission INF"
+            )
+        ),
+        (
+            {
+                "EDA Kunti League"
+            },
+            "Journal.210125115425.01.log",
+            load_test_market,
+            (
+                "HR 1597 - PRO EDA Kunti League\n"
+                "2 market sell(s). Total: 5 T and 18,669 CR profit. Average: 3,734 CR/T profit at bracket 0.0"
+            )
+        ),
+        (
+            {
+                "Yuri Grom"
+            },
+            "Journal.210120211308.01.log",
+            load_test_market,
+            ("")
+        ),
+        (
+            {"Atfero Blue General & Co"},
+            "Journal.200509115806.01.log",
+            load_test_market,
+            ("Atfero - PRO Atfero Blue General & Co\n"
+            "4 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "6 total mission INF")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210212124540.01.log",
+            load_test_market,
+            ("Herci - PRO EDA Kunti League\n"
+            "2,930,517 CR of Combat Bonds\n"
+            "\n"
+            "Trumuye - PRO EDA Kunti League\n"
+            "1,339,513 CR of Combat Bonds\n"
+            "13 market buy(s). Total: 10,091 T and 847,644 CR. Average: 84 CR/T at bracket 3.0")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210221171753.01.log",
+            load_test_market,
+            ("Kunti - PRO EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "2 INF+++ mission(s)\n"
+            "2 INF++++ mission(s)\n"
+            "1 INF+++++ mission(s)\n"
+            "22 total mission INF\n"
+            "348,491 CR of Bounty Vouchers\n"
+            "10,402 CR of Cartography Data")
+        ),
+        (
+            {"Federal Defense League"},
+            "Journal.210225200231.01.log",
+            load_test_market,
+            ("LHS 1832 - PRO Federal Defense League\n"
+            "2 INF++ mission(s)\n"
+            "4 total mission INF\n"
+            "11,772,015 CR of Combat Bonds")
+        ),
+        (
+            {"Extra Corporation"},
+            "Journal.210817213224.01.log",
+            load_test_market,
+            ("Naualam - PRO Extra Corporation\n"
+            "1,278,672 CR of Bounty Vouchers")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210818120219.01.log",
+            load_test_market,
+            ("Naualam - PRO EDA Kunti League\n"
+            "7,566,083 CR of Combat Bonds")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.210805213331.01.log",
+            load_test_market,
+            ("Kanates - PRO EDA Kunti League\n"
+            "5 INF++ mission(s)\n"
+            "2 INF+++++ mission(s)\n"
+            "20 total mission INF\n"
+            "3,453,667 CR of Bounty Vouchers\n"
+            "38,289,972 CR of Cartography Data\n"
+            "4 market sell(s). Total: 6 T and 3,092 CR profit. Average: 515 CR/T profit at bracket 0.8\n"
+            "\n"
+            "Kunti - PRO EDA Kunti League\n"
+            "3,283,200 CR of Organic Data\n"
+            "\n"
+            "LTT 2337 - PRO EDA Kunti League\n"
+            "1 INF+ mission(s)\n"
+            "1 INF++ mission(s)\n"
+            "3 total mission INF\n"
+            "2,600 CR of Bounty Vouchers")
+        )
+    ])
+def test_journal_file_hide_anti(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):
+    tracker = Tracker(minor_factions=minor_factions, show_anti=False, get_last_market=get_last_market)
+    with open("tests/journal_files/" + journal_file_name) as journal_file:
+        for line in journal_file.readlines():
+            tracker.on_event(json.loads(line))
+
+    # Sanity checks
+    assert len([event_summary for event_summary in tracker._event_summaries if not set(event_summary.pro).isdisjoint(set(event_summary.anti))]) == 0  # No overlaps
+
+    assert tracker.activity == expected_activity
 
 
 @pytest.mark.parametrize(
