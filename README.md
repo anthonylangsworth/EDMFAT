@@ -54,6 +54,8 @@ See [LICENSE](LICENSE) for the license.
 5. EDMFAT is not localized. It is English only. Localization assistance is appreciated!
 6. EDMFAT does not support console players. Sorry. This is a limitation of EDMC.
 
+See the [issues page](https://github.com/anthonylangsworth/EDMFAT/issues), too.
+
 # Contributing and Development
 
 Bugs reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for details.
