@@ -1,4 +1,5 @@
 [![Github All Releases](https://img.shields.io/github/downloads/anthonylangsworth/EDMFAT/total.svg)]()
+![Tests](https://github.com/anthonylangsworth/EDMFAT/actions/workflows/main.yml/badge.svg)
 
 # Introduction
 
