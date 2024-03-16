@@ -8,7 +8,7 @@ Elite: Dangerous Minor Faction Activity Tracker (EDMFAT) is an EDMC plug-in that
 ![Sample EDMFAT Screenshot](doc/EDMFAT.png)
 
 EDMFAT is aimed at players in **Elite: Dangerous** squadrons that support a minor faction for background simulation (BGS) work. It aims to:
-1. Reduce manual record keeping. Manually tracking tasks is difficult for new players. It is also immersion-breaking and error prone, even for experienced ones.
+1. Reduce manual record keeping. Manually tracking tasks is difficult for new players. It is also immersion-breaking and error-prone, even for experienced ones.
 2. Educate players by highlighting activity that supports or undermines minor factions. 
 
 EDMFAT was initially developed to support the [Elite Dangerous AU & NZ](https://inara.cz/squadron/687/) squadron and their minor faction [EDA Kunti League](https://inara.cz/galaxy-minorfaction/33400/), hence EDA Kunti League being the default minor faction.
@@ -18,7 +18,7 @@ Fly safe, commanders, from CMDR Akton!
 # Installation and Upgrade
 
 Requirements:
-1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 5.0 (Odyseey release) or later.
+1. Install [Elite Dangerous Market Connector (EDMC)](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) version 5.0 (Odyssey release) or later.
 
 To install or upgrade:
 1. If upgrading, `Copy` any activity you want to report, just in case.
@@ -59,7 +59,7 @@ See the [issues page](https://github.com/anthonylangsworth/EDMFAT/issues), too.
 
 # Contributing and Development
 
-Bugs reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for details.
+Bug reports and suggestions are welcome! Please read the [FAQ](doc/faq.md) for details.
 
 See [Contributing](doc/contributing.md) if you want to help with development.
 
