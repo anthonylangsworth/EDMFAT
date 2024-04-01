@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. For MSI installs, download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/).
+1. For MSI installs, download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/), currently from [NuGet](https://www.nuget.org/packages/wix).
 2. Ensure the WiX Toolset bin folder, `%ProgramFiles(x86)%\WiX Toolset v3.11\bin\` by default, is in the PATH.
 3. (Optional) Have `signtool.exe` in the PATH and the correct digitial certificate in an accessible certificate store.
 
