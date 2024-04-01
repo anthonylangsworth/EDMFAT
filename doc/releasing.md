@@ -16,7 +16,7 @@
 4. Install the MSI and test as desired. For reference, the files are installed to `%USERPROFILE%\AppData\Local\EDMarketConnector\plugins\EDMFAT`.
 5. Update documentation, such as [README.md](../README.md).
 6. Commit the changes and push them to Git Hub.
-7. Create a new release.
+7. Create a [new release](https://github.com/anthonylangsworth/EDMFAT/releases/new).
     1. Set the tag to the version number.
     2. Add release comments as appropriate.
     3. Upload the MSI.
