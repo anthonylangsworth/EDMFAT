@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-1. For MSI installs, download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/), currently from [NuGet](https://www.nuget.org/packages/wix).
-2. Install the WiX UI extension using `wix extension add -g WixToolset.UI.wixext`.
-4. (Optional) Have `signtool.exe` in the PATH and the correct digitial certificate in an accessible certificate store.
+1. Download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/) using `dotnet tool install --global wix`.
+2. Install the WiX UI extension using `wix extension add -g WixToolset.UI.wixext/4.0.4`.
+4. (Optional) Have `signtool.exe` in the PATH and the correct digital certificate in an accessible certificate store.
 
 ## Process
 
