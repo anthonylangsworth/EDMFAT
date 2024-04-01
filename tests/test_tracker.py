@@ -19,6 +19,7 @@ def test_tracker_init():
 
 def load_test_market():
     return {
+        "Computer Components": {"id": 128049240, "Name": "$computercomponents_name;", "Name_Localised": "Computer Components", "Category": "$MARKET_technology;", "Category_Localised": "Computer Components", "BuyPrice": 0, "SellPrice": 7186, "MeanPrice": 6690, "StockBracket": 0, "DemandBracket": 2, "Stock": 0, "Demand": 18, "Consumer": True, "Producer": False, "Rare": False},
         "Consumer Technology": {"id": 128049240, "Name": "$consumertechnology_name;", "Name_Localised": "Consumer Technology", "Category": "$MARKET_category_consumer_items;", "Category_Localised": "Consumer items", "BuyPrice": 0, "SellPrice": 7186, "MeanPrice": 6690, "StockBracket": 0, "DemandBracket": 2, "Stock": 0, "Demand": 18, "Consumer": True, "Producer": False, "Rare": False},
         "Coltan": {"id": 128049159, "Name": "$coltan_name;", "Name_Localised": "Coltan", "Category": "$MARKET_category_minerals;", "Category_Localised": "Minerals", "BuyPrice": 5051, "SellPrice": 4846, "MeanPrice": 6163, "StockBracket": 3, "DemandBracket": 0, "Stock": 277, "Demand": 1, "Consumer": False, "Producer": True, "Rare": False},
         "Copper": {"id": 128049175, "Name": "$copper_name;", "Name_Localised": "Copper", "Category": "$MARKET_category_metals;", "Category_Localised": "Metals", "BuyPrice": 246, "SellPrice": 245, "MeanPrice": 689, "StockBracket": 0, "DemandBracket": 0, "Stock": 0, "Demand": 0, "Consumer": False, "Producer": False, "Rare": False},
@@ -455,6 +456,16 @@ def load_test_market():
             "Mors - ANTI EDA Kunti League\n"
             "1 INF++ mission(s)\n"
             "2 total mission INF")
+        ),
+        (
+            {"EDA Kunti League"},
+            "Journal.2024-02-28T211110.01.log",
+            load_test_market,
+            ("Bhajaja - PRO EDA Kunti League\n"
+             "1 market sell(s). Total: 1 T and 35,144 CR profit. Average: 35,144 CR/T profit at bracket 0.0\n"
+             "\n"
+             "Eta-1 Pictoris - PRO EDA Kunti League\n"
+             "4 market sell(s). Total: 32 T and 226,438 CR profit. Average: 7,076 CR/T profit at bracket 0.5")
         )
     ])
 def test_journal_file_show_anti(minor_factions: List[str], journal_file_name: str, get_last_market: Callable[[], Dict], expected_activity: str):

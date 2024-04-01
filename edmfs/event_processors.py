@@ -186,8 +186,13 @@ class MarketSellEventProcessor(EventProcessor):
             sold_at_blackmarket = "BlackMarket" in event
             pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions,
                 (sold_at_loss and not sold_at_blackmarket) or (not sold_at_loss and sold_at_blackmarket))
-            market_entry = _get_market_entry(event, galaxy_state)
-            result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"], market_entry["DemandBracket"])]
+            demand_bracket = 0.0
+            try:
+                market_entry = _get_market_entry(event, galaxy_state)
+                demand_bracket = market_entry["DemandBracket"]
+            except CommodityNotInLastMarketError:
+                pass  # Happens at black markets
+            result = [MarketSellEventSummary(star_system.name, pro, anti, event["Count"], event["SellPrice"], event["AvgPricePaid"], demand_bracket)]
         return result
 
 
