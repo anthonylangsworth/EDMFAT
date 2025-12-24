@@ -1,1 +1,1 @@
-@wix build -o edmfat.msi -ext WixToolset.UI.wixext/4.0.4 edmfat.wxs
+@wix build -o edmfat.msi -ext WixToolset.UI.wixext edmfat.wxs
