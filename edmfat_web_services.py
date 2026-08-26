@@ -78,7 +78,7 @@ def get_last_market(logger: logging.Logger, market_json_file_path: str = None) -
     if market_json_file_path is None:
         config_journal_dir = config.get_str("journaldir")
         journal_dir = config_journal_dir if os.path.exists(config_journal_dir) else config.default_journal_dir
-        file_path = os.path.join(journal_dir, "Market.json") # Ensure correct capitalization for Un*x
+        file_path = os.path.join(journal_dir, "Market.json")  # Ensure correct capitalization for Un*x
     else:
         file_path = market_json_file_path
     with open(file_path, mode="r") as market_json_file:
