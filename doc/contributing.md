@@ -21,7 +21,7 @@ Guidelines:
 ## Development Principles
 
 Development uses the following principles:
-1. **In-game is correct:** Assume influence and totals shown in the in-game UI are correct, notwithstannding the [problems with missions](missions.md).
+1. **In-game is correct:** Assume influence and totals shown in the in-game UI are correct, notwithstanding the [problems with missions](missions.md).
 2. **Do one thing well:** Conceivably, this plug-in could advise pilots on effective and ineffective ways of increasing or decreasing influence. A website for each squadron could centrally control minor faction(s) to support. The plug-in could automatically post results to a Discord channel. However, this plug-in achieves 80% of the value by merely tallying relevant activity. 
 3. **Ease of use:** Require as little thought as possible from the user. For example, avoid non-game abbreviations in activity. Be forgiving, such as using a "Copy + Reset" button to clear activity instead of a "Reset" button. 
 4. **Simple, SOLID design:** Follow good design principles (e.g. SOLID) and keep the plug-in design as simple as possible. For example, eschew plug-ins or dependencies unless necessary. Only store as much state or information as the plug-in needs.
