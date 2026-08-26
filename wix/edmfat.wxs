@@ -1,9 +1,9 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-    <Package Name="Elite: Dangerous Minor Faction Activity Tracker (EDMFAT)" Language="1033" Version="0.31.0" Manufacturer="Anthony Langsworth" UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935" InstallerVersion="200" Scope="perMachine">
+    <Package Name="Elite: Dangerous Minor Faction Activity Tracker (EDMFAT)" Language="1033" Version="0.32.0" Manufacturer="Anthony Langsworth" UpgradeCode="530be369-3c3f-4eae-abf3-46fe6e7c0935" InstallerVersion="200" Scope="perMachine">
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
         <Upgrade Id="530be369-3c3f-4eae-abf3-46fe6e7c0935">
-            <UpgradeVersion Minimum="0.31.0" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
-            <UpgradeVersion Minimum="0.0.0" Maximum="0.31.0" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
+            <UpgradeVersion Minimum="0.32.0" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+            <UpgradeVersion Minimum="0.0.0" Maximum="0.32.0" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
         </Upgrade>
         <Launch Condition="NOT NEWERVERSIONDETECTED" Message="A newer version of this software is already installed." />
         <Property Id="ARPURLINFOABOUT" Value="https://github.com/anthonylangsworth/EDMFAT" />

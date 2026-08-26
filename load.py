@@ -19,7 +19,7 @@ this.plugin_name = "Minor Faction Activity Tracker"
 this.minor_factions = tk.StringVar()
 this.activity_summary = tk.StringVar()
 this.current_station = ""
-this.version = (0, 31, 0)
+this.version = (0, 32, 0)
 this.logger = logging.getLogger(f'{appname}.{os.path.basename(os.path.dirname(__file__))}')
 this.settings_file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "settings.json")
 this.star_system_resolver = functools.partial(edmfat_web_services.resolve_star_system_via_edsm, this.logger)
@@ -259,23 +259,28 @@ def load_settings_from_file() -> edmfs.Tracker:
 
 
 def load_settings_from_config() -> edmfs.Tracker:
+    tracker = None
     try:
         saved_minor_factions = config.get_list(CONFIG_MINOR_FACTION)
+        if isinstance(saved_minor_factions, list) and len(saved_minor_factions) > 0:
+            # Previous default was ANTI
+            tracker = edmfs.Tracker(saved_minor_factions, True, this.logger, star_system_resolver=this.star_system_resolver,
+                get_last_market=this.get_last_market)
     except Exception:
-        saved_minor_factions = {}
-    if saved_minor_factions is None:
-        saved_minor_factions = DEFAULT_MINOR_FACTIONS
-        this.logger.info(f"Defaulting to minor faction(s): {', '.join(sorted(saved_minor_factions))}")
-    else:
-        saved_minor_factions = {}
-    return edmfs.Tracker(saved_minor_factions, True, this.logger, star_system_resolver=this.star_system_resolver,
-        get_last_market=this.get_last_market)
+        this.logger.exception("Error loading settings from config")
+        pass
+    return tracker
 
 
-def load_settings() -> List[str]:
+def load_settings() -> None:
     this.tracker = load_settings_from_file()
     if not this.tracker:
         this.tracker = load_settings_from_config()
+    if not this.tracker:
+        this.logger.info(f"Defaulting to minor faction(s): {', '.join(sorted(DEFAULT_MINOR_FACTIONS))}")
+        # Default to no ANTI work
+        this.tracker = edmfs.Tracker(DEFAULT_MINOR_FACTIONS, False, this.logger, star_system_resolver=this.star_system_resolver,
+            get_last_market=this.get_last_market)
 
 
 def save_config() -> None:
