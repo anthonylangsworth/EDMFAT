@@ -3,7 +3,7 @@
 ## Prerequisites
 
 1. Download the latest version of the [WiX Toolset](https://wixtoolset.org/releases/) using `dotnet tool install --global wix`.
-2. Install the WiX UI extension using `wix extension add -g WixToolset.UI.wixext/4.0.4`.
+2. Install the WiX UI extension using `wix extension add -g WixToolset.UI.wixext`. You may need to accept the EULA using `wix eula accept wix7` first.
 4. (Optional) Have `signtool.exe` in the PATH and the correct digital certificate in an accessible certificate store.
 
 ## Process
