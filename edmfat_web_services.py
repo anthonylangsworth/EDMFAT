@@ -19,20 +19,20 @@ except ImportError:
 
 def resolve_star_system_via_edsm(logger: logging.Logger, system_address: int) -> edmfs.StarSystem:
     """
-    Get the minor factions for the given star system using the ESM API.
+    Get the minor factions for the given star system using the EDSM API.
     """
     URL = "https://www.edsm.net/api-system-v1/factions"
     try:
-        with requests.get(URL, params={"systemId64": system_address}, timeout=30) as response:
+        with requests.get(URL, headers={"User-Agent": "EDMFAT"}, params={"systemId64": system_address}, timeout=30) as response:
             if response.status_code == 200:
                 output = response.json()
                 if "factions" in output and "name" in output:
                     minor_factions = [faction["name"] for faction in output["factions"]]
                     star_system = edmfs.StarSystem(output["name"], system_address, minor_factions)
-                    logger.info(f"Resolved from EDSM: { star_system }")
+                    logger.info(f"Resolved from EDSM: {star_system}")
                     return star_system
                 else:
-                    raise Exception(f"Response mising 'factions' or 'output': {output}")
+                    raise Exception(f"Response missing 'factions' or 'output': {output}")
             else:
                 response.raise_for_status()
     except Exception as e:
@@ -78,7 +78,7 @@ def get_last_market(logger: logging.Logger, market_json_file_path: str = None) -
     if market_json_file_path is None:
         config_journal_dir = config.get_str("journaldir")
         journal_dir = config_journal_dir if os.path.exists(config_journal_dir) else config.default_journal_dir
-        file_path = os.path.join(journal_dir, "market.json")
+        file_path = os.path.join(journal_dir, "Market.json") # Ensure correct capitalization for Un*x
     else:
         file_path = market_json_file_path
     with open(file_path, mode="r") as market_json_file:
