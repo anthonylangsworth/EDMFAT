@@ -122,7 +122,7 @@ def load_test_market():
             "141,361 CR of Cartography Data\n"
             "\n"
             "Shambogi - PRO EDA Kunti League\n"
-            "50,765 CR of Cartography Data")
+            "93,708 CR of Cartography Data")
         ),
         (
             {"EDA Kunti League"},
@@ -530,7 +530,7 @@ def test_journal_file_show_anti(minor_factions: List[str], journal_file_name: st
             "141,361 CR of Cartography Data\n"
             "\n"
             "Shambogi - PRO EDA Kunti League\n"
-            "50,765 CR of Cartography Data")
+            "93,708 CR of Cartography Data")
         ),
         (
             {"EDA Kunti League"},

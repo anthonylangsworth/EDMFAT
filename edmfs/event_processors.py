@@ -173,7 +173,9 @@ class SellExplorationDataEventProcessor(EventProcessor):
         star_system = _get_system(galaxy_state, pilot_state.system_address)
         station = pilot_state.last_docked_station
         pro, anti = _get_event_minor_faction_impact(station.controlling_minor_faction, star_system.minor_factions)
-        return [SellExplorationDataEventSummary(star_system.name, pro, anti, event["TotalEarnings"])]
+        # Not sure why TotalEarnings is sometimes 0
+        totalEarnings = event["TotalEarnings"] if event["TotalEarnings"] > 0 else event["BaseValue"] + event["Bonus"]
+        return [SellExplorationDataEventSummary(star_system.name, pro, anti, totalEarnings)]
 
 
 class MarketSellEventProcessor(EventProcessor):
