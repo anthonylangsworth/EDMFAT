@@ -1,10 +1,11 @@
 import pytest
 import json
-from typing import Callable, Dict
+from typing import Any, Callable, Dict
 
 from edmfs.tracker import Tracker, _get_dummy_logger
 from edmfs.serializers import TrackerFileRepository
 from edmfs.state import StarSystem
+from edmfs.event_summaries import EventSummary
 
 
 def load_test_market():
@@ -69,7 +70,8 @@ def _test_star_system_resolver(_):
         ({"EDA Kunti League"}, "Journal.210125115425.01.log", load_test_market),
         ({"Yuri Grom"}, "Journal.210120211308.01.log", load_test_market),
         ({"Atfero Blue General & Co"}, "Journal.200509115806.01.log", load_test_market),
-        ({"EDA Kunti League"}, "Journal.210221171753.01.log", load_test_market)
+        ({"EDA Kunti League"}, "Journal.210221171753.01.log", load_test_market),
+        ({"EDA Kunti League"}, "Journal.2026-04-25T093217.01.log", load_test_market)
     ]
 )
 def test_serialize_tracker(minor_factions: str, journal_file_name: str, get_last_market: Callable[[], Dict]):
@@ -98,3 +100,15 @@ def test_serialize_tracker(minor_factions: str, journal_file_name: str, get_last
     assert new_tracker._logger == logger
     assert new_tracker.galaxy_state.systems.resolver == star_system_resolver
     assert new_tracker.galaxy_state._get_last_market == get_last_market
+
+
+def test_event_summaries_have_serializers():
+    ensure_all_event_summary_names_in_dict_keys(TrackerFileRepository._event_summary_serializers)
+
+
+def test_event_summaries_have_deserializers():
+    ensure_all_event_summary_names_in_dict_keys(TrackerFileRepository._event_summary_deserializers)
+
+
+def ensure_all_event_summary_names_in_dict_keys(map_type_to_serializer: dict[str, Any]):
+    assert set([x.__name__ for x in EventSummary.__subclasses__()]).difference(map_type_to_serializer.keys()) == set()

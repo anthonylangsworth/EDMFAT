@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Dict, Callable
 
-from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary
+from .event_summaries import EventSummary, RedeemVoucherEventSummary, SellExplorationDataEventSummary, MarketBuyEventSummary, MarketSellEventSummary, MissionCompletedEventSummary, MissionFailedEventSummary, MurderEventSummary, SellOrganicDataEventSummary
 from .state import Mission
 from .tracker import Tracker
 
@@ -61,14 +61,23 @@ class TrackerFileRepository:
             }
         }
 
+    def _serialize_sell_organic_data_event_summary(self, sell_organic_data_event_summary: SellOrganicDataEventSummary) -> Dict:
+        return {
+            **self._serialize_event_summary(sell_organic_data_event_summary),
+            **{
+                "value": sell_organic_data_event_summary.value
+            }
+        }    
+
     _event_summary_serializers = {
-        "RedeemVoucherEventSummary": _serialize_redeem_voucher_event_summary,
-        "SellExplorationDataEventSummary": _serialize_sell_exploration_data_event_summary,
-        "MarketBuyEventSummary": _serialize_market_buy_event_summary,
-        "MarketSellEventSummary": _serialize_market_sell_event_summary,
-        "MissionCompletedEventSummary": _serialize_mission_completed_event_summary,
-        "MissionFailedEventSummary": _serialize_event_summary,
-        "MurderEventSummary": _serialize_event_summary
+        RedeemVoucherEventSummary.__name__: _serialize_redeem_voucher_event_summary,
+        SellExplorationDataEventSummary.__name__: _serialize_sell_exploration_data_event_summary,
+        MarketBuyEventSummary.__name__: _serialize_market_buy_event_summary,
+        MarketSellEventSummary.__name__: _serialize_market_sell_event_summary,
+        MissionCompletedEventSummary.__name__: _serialize_mission_completed_event_summary,
+        MissionFailedEventSummary.__name__: _serialize_event_summary,
+        MurderEventSummary.__name__: _serialize_event_summary,
+        SellOrganicDataEventSummary.__name__: _serialize_sell_organic_data_event_summary
     }
 
     def _serialize_event_summary_v1(self, event_summary: EventSummary) -> Dict:
@@ -133,18 +142,23 @@ class TrackerFileRepository:
         return MurderEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"],
             deserialized_event_summary["anti"])
 
-    def _deserialize_event_summary_v1(self, deserialied_event_summary) -> EventSummary:
-        return self._event_summary_deserializers[deserialied_event_summary["type"]](self, deserialied_event_summary["event_summary"])
+    def _deserialize_sell_organic_data_event_summary(self, deserialized_event_summary) -> EventSummary:
+        return SellOrganicDataEventSummary(deserialized_event_summary["system_name"], deserialized_event_summary["pro"],
+            deserialized_event_summary["anti"], deserialized_event_summary["value"])
 
     _event_summary_deserializers = {
-        "RedeemVoucherEventSummary": _deserialize_redeem_voucher_event_summary,
-        "SellExplorationDataEventSummary": _deserialize_sell_exploration_data_event_summary,
-        "MarketBuyEventSummary": _deserialize_market_buy_event_summary,
-        "MarketSellEventSummary": _deserialize_market_sell_event_summary,
-        "MissionCompletedEventSummary": _deserialize_mission_completed_event_summary,
-        "MissionFailedEventSummary": _deserialize_mission_failed_event_summary,
-        "MurderEventSummary": _deserialize_murder_event_summary
+        RedeemVoucherEventSummary.__name__: _deserialize_redeem_voucher_event_summary,
+        SellExplorationDataEventSummary.__name__: _deserialize_sell_exploration_data_event_summary,
+        MarketBuyEventSummary.__name__: _deserialize_market_buy_event_summary,
+        MarketSellEventSummary.__name__: _deserialize_market_sell_event_summary,
+        MissionCompletedEventSummary.__name__: _deserialize_mission_completed_event_summary,
+        MissionFailedEventSummary.__name__: _deserialize_mission_failed_event_summary,
+        MurderEventSummary.__name__: _deserialize_murder_event_summary,
+        SellOrganicDataEventSummary.__name__: _deserialize_sell_organic_data_event_summary
     }
+
+    def _deserialize_event_summary_v1(self, deserialied_event_summary) -> EventSummary:
+        return self._event_summary_deserializers[deserialied_event_summary["type"]](self, deserialied_event_summary["event_summary"])
 
     def _deserialize_mission_v1(self, deserialized_mission) -> Mission:
         return Mission(deserialized_mission["id"], deserialized_mission["minor_faction"],
