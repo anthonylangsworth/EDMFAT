@@ -767,7 +767,7 @@ def test_journal_file_hide_anti(minor_factions: List[str], journal_file_name: st
 )
 def test_tracker_clear_activity(journal_file_name, get_last_market):
     events = []
-    if(journal_file_name):
+    if journal_file_name:
         with open("tests/journal_files/" + journal_file_name) as journal_file:
             events = [json.loads(line) for line in journal_file.readlines()]
 
@@ -776,8 +776,8 @@ def test_tracker_clear_activity(journal_file_name, get_last_market):
     for event in events:
         tracker.on_event(event)
     tracker.clear_activity()
-    assert(tracker.activity == "")
-    assert(tracker._event_summaries == [])
+    assert tracker.activity == ""
+    assert tracker._event_summaries == []
 
 
 def load_test_market():
